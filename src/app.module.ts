@@ -17,6 +17,7 @@ import {
   MONGO_PORT,
   MONGO_USER,
 } from './constants/database.const';
+import { UserModule } from './modules/users/user.module';
 
 @Module({
   imports: [
@@ -42,8 +43,8 @@ import {
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
       introspection: true,
     }),
+    UserModule,
   ],
-  controllers: [],
   providers: [AppService, AppResolver],
 })
 export class AppModule {}
