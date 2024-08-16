@@ -1,6 +1,6 @@
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -45,6 +45,7 @@ import { UserModule } from './modules/users/user.module';
     }),
     UserModule,
   ],
-  providers: [AppService, AppResolver],
+  providers: [AppService, AppResolver, Logger],
+  exports: [Logger],
 })
 export class AppModule {}
