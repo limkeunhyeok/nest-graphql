@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Schema as MongooseSchema } from 'mongoose';
 import { CreateUserInput } from './dtos/create.input';
@@ -30,7 +30,6 @@ export class UserService {
   }
 
   async findAll() {
-    throw new BadRequestException('TESTESTESTSETEST!!');
     return await this.userModel.find();
   }
 

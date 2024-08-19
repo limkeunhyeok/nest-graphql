@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
 import { Observable, tap } from 'rxjs';
+import { LogLevel } from 'src/libs/logger';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
@@ -22,40 +23,27 @@ export class LoggingInterceptor implements NestInterceptor {
   ): Observable<any> | Promise<Observable<any>> {
     // Graphql
     if (context.getType<GqlContextType>() === 'graphql') {
-      const gqlContext = GqlExecutionContext.create(context);
-      const info = gqlContext.getInfo();
-      const parentType = info.parentType.name;
-      const fieldName = info.fieldName;
-      const body = info.fieldNodes[0]?.loc?.source?.body;
-      const message = `GraphQL - ${parentType} - ${fieldName}`;
-
-      // // Add request ID,so it can be tracked with response
-      // const requestId = uuidv4();
-      // // Put to header, so can attach it to response as well
-      // res.set('requestId', requestId);
-
-      const trace = {
-        userId: 'good',
-        body,
-      };
-
-      // console.log('INFO!!!!!!!', JSON.stringify(info));
-      // console.log(
-      //   'INFO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
-      // );
-
-      // console.log(`requestId: AAAAAAA`, {
-      //   context: message,
-      //   trace,
-      // });
+      this.writeLog(context, false, 'A request has arrived.', LogLevel.INFO);
 
       return next.handle().pipe(
         tap({
           next: (val: unknown): void => {
-            this.logNext(val, context);
+            this.writeLog(
+              context,
+              false,
+              'Send a response.',
+              LogLevel.INFO,
+              val,
+            );
           },
           error: (val: unknown): void => {
-            this.errorNext(val, context);
+            this.writeLog(
+              context,
+              true,
+              'An error occurred.',
+              LogLevel.ERROR,
+              val,
+            );
           },
         }),
       );
@@ -63,47 +51,43 @@ export class LoggingInterceptor implements NestInterceptor {
     return next.handle();
   }
 
-  /**
-   * Method to log response message
-   */
-  private logNext(body: unknown, context: ExecutionContext): void {
-    if (context.getType<GqlContextType>() === 'graphql') {
-      const gqlContext = GqlExecutionContext.create(context);
-      const info = gqlContext.getInfo();
-      const parentType = info.parentType.name;
-      const fieldName = info.fieldName;
-      const res: Response = gqlContext.getContext().res;
-      const message = `GraphQL - ${parentType} - ${fieldName}`;
+  private writeLog(
+    context: ExecutionContext,
+    isError: boolean,
+    message: string,
+    logLevel: LogLevel,
+    body?: any,
+  ) {
+    const gqlContext = GqlExecutionContext.create(context);
 
-      // Remove secure fields from request body and headers
-      // const secureBody = secureReqBody(body);
+    const info = gqlContext.getInfo();
 
-      // const requestId = res.getHeader('requestId');
+    const operationType = info.parentType.name;
+    const operationName = info.fieldName;
+    const variableValues = info.variableValues[operationName]
+      ? info.variableValues[operationName]
+      : null;
+    const selectionSets = info.fieldNodes[0].selectionSet.selections.map(
+      (item) => item.name.value,
+    );
 
-      // Log trace message
-      const trace = {
-        body: { good: 'body' },
-      };
-      // console.log(
-      //   '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@',
-      // );
-      // console.log(body);
-      // console.log(
-      //   '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@',
-      // );
-      this.logger.log({
-        level: 'info',
-        message,
-      });
-    }
-  }
+    const error = isError
+      ? {
+          exceptionCode: body.name,
+          statusCode: body.status,
+          message: body.message,
+          stack: body.stack,
+        }
+      : null;
 
-  private errorNext(body, context: ExecutionContext): void {
-    if (context.getType<GqlContextType>() === 'graphql') {
-      this.logger.log({
-        level: 'error',
-        message: 'error!',
-      });
-    }
+    this.logger.log({
+      level: logLevel,
+      operationType,
+      operationName,
+      variableValues,
+      selectionSets,
+      message,
+      error,
+    });
   }
 }
