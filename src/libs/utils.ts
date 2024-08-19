@@ -1,3 +1,5 @@
+import * as bcrypt from 'bcrypt';
+
 export const isEmptyObject = (value: any): boolean => {
   return (
     value !== null &&
@@ -5,4 +7,12 @@ export const isEmptyObject = (value: any): boolean => {
     !Array.isArray(value) &&
     Object.keys(value).length === 0
   );
+};
+
+export const encryptPassword = (password: string) => {
+  return bcrypt.hashSync(password, 10);
+};
+
+export const comparedPassword = (attemptPassword: string, password: string) => {
+  return bcrypt.compareSync(attemptPassword, password);
 };
