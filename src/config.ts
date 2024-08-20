@@ -6,4 +6,5 @@ export default () => ({
   mongoUser: process.env.MONGO_USER || 'root',
   mongoPass: process.env.MONGO_PASS || 'password',
   mongoName: process.env.MONGO_NAME || 'graphql',
+  secretKey: process.env.SECRET_KEY || 'secretKey',
 });

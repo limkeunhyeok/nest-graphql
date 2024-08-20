@@ -17,6 +17,7 @@ import {
   MONGO_PORT,
   MONGO_USER,
 } from './constants/database.const';
+import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/users/user.module';
 
 @Module({
@@ -44,6 +45,7 @@ import { UserModule } from './modules/users/user.module';
       introspection: true,
     }),
     UserModule,
+    AuthModule,
   ],
   providers: [AppService, AppResolver, Logger],
   exports: [Logger],

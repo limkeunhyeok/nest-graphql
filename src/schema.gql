@@ -6,6 +6,7 @@ input CreateUserInput {
   email: String!
   name: String!
   password: String!
+  test: Int!
 }
 
 """
@@ -13,9 +14,16 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input LoginInput {
+  email: String!
+  password: String!
+}
+
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   deleteById(id: String!): User!
+  login(loginInput: LoginInput!): TokenResponse!
+  signup(signupInput: CreateUserInput!): TokenResponse!
   updateUser(updateUserInput: UpdateUserInput!): User!
 }
 
@@ -23,6 +31,10 @@ type Query {
   findAll: [User!]!
   getHello: String!
   getUserById(id: String!): User!
+}
+
+type TokenResponse {
+  accessToken: String!
 }
 
 input UpdateUserInput {
@@ -37,5 +49,6 @@ type User {
   email: String!
   name: String!
   password: String!
+  test: Int!
   updatedAt: DateTime!
 }

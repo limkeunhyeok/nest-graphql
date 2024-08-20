@@ -5,7 +5,11 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { GqlArgumentsHost, GqlExceptionFilter } from '@nestjs/graphql';
+import {
+  GqlArgumentsHost,
+  GqlContextType,
+  GqlExceptionFilter,
+} from '@nestjs/graphql';
 import { LogLevel } from 'src/libs/logger';
 import { isEmptyObject } from 'src/libs/utils';
 
@@ -24,12 +28,14 @@ export class AllExceptionsFilter implements GqlExceptionFilter {
 
     const info = gqlHost.getInfo();
 
-    const operationType = info.parentType.name;
-    const operationName = info.fieldName;
-    const variableValues = isEmptyObject(gqlHost.getArgs())
-      ? null
-      : gqlHost.getArgs();
-    const selectionSets = info.fieldNodes[0].selectionSet.selections.map(
+    const operationType = info?.parentType?.name;
+    const operationName = info?.fieldName;
+    const variableValues =
+      gqlHost.getType<GqlContextType>() === 'graphql' &&
+      !isEmptyObject(gqlHost.getArgs())
+        ? gqlHost.getArgs()
+        : null;
+    const selectionSets = info?.fieldNodes[0]?.selectionSet?.selections?.map(
       (item) => item.name.value,
     );
 
