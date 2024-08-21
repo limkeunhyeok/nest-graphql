@@ -43,6 +43,27 @@ import { UserModule } from './modules/users/user.module';
       sortSchema: true,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
       introspection: true,
+      formatError: (error) => {
+        const { message, path, extensions } = error;
+
+        // 일단, 아폴로 자체 에러는 400으로 처리
+        const statusCode = extensions.originalError
+          ? (extensions.originalError as any).statusCode
+          : 400;
+        const exceptionCode = extensions.code;
+        const stack = extensions.stacktrace;
+
+        return {
+          message: 'An error occurred.',
+          path,
+          extensions: {
+            exceptionCode,
+            statusCode,
+            message,
+            stack,
+          },
+        };
+      },
     }),
     UserModule,
     AuthModule,

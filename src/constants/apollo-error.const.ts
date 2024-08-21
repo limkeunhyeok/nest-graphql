@@ -1,0 +1,14 @@
+// https://www.apollographql.com/docs/apollo-server/data/errors/#built-in-error-codes 참고
+export const ApolloErrorCode = {
+  GRAPHQL_PARSE_FAILED: 'GRAPHQL_PARSE_FAILED',
+  GRAPHQL_VALIDATION_FAILED: 'GRAPHQL_VALIDATION_FAILED',
+  BAD_USER_INPUT: 'BAD_USER_INPUT',
+  PERSISTED_QUERY_NOT_FOUND: 'PERSISTED_QUERY_NOT_FOUND',
+  PERSISTED_QUERY_NOT_SUPPORTED: 'PERSISTED_QUERY_NOT_SUPPORTED',
+  OPERATION_RESOLUTION_FAILURE: 'OPERATION_RESOLUTION_FAILURE',
+  BAD_REQUEST: 'BAD_REQUEST',
+  INTERNAL_SERVER_ERROR: 'INTERNAL_SERVER_ERROR',
+} as const;
+
+export type ApolloErrorCode =
+  (typeof ApolloErrorCode)[keyof typeof ApolloErrorCode];

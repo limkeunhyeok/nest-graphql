@@ -6,7 +6,6 @@ input CreateUserInput {
   email: String!
   name: String!
   password: String!
-  test: Int!
 }
 
 """
@@ -29,7 +28,7 @@ type Mutation {
 
 type Query {
   findAll: [User!]!
-  getHello: String!
+  getHello: String
   getUserById(id: String!): User!
 }
 
@@ -49,6 +48,5 @@ type User {
   email: String!
   name: String!
   password: String!
-  test: Int!
   updatedAt: DateTime!
 }

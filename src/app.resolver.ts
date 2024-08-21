@@ -5,7 +5,7 @@ import { AppService } from './app.service';
 export class AppResolver {
   constructor(private readonly appService: AppService) {}
 
-  @Query(() => String)
+  @Query(() => String, { nullable: true })
   getHello(): string {
     return this.appService.getHello();
   }

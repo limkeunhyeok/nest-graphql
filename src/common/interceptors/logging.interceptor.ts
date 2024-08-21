@@ -50,7 +50,8 @@ export class LoggingInterceptor implements NestInterceptor {
     const variableValues = isEmptyObject(gqlContext.getArgs())
       ? null
       : gqlContext.getArgs();
-    const selectionSets = info.fieldNodes[0].selectionSet.selections.map(
+
+    const selectionSets = info.fieldNodes[0]?.selectionSet?.selections?.map(
       (item) => item.name.value,
     );
 
