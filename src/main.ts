@@ -10,11 +10,10 @@ async function bootstrap() {
   const logger = getWinstonLogger();
 
   const app = await NestFactory.create(AppModule, { logger });
+  const configService = app.get(ConfigService);
 
   app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalInterceptors(new LoggingInterceptor());
-
-  const configService = app.get(ConfigService);
 
   await app.listen(configService.get(SERVER_PORT), () => {
     logger.log({

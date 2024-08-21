@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Schema as MongooseSchema } from 'mongoose';
 import { CreateUserInput } from './dtos/create.input';
 import { UpdateUserInput } from './dtos/update.input';
@@ -30,7 +30,9 @@ export class UserResolver {
   }
 
   @Query(() => [User])
-  async findAll() {
+  async findAll(@Context() context) {
+    const user = context.req['user'];
+    console.log('TESTESTWESTADS!!!!!!!!!!!!!!!!', user);
     return await this.userService.findAll();
   }
 

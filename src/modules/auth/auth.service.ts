@@ -22,7 +22,7 @@ export class AuthService {
       throw new BadRequestException('Incorrect email or password.');
     }
 
-    const accessToken = this.jwtService.sign({ id: user.id });
+    const accessToken = this.jwtService.sign({ userId: user.id });
 
     return { accessToken };
   }
