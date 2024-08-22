@@ -1,6 +1,6 @@
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { Logger, Module } from '@nestjs/common';
+import { Logger, Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -22,7 +22,9 @@ import {
 } from './constants/database.const';
 import { SECRET_KEY } from './constants/server.const';
 import { AuthModule } from './modules/auth/auth.module';
+import { Role } from './modules/users/entities/user.entity';
 import { UserModule } from './modules/users/user.module';
+import { UserService } from './modules/users/user.service';
 
 @Module({
   imports: [
@@ -93,4 +95,18 @@ import { UserModule } from './modules/users/user.module';
   ],
   exports: [Logger],
 })
-export class AppModule {}
+export class AppModule implements OnModuleInit {
+  constructor(private readonly userService: UserService) {}
+
+  async onModuleInit() {
+    const email = 'admin@example.com';
+    const password = 'password';
+    const name = 'admin';
+    const role = Role.ADMIN;
+
+    const hasAdmin = await this.userService.findOneByEmail(email);
+    if (!hasAdmin) {
+      await this.userService.create({ email, password, name, role });
+    }
+  }
+}

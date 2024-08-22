@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Schema as MongooseSchema } from 'mongoose';
+import { Model } from 'mongoose';
+import { MongoId } from 'src/@types/datatype';
 import { encryptPassword } from 'src/libs/utils';
 import { CreateUserInput } from './dtos/create.input';
 import { UpdateUserInput } from './dtos/update.input';
@@ -14,6 +15,7 @@ export class UserService {
     email,
     password,
     name,
+    role,
   }: CreateUserInput): Promise<UserDocument> {
     const hasUser = await this.findOneByEmail(email);
     if (hasUser) {
@@ -24,12 +26,13 @@ export class UserService {
       email,
       password: encryptPassword(password),
       name,
+      role,
     });
     return await createdUser.save();
   }
 
   async updateById(
-    id: MongooseSchema.Types.ObjectId,
+    id: MongoId,
     { name, password }: UpdateUserInput,
   ): Promise<UserDocument> {
     const hasUser = await this.userModel.findById(id);
@@ -46,7 +49,7 @@ export class UserService {
     );
   }
 
-  async deleteById(id: MongooseSchema.Types.ObjectId): Promise<UserDocument> {
+  async deleteById(id: MongoId): Promise<UserDocument> {
     const hasUser = await this.userModel.findById(id);
     if (!hasUser) {
       throw new BadRequestException('Id does not exist.');
@@ -61,13 +64,13 @@ export class UserService {
     return await this.userModel.find();
   }
 
-  async findOneById(id: MongooseSchema.Types.ObjectId): Promise<UserDocument> {
+  async findOneById(id: MongoId): Promise<UserDocument> {
     const hasUser = await this.userModel.findById(id);
     if (!hasUser) {
       throw new BadRequestException('Id does not exist.');
     }
 
-    return await this.userModel.findById(id);
+    return hasUser;
   }
 
   async findOneByEmail(email: string): Promise<UserDocument> {

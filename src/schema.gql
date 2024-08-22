@@ -6,6 +6,7 @@ input CreateUserInput {
   email: String!
   name: String!
   password: String!
+  role: Role! = MEMBER
 }
 
 """
@@ -32,6 +33,11 @@ type Query {
   getUserById(id: String!): User!
 }
 
+enum Role {
+  ADMIN
+  MEMBER
+}
+
 type TokenResponse {
   accessToken: String!
 }
@@ -48,5 +54,6 @@ type User {
   email: String!
   name: String!
   password: String!
+  role: Role!
   updatedAt: DateTime!
 }

@@ -35,7 +35,7 @@ export class AuthInterceptor implements NestInterceptor {
 
         try {
           const decoded = this.jwtService.verify(token);
-          req['user'] = { userId: decoded.userId };
+          req['user'] = { userId: decoded.userId, role: decoded.role };
         } catch (error) {
           throw new UnauthorizedException('Invalid token.');
         }
