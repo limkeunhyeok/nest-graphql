@@ -1,8 +1,10 @@
+import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Schema as MongooseSchema } from 'mongoose';
+import { RoleGuard } from 'src/common/guards/role.guard';
 import { CreateUserInput } from './dtos/create.input';
 import { UpdateUserInput } from './dtos/update.input';
-import { User } from './entities/user.entity';
+import { Role, User } from './entities/user.entity';
 import { UserService } from './user.service';
 
 @Resolver(() => User)
@@ -30,6 +32,7 @@ export class UserResolver {
   }
 
   @Query(() => [User])
+  @UseGuards(RoleGuard([Role.ADMIN]))
   async findAll(@Context() context) {
     const user = context.req['user'];
     console.log('TESTESTWESTADS!!!!!!!!!!!!!!!!', user);
