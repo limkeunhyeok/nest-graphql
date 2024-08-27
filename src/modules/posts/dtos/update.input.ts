@@ -2,13 +2,16 @@ import { Field, InputType } from '@nestjs/graphql';
 import { MongoId } from 'src/@types/datatype';
 
 @InputType()
-export class UpdateUserInput {
+export class UpdatePostInput {
   @Field(() => String)
   _id: MongoId;
 
   @Field(() => String)
-  name: string;
+  title: string;
 
   @Field(() => String)
-  password: string;
+  contents: string;
+
+  @Field(() => Boolean)
+  published: boolean;
 }
