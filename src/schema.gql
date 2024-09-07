@@ -2,6 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input CreatePostInput {
+  contents: String!
+  published: Boolean!
+  title: String!
+}
+
 input CreateUserInput {
   email: String!
   name: String!
@@ -20,17 +26,37 @@ input LoginInput {
 }
 
 type Mutation {
+  createPost(createPostInput: CreatePostInput!): Post!
   createUser(createUserInput: CreateUserInput!): User!
-  deleteById(id: String!): User!
+  deleteById(id: String!): Post!
   login(loginInput: LoginInput!): TokenResponse!
   signup(signupInput: CreateUserInput!): TokenResponse!
+  updatePost(updatePostInput: UpdatePostInput!): Post!
   updateUser(updateUserInput: UpdateUserInput!): User!
+}
+
+type Post {
+  _id: String!
+  authorId: String!
+  contents: String!
+  createdAt: DateTime!
+  published: Boolean!
+  title: String!
+  updatedAt: DateTime!
 }
 
 type Query {
   findAll: [User!]!
+  findByQuery(readPostInput: ReadPostInput!): [Post!]!
   getHello: String
+  getPostById(id: String!): Post!
   getUserById(id: String!): User!
+}
+
+input ReadPostInput {
+  authorId: String
+  published: Boolean
+  title: String
 }
 
 enum Role {
@@ -40,6 +66,13 @@ enum Role {
 
 type TokenResponse {
   accessToken: String!
+}
+
+input UpdatePostInput {
+  _id: String!
+  contents: String!
+  published: Boolean!
+  title: String!
 }
 
 input UpdateUserInput {

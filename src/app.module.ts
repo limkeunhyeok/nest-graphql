@@ -2,14 +2,12 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Logger, Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_INTERCEPTOR } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import * as path from 'path';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
-import { AuthInterceptor } from './common/interceptors/auth.interceptor';
 import config from './config';
 import {
   AUTH_SOURCE,
@@ -22,6 +20,7 @@ import {
 } from './constants/database.const';
 import { SECRET_KEY } from './constants/server.const';
 import { AuthModule } from './modules/auth/auth.module';
+import { PostModule } from './modules/posts/post.module';
 import { Role } from './modules/users/entities/user.entity';
 import { UserModule } from './modules/users/user.module';
 import { UserService } from './modules/users/user.service';
@@ -73,6 +72,7 @@ import { UserService } from './modules/users/user.service';
     }),
     UserModule,
     AuthModule,
+    PostModule,
     JwtModule.registerAsync({
       inject: [ConfigService],
       imports: [ConfigModule],
@@ -91,7 +91,7 @@ import { UserService } from './modules/users/user.service';
     AppService,
     AppResolver,
     Logger,
-    { provide: APP_INTERCEPTOR, useClass: AuthInterceptor },
+    // { provide: APP_INTERCEPTOR, useClass: AuthInterceptor },
   ],
   exports: [Logger],
 })
