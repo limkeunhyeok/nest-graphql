@@ -59,7 +59,7 @@ export class PostResolver {
   }
 
   @Query(() => Post)
-  async getPostById(@Args('id', { type: () => String }) id: MongoId) {
-    return await this.postService.findByQuery({ _id: id });
+  async getPostById(@Args('id', { type: () => String }) _id: string) {
+    return await this.postService.findByQuery({ _id });
   }
 }

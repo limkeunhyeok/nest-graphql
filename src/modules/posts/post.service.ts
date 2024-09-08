@@ -66,6 +66,8 @@ export class PostService {
   }
 
   async findByQuery(query: FilterQuery<Post>) {
+    // const t = await this.postModel.find(query);
+    // return t;
     return await this.postModel.find(query);
   }
 }

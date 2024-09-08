@@ -2,12 +2,14 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Logger, Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import * as path from 'path';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
+import { AuthGuard } from './common/guards/auth.guard';
 import config from './config';
 import {
   AUTH_SOURCE,
@@ -92,6 +94,7 @@ import { UserService } from './modules/users/user.service';
     AppResolver,
     Logger,
     // { provide: APP_INTERCEPTOR, useClass: AuthInterceptor },
+    { provide: APP_GUARD, useClass: AuthGuard },
   ],
   exports: [Logger],
 })
