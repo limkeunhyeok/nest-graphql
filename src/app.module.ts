@@ -7,9 +7,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import * as path from 'path';
-import { AppResolver } from './app.resolver';
-import { AppService } from './app.service';
 import { AuthGuard } from './common/guards/auth.guard';
+import { HealthModule } from './common/health/health.module';
 import config from './config';
 import {
   AUTH_SOURCE,
@@ -30,6 +29,7 @@ import { UserService } from './modules/users/user.service';
 @Module({
   imports: [
     ConfigModule.forRoot({ load: [config] }),
+    // TODO: 추후, db 연결이 끊어졌을 때, 전략 추가하기
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -88,10 +88,9 @@ import { UserService } from './modules/users/user.service';
         };
       },
     }),
+    HealthModule,
   ],
   providers: [
-    AppService,
-    AppResolver,
     Logger,
     // { provide: APP_INTERCEPTOR, useClass: AuthInterceptor },
     { provide: APP_GUARD, useClass: AuthGuard },
