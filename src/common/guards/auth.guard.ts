@@ -24,7 +24,6 @@ export class AuthGuard implements CanActivate {
     ]);
 
     if (isPublic) {
-      console.log('PUBLIC!!!!');
       return true;
     }
 
