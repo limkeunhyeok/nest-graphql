@@ -17,9 +17,9 @@ import {
 } from 'test/lib/utils';
 import { createUser, mockUserRaw } from 'test/mockup/user';
 import {
-  generateLoginInput,
-  LOGIN_OPERATION,
-  LOGIN_QUERY,
+  generateSignupInput,
+  SIGNUP_OPERATION,
+  SIGNUP_QUERY,
 } from 'test/operations/auth';
 
 describe('Auth resolver (e2e)', () => {
@@ -28,7 +28,6 @@ describe('Auth resolver (e2e)', () => {
 
   let userModel: mongoose.Model<User>;
 
-  let userRaw: Omit<User, '_id'>;
   let headers: Headers;
   let withHeaders: any;
 
@@ -52,9 +51,6 @@ describe('Auth resolver (e2e)', () => {
 
     req = request(app.getHttpServer());
 
-    userRaw = mockUserRaw();
-    await createUser(userModel, userRaw);
-
     headers = await fetchHeaders(req);
     withHeaders = withHeadersBy(headers);
   });
@@ -64,29 +60,44 @@ describe('Auth resolver (e2e)', () => {
     await app.close();
   });
 
-  describe('Login', () => {
+  describe('Signup', () => {
     it('success', async () => {
       // given
+      const userRaw = mockUserRaw();
+
       const params = {
-        operationType: LOGIN_OPERATION,
-        query: LOGIN_QUERY,
-        variables: generateLoginInput(userRaw.email, userRaw.password),
+        operationType: SIGNUP_OPERATION,
+        query: SIGNUP_QUERY,
+        variables: generateSignupInput(
+          userRaw.email,
+          userRaw.password,
+          userRaw.name,
+          userRaw.role,
+        ),
       };
 
       // when
       const res = await withHeaders(req.post(graphql).send(params)).expect(200);
-      const data = getResponseData(res, LOGIN_OPERATION);
+      const data = getResponseData(res, SIGNUP_OPERATION);
 
       // then
       expectTokenResponseSucceed(data);
     });
 
-    it('failed - invalid email or password', async () => {
+    it('failed - email is already registered.', async () => {
       // given
+      const userRaw = mockUserRaw();
+      await createUser(userModel, userRaw);
+
       const params = {
-        operationType: LOGIN_OPERATION,
-        query: LOGIN_QUERY,
-        variables: generateLoginInput(userRaw.email, 'invalidPassword'),
+        operationType: SIGNUP_OPERATION,
+        query: SIGNUP_QUERY,
+        variables: generateSignupInput(
+          userRaw.email,
+          userRaw.password,
+          userRaw.name,
+          userRaw.role,
+        ),
       };
 
       // when
