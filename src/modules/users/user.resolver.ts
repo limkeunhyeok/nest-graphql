@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Schema as MongooseSchema } from 'mongoose';
 import { RoleGuard } from 'src/common/guards/role.guard';
 import { CreateUserInput } from './dtos/create.input';
@@ -18,6 +18,7 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
+  @UseGuards(RoleGuard([Role.ADMIN, Role.MEMBER]))
   async updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
     return await this.userService.updateById(
       updateUserInput._id,
@@ -26,21 +27,21 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
-  async deleteById(
+  @UseGuards(RoleGuard([Role.ADMIN, Role.MEMBER]))
+  async deleteUser(
     @Args('id', { type: () => String }) id: MongooseSchema.Types.ObjectId,
   ) {
     return await this.userService.deleteById(id);
   }
 
   @Query(() => [User])
-  // @UseGuards(RoleGuard([Role.ADMIN]))
-  async findAll(@Context() context) {
-    const user = context.req['user'];
-    console.log('TESTESTWESTADS!!!!!!!!!!!!!!!!', user);
+  @UseGuards(RoleGuard([Role.ADMIN]))
+  async getAllUsers() {
     return await this.userService.findAll();
   }
 
   @Query(() => User)
+  @UseGuards(RoleGuard([Role.ADMIN]))
   async getUserById(
     @Args('id', { type: () => String }) id: MongooseSchema.Types.ObjectId,
   ) {

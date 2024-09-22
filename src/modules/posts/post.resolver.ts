@@ -37,7 +37,7 @@ export class PostResolver {
   }
 
   @Mutation(() => Post)
-  async deleteById(
+  async deletePost(
     @Args('id', { type: () => String }) id: MongoId,
     @Context() context,
   ) {

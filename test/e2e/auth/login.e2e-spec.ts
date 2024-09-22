@@ -32,7 +32,7 @@ describe('Auth resolver (e2e)', () => {
   let headers: Headers;
   let withHeaders: any;
 
-  const graphql = '/graphql';
+  const GRAPHQL = '/graphql';
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -74,7 +74,7 @@ describe('Auth resolver (e2e)', () => {
       };
 
       // when
-      const res = await withHeaders(req.post(graphql).send(params)).expect(200);
+      const res = await withHeaders(req.post(GRAPHQL).send(params)).expect(200);
       const data = getResponseData(res, LOGIN_OPERATION);
 
       // then
@@ -90,7 +90,7 @@ describe('Auth resolver (e2e)', () => {
       };
 
       // when
-      const res = await withHeaders(req.post(graphql).send(params)).expect(200);
+      const res = await withHeaders(req.post(GRAPHQL).send(params)).expect(200);
 
       // then
       expectResponseFailed(res);

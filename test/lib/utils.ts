@@ -2,6 +2,11 @@ import * as mongoose from 'mongoose';
 import { Role, User } from 'src/modules/users/entities/user.entity';
 import request, { Response } from 'supertest';
 import { createUser, mockUserRaw } from 'test/mockup/user';
+import {
+  generateLoginInput,
+  LOGIN_OPERATION,
+  LOGIN_QUERY,
+} from 'test/operations/auth';
 
 export interface Headers {
   token?: string;
@@ -72,19 +77,17 @@ export async function fetchUserTokenAndHeaders(
 
   const res = await withHeaders(
     req.post('/graphql').send({
-      operationType: 'Login',
-      query: `mutation Login($loginInput: LoginInput!) {
-        login(loginInput: $loginInput) {
-          accessToken
-        }
-      }`,
-      variables: { loginInput: params },
+      operationType: LOGIN_OPERATION,
+      query: LOGIN_QUERY,
+      variables: generateLoginInput(userRaw.email, userRaw.password),
     }),
   ).expect(200);
 
+  const data = getResponseData(res, LOGIN_OPERATION);
+
   const headersWithToken = getHeadersFrom(res, {
     ...headers,
-    token: res.body.accessToken,
+    token: data.accessToken,
   });
   return headersWithToken;
 }
@@ -94,7 +97,11 @@ export function expectResponseSucceed(res: Response) {
   expect(body).toHaveProperty('data');
 }
 
-export function expectResponseFailed(res: Response) {
+export function expectResponseFailed(
+  res: Response,
+  message?: string,
+  statusCode?: number,
+) {
   const body = res.body;
 
   expect(body).toHaveProperty('errors');
@@ -105,6 +112,14 @@ export function expectResponseFailed(res: Response) {
     expect(err['extensions']).toHaveProperty('exceptionCode');
     expect(err['extensions']).toHaveProperty('statusCode');
     expect(err['extensions']).toHaveProperty('message');
+
+    if (message) {
+      expect(err['extensions']['message']).toEqual(message);
+    }
+
+    if (statusCode) {
+      expect(err['extensions']['statusCode']).toEqual(statusCode);
+    }
   }
 }
 

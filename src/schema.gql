@@ -28,7 +28,8 @@ input LoginInput {
 type Mutation {
   createPost(createPostInput: CreatePostInput!): Post!
   createUser(createUserInput: CreateUserInput!): User!
-  deleteById(id: String!): Post!
+  deletePost(id: String!): Post!
+  deleteUser(id: String!): User!
   login(loginInput: LoginInput!): TokenResponse!
   signup(signupInput: CreateUserInput!): TokenResponse!
   updatePost(updatePostInput: UpdatePostInput!): Post!
@@ -46,8 +47,8 @@ type Post {
 }
 
 type Query {
-  findAll: [User!]!
   findByQuery(readPostInput: ReadPostInput!): [Post!]!
+  getAllUsers: [User!]!
   getPostById(id: String!): Post!
   getUserById(id: String!): User!
 }
