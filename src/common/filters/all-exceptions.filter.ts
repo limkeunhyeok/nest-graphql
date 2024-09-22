@@ -10,6 +10,7 @@ import {
   GqlContextType,
   GqlExceptionFilter,
 } from '@nestjs/graphql';
+import { COMMON_MESSAGE } from 'src/constants/exception-message.const';
 import { LogLevel } from 'src/libs/logger';
 import { isEmptyObject } from 'src/libs/utils';
 
@@ -52,7 +53,7 @@ export class AllExceptionsFilter implements GqlExceptionFilter {
       operationName,
       variableValues,
       selectionSets,
-      message: 'An error occurred.',
+      message: COMMON_MESSAGE,
       error,
     });
 

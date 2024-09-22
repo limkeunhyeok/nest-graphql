@@ -2,6 +2,10 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { MongoId } from 'src/@types/datatype';
+import {
+  EMAIL_IS_ALREADY_REGISTERED,
+  ID_DOES_NOT_EXIST,
+} from 'src/constants/exception-message.const';
 import { encryptPassword } from 'src/libs/utils';
 import { CreateUserInput } from './dtos/create.input';
 import { UpdateUserInput } from './dtos/update.input';
@@ -19,7 +23,7 @@ export class UserService {
   }: CreateUserInput): Promise<UserDocument> {
     const hasUser = await this.findOneByEmail(email);
     if (hasUser) {
-      throw new BadRequestException('Email is already registered.');
+      throw new BadRequestException(EMAIL_IS_ALREADY_REGISTERED);
     }
 
     const createdUser = new this.userModel({
@@ -37,7 +41,7 @@ export class UserService {
   ): Promise<UserDocument> {
     const hasUser = await this.userModel.findById(id);
     if (!hasUser) {
-      throw new BadRequestException('Id does not exist.');
+      throw new BadRequestException(ID_DOES_NOT_EXIST);
     }
 
     return await this.userModel.findByIdAndUpdate(
@@ -52,7 +56,7 @@ export class UserService {
   async deleteById(id: MongoId): Promise<UserDocument> {
     const hasUser = await this.userModel.findById(id);
     if (!hasUser) {
-      throw new BadRequestException('Id does not exist.');
+      throw new BadRequestException(ID_DOES_NOT_EXIST);
     }
 
     return await this.userModel.findByIdAndDelete(id, {
@@ -67,7 +71,7 @@ export class UserService {
   async findOneById(id: MongoId): Promise<UserDocument> {
     const hasUser = await this.userModel.findById(id);
     if (!hasUser) {
-      throw new BadRequestException('Id does not exist.');
+      throw new BadRequestException(ID_DOES_NOT_EXIST);
     }
 
     return hasUser;

@@ -6,6 +6,10 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { MongoId } from 'src/@types/datatype';
+import {
+  ACCESS_IS_DENIED,
+  ID_DOES_NOT_EXIST,
+} from 'src/constants/exception-message.const';
 import { CreatePostInput } from './dtos/create.input';
 import { UpdatePostInput } from './dtos/update.input';
 import { Post, PostDocument } from './entities/post.entity';
@@ -34,11 +38,11 @@ export class PostService {
   ) {
     const post = await this.postModel.findById(postId);
     if (!post) {
-      throw new BadRequestException('Id does not exist.');
+      throw new BadRequestException(ID_DOES_NOT_EXIST);
     }
 
     if (post.id !== authorId) {
-      throw new ForbiddenException('Access is denied.');
+      throw new ForbiddenException(ACCESS_IS_DENIED);
     }
 
     return await this.postModel.findByIdAndUpdate(
@@ -55,19 +59,17 @@ export class PostService {
   async deleteById(authorId: MongoId, postId: MongoId) {
     const post = await this.postModel.findById(postId);
     if (!post) {
-      throw new BadRequestException('Id does not exist.');
+      throw new BadRequestException(ID_DOES_NOT_EXIST);
     }
 
     if (post.id !== authorId) {
-      throw new ForbiddenException('Access is denied.');
+      throw new ForbiddenException(ACCESS_IS_DENIED);
     }
 
     return await this.postModel.findByIdAndDelete(postId, { new: true });
   }
 
   async findByQuery(query: FilterQuery<Post>) {
-    // const t = await this.postModel.find(query);
-    // return t;
     return await this.postModel.find(query);
   }
 }

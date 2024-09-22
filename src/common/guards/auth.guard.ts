@@ -8,6 +8,7 @@ import { Reflector } from '@nestjs/core';
 import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
 import { JwtService } from '@nestjs/jwt';
 import { IncomingMessage } from 'http';
+import { INVALID_TOKEN } from 'src/constants/exception-message.const';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 
 @Injectable()
@@ -22,7 +23,6 @@ export class AuthGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
-
     if (isPublic) {
       return true;
     }
@@ -35,7 +35,7 @@ export class AuthGuard implements CanActivate {
 
       const token = this.extractTokenFromHeader(req);
       if (!token) {
-        throw new UnauthorizedException('Invalid token.');
+        throw new UnauthorizedException(INVALID_TOKEN);
       }
 
       try {

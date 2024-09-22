@@ -9,6 +9,7 @@ import {
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
+import { ACCESS_IS_DENIED } from 'src/constants/exception-message.const';
 import { Role } from 'src/modules/users/entities/user.entity';
 
 export const RoleGuard = (roles: Role[]): Type<CanActivate> => {
@@ -26,7 +27,7 @@ export const RoleGuard = (roles: Role[]): Type<CanActivate> => {
       const { role } = req['user'];
 
       if (!roles.includes(role)) {
-        throw new ForbiddenException('Access is denied.');
+        throw new ForbiddenException(ACCESS_IS_DENIED);
       }
 
       return true;

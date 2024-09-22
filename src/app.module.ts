@@ -90,11 +90,7 @@ import { UserService } from './modules/users/user.service';
     }),
     HealthModule,
   ],
-  providers: [
-    Logger,
-    // { provide: APP_INTERCEPTOR, useClass: AuthInterceptor },
-    { provide: APP_GUARD, useClass: AuthGuard },
-  ],
+  providers: [Logger, { provide: APP_GUARD, useClass: AuthGuard }],
   exports: [Logger],
 })
 export class AppModule implements OnModuleInit {

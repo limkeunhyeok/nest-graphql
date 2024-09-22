@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { INCORRECT_EMAIL_OR_PASSWORD } from 'src/constants/exception-message.const';
 import { comparedPassword } from 'src/libs/utils';
 import { CreateUserInput } from '../users/dtos/create.input';
 import { UserDocument } from '../users/entities/user.entity';
@@ -16,11 +17,11 @@ export class AuthService {
   async login({ email, password }: LoginInput) {
     const user = await this.userService.findOneByEmail(email);
     if (!user) {
-      throw new BadRequestException('Incorrect email or password.');
+      throw new BadRequestException(INCORRECT_EMAIL_OR_PASSWORD);
     }
 
     if (!comparedPassword(password, user.password)) {
-      throw new BadRequestException('Incorrect email or password.');
+      throw new BadRequestException(INCORRECT_EMAIL_OR_PASSWORD);
     }
 
     const accessToken = this.createToken(user);
