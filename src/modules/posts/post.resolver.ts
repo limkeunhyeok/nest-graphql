@@ -10,6 +10,7 @@ import { Post } from './entities/post.entity';
 import { PostService } from './post.service';
 
 @Resolver(() => Post)
+@UseGuards(RoleGuard([Role.ADMIN, Role.MEMBER]))
 export class PostResolver {
   constructor(private readonly postService: PostService) {}
 
@@ -46,8 +47,7 @@ export class PostResolver {
   }
 
   @Query(() => [Post])
-  @UseGuards(RoleGuard([Role.ADMIN]))
-  async findByQuery(
+  async getPostsByQuery(
     @Args('readPostInput') readPostInput: ReadPostInput,
     @Context() context,
   ) {
@@ -59,7 +59,7 @@ export class PostResolver {
   }
 
   @Query(() => Post)
-  async getPostById(@Args('id', { type: () => String }) _id: string) {
-    return await this.postService.findByQuery({ _id });
+  async getPostById(@Args('id', { type: () => String }) _id: MongoId) {
+    return (await this.postService.findByQuery({ _id }))[0];
   }
 }

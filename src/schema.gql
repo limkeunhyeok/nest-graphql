@@ -47,9 +47,9 @@ type Post {
 }
 
 type Query {
-  findByQuery(readPostInput: ReadPostInput!): [Post!]!
   getAllUsers: [User!]!
   getPostById(id: String!): Post!
+  getPostsByQuery(readPostInput: ReadPostInput!): [Post!]!
   getUserById(id: String!): User!
 }
 

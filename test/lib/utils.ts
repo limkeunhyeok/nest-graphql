@@ -59,27 +59,19 @@ export async function fetchHeaders(req: request.SuperTest<request.Test>) {
   return getHeadersFrom(res);
 }
 
-export async function fetchUserTokenAndHeaders(
+async function loginAndFetchHeaders(
   req: request.SuperTest<request.Test>,
-  userModel: mongoose.Model<User>,
-  userType: Role = Role.MEMBER,
+  email: string,
+  password: string,
+  headers: any,
 ) {
-  const userRaw = mockUserRaw(userType);
-  const user = await createUser(userModel, userRaw);
-
-  const headers = await fetchHeaders(req);
   const withHeaders = withHeadersBy(headers);
-
-  const params = {
-    email: userRaw.email,
-    password: userRaw.password,
-  };
 
   const res = await withHeaders(
     req.post('/graphql').send({
       operationType: LOGIN_OPERATION,
       query: LOGIN_QUERY,
-      variables: generateLoginInput(userRaw.email, userRaw.password),
+      variables: generateLoginInput(email, password),
     }),
   ).expect(200);
 
@@ -89,7 +81,38 @@ export async function fetchUserTokenAndHeaders(
     ...headers,
     token: data.accessToken,
   });
+
   return headersWithToken;
+}
+
+export async function fetchUserTokenAndHeaders(
+  req: request.SuperTest<request.Test>,
+  userModel: mongoose.Model<User>,
+  userType: Role = Role.MEMBER,
+) {
+  const userRaw = mockUserRaw(userType);
+  await createUser(userModel, userRaw);
+
+  const headers = await fetchHeaders(req);
+  return await loginAndFetchHeaders(
+    req,
+    userRaw.email,
+    userRaw.password,
+    headers,
+  );
+}
+
+export async function fetchExistingUserTokenAndHeaders(
+  req: request.SuperTest<request.Test>,
+  userRaw: Omit<User, '_id'>,
+) {
+  const headers = await fetchHeaders(req);
+  return await loginAndFetchHeaders(
+    req,
+    userRaw.email,
+    userRaw.password,
+    headers,
+  );
 }
 
 export function expectResponseSucceed(res: Response) {

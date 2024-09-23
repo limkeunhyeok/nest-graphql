@@ -41,7 +41,7 @@ export class PostService {
       throw new BadRequestException(ID_DOES_NOT_EXIST);
     }
 
-    if (post.id !== authorId) {
+    if (post.authorId !== authorId) {
       throw new ForbiddenException(ACCESS_IS_DENIED);
     }
 
@@ -62,7 +62,7 @@ export class PostService {
       throw new BadRequestException(ID_DOES_NOT_EXIST);
     }
 
-    if (post.id !== authorId) {
+    if (post.authorId !== authorId) {
       throw new ForbiddenException(ACCESS_IS_DENIED);
     }
 
