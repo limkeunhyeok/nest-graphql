@@ -85,13 +85,13 @@ export const UPDATE_POST_QUERY = `mutation UpdatePost($updatePostInput: UpdatePo
   }
 }`;
 export const generateUpdatePostInput = (
-  _id: MongoId,
+  postId: MongoId,
   title: string,
   contents: string,
   published: boolean,
 ) => ({
   updatePostInput: {
-    _id,
+    postId,
     title,
     contents,
     published,

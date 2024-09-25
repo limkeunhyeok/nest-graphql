@@ -69,8 +69,8 @@ type TokenResponse {
 }
 
 input UpdatePostInput {
-  _id: String!
   contents: String!
+  postId: String!
   published: Boolean!
   title: String!
 }

@@ -32,7 +32,7 @@ export class PostResolver {
 
     return await this.postService.updateById(
       user.userId,
-      updatePostInput._id,
+      updatePostInput.postId,
       updatePostInput,
     );
   }
