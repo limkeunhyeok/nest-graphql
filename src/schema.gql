@@ -2,6 +2,22 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Comment {
+  _id: String!
+  authorId: String!
+  contents: String!
+  createdAt: DateTime!
+  postId: String!
+  published: Boolean!
+  updatedAt: DateTime!
+}
+
+input CreateCommentInput {
+  contents: String!
+  postId: String!
+  published: Boolean!
+}
+
 input CreatePostInput {
   contents: String!
   published: Boolean!
@@ -26,12 +42,15 @@ input LoginInput {
 }
 
 type Mutation {
+  createComment(createCommentInput: CreateCommentInput!): Comment!
   createPost(createPostInput: CreatePostInput!): Post!
   createUser(createUserInput: CreateUserInput!): User!
+  deleteComment(commentId: String!, postId: String!): Comment!
   deletePost(id: String!): Post!
   deleteUser(id: String!): User!
   login(loginInput: LoginInput!): TokenResponse!
   signup(signupInput: CreateUserInput!): TokenResponse!
+  updateComment(updateCommentInput: UpdateCommentInput!): Comment!
   updatePost(updatePostInput: UpdatePostInput!): Post!
   updateUser(updateUserInput: UpdateUserInput!): User!
 }
@@ -48,9 +67,17 @@ type Post {
 
 type Query {
   getAllUsers: [User!]!
+  getCommentById(id: String!): Comment!
+  getCommentsByQuery(readCommentInput: ReadCommentInput!): [Comment!]!
   getPostById(id: String!): Post!
   getPostsByQuery(readPostInput: ReadPostInput!): [Post!]!
   getUserById(id: String!): User!
+}
+
+input ReadCommentInput {
+  authorId: String
+  postId: String
+  published: Boolean
 }
 
 input ReadPostInput {
@@ -66,6 +93,13 @@ enum Role {
 
 type TokenResponse {
   accessToken: String!
+}
+
+input UpdateCommentInput {
+  commentId: String!
+  contents: String!
+  postId: String!
+  published: Boolean!
 }
 
 input UpdatePostInput {

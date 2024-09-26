@@ -1,3 +1,4 @@
+import { MongoId } from 'src/@types/datatype';
 import { Role } from 'src/modules/users/entities/user.entity';
 
 // create user
@@ -41,7 +42,7 @@ export const UPDATE_USER_QUERY = `mutation UpdateUser($updateUserInput: UpdateUs
   }
 }`;
 export const generateUpdateUserInput = (
-  _id: string,
+  _id: MongoId,
   password: string,
   name: string,
 ) => ({
@@ -65,7 +66,7 @@ export const DELETE_USER_QUERY = `mutation DeleteUser($deleteUserId: String!) {
     updatedAt
   }
 }`;
-export const generateDeleteUserInput = (id: string) => ({
+export const generateDeleteUserInput = (id: MongoId) => ({
   deleteUserId: id,
 });
 
@@ -96,6 +97,6 @@ export const GET_USER_BY_ID_QUERY = `query GetUserById($getUserById: String!) {
     updatedAt
   }
 }`;
-export const generateGetUserByIdInput = (id: string) => ({
+export const generateGetUserByIdInput = (id: MongoId) => ({
   getUserById: id,
 });

@@ -11,7 +11,7 @@ import { Comment } from './entities/comment.entity';
 
 @Resolver(() => Comment)
 @UseGuards(RoleGuard([Role.ADMIN, Role.MEMBER]))
-export class PostResolver {
+export class CommentResolver {
   constructor(private readonly commentService: CommentService) {}
 
   @Mutation(() => Comment)
@@ -24,7 +24,7 @@ export class PostResolver {
   }
 
   @Mutation(() => Comment)
-  async updatePost(
+  async updateComment(
     @Args('updateCommentInput') updateCommentInput: UpdateCommentInput,
     @Context() context,
   ) {
@@ -39,7 +39,7 @@ export class PostResolver {
   }
 
   @Mutation(() => Comment)
-  async deletePost(
+  async deleteComment(
     @Args('postId', { type: () => String }) postId: MongoId,
     @Args('commentId', { type: () => String }) commentId: MongoId,
     @Context() context,
@@ -49,7 +49,7 @@ export class PostResolver {
   }
 
   @Query(() => [Comment])
-  async getPostsByQuery(
+  async getCommentsByQuery(
     @Args('readCommentInput') readCommentInput: ReadCommentInput,
     @Context() context,
   ) {
@@ -61,7 +61,7 @@ export class PostResolver {
   }
 
   @Query(() => Comment)
-  async getPostById(@Args('id', { type: () => String }) _id: MongoId) {
+  async getCommentById(@Args('id', { type: () => String }) _id: MongoId) {
     return (await this.commentService.findByQuery({ _id }))[0];
   }
 }

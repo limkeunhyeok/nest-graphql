@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { PostResolver } from './comment.resolver';
+import { CommentResolver } from './comment.resolver';
 import { CommentService } from './comment.service';
 import { Comment, CommentSchema } from './entities/comment.entity';
 
@@ -14,6 +14,6 @@ import { Comment, CommentSchema } from './entities/comment.entity';
     ]),
   ],
   exports: [CommentService],
-  providers: [PostResolver, CommentService],
+  providers: [CommentResolver, CommentService],
 })
-export class PostModule {}
+export class CommentModule {}

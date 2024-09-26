@@ -21,6 +21,7 @@ import {
 } from './constants/database.const';
 import { SECRET_KEY } from './constants/server.const';
 import { AuthModule } from './modules/auth/auth.module';
+import { CommentModule } from './modules/comments/comment.module';
 import { PostModule } from './modules/posts/post.module';
 import { Role } from './modules/users/entities/user.entity';
 import { UserModule } from './modules/users/user.module';
@@ -75,6 +76,7 @@ import { UserService } from './modules/users/user.service';
     UserModule,
     AuthModule,
     PostModule,
+    CommentModule,
     JwtModule.registerAsync({
       inject: [ConfigService],
       imports: [ConfigModule],

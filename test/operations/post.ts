@@ -67,7 +67,7 @@ export const GET_POST_BY_ID_QUERY = `query GetPostById($getPostById: String!) {
     updatedAt
   }
 }`;
-export const generateGetPostByIdInput = (id: string) => ({
+export const generateGetPostByIdInput = (id: MongoId) => ({
   getPostById: id,
 });
 
@@ -111,6 +111,6 @@ export const DELETE_POST_QUERY = `mutation DeletePost($deletePostId: String!) {
     updatedAt
   }
 }`;
-export const generateDeletePostInput = (id: string) => ({
+export const generateDeletePostInput = (id: MongoId) => ({
   deletePostId: id,
 });
