@@ -8,6 +8,7 @@ import { LoggingInterceptor } from 'src/common/interceptors/logging.interceptor'
 import { User } from 'src/modules/users/entities/user.entity';
 import * as request from 'supertest';
 import { expectTokenResponseSucceed } from 'test/expectations/auth';
+import { cleanupDatabase } from 'test/lib/database';
 import {
   expectResponseFailed,
   fetchHeaders,
@@ -56,7 +57,7 @@ describe('Auth resolver (e2e)', () => {
   });
 
   afterAll(async () => {
-    await userModel.deleteMany({});
+    await cleanupDatabase([userModel]);
     await app.close();
   });
 

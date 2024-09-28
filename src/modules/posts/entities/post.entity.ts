@@ -2,6 +2,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { MongoId } from 'src/@types/datatype';
+import { Comment } from 'src/modules/comments/entities/comment.entity';
 
 @ObjectType()
 @Schema({ timestamps: true, _id: true })
@@ -24,6 +25,10 @@ export class Post {
   @Field(() => String)
   @Prop({ required: true, type: Types.ObjectId, ref: 'user' })
   authorId: MongoId;
+
+  // comments 필드는 동적으로 가져오는 필드로 설정
+  @Field(() => [Comment], { nullable: true })
+  comments?: Comment[]; // 실제 DB에는 저장되지 않음
 
   @Field(() => Date)
   createdAt: Date;

@@ -11,6 +11,7 @@ import { Post } from 'src/modules/posts/entities/post.entity';
 import { Role, User } from 'src/modules/users/entities/user.entity';
 import * as request from 'supertest';
 import { expectCommentResponseSucceed } from 'test/expectations/comment';
+import { cleanupDatabase } from 'test/lib/database';
 import {
   expectResponseFailed,
   fetchExistingUserTokenAndHeaders,
@@ -68,10 +69,7 @@ describe('Comment resolver (e2e)', () => {
   });
 
   afterAll(async () => {
-    await commentModel.deleteMany({});
-    await postModel.deleteMany({});
-    await userModel.deleteMany({});
-
+    await cleanupDatabase([commentModel, postModel, userModel]);
     await app.close();
   });
 

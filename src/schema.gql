@@ -58,6 +58,7 @@ type Mutation {
 type Post {
   _id: String!
   authorId: String!
+  comments: [Comment!]
   contents: String!
   createdAt: DateTime!
   published: Boolean!
@@ -81,6 +82,7 @@ input ReadCommentInput {
 }
 
 input ReadPostInput {
+  _id: String
   authorId: String
   published: Boolean
   title: String

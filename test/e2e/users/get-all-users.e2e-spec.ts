@@ -9,6 +9,7 @@ import { ACCESS_IS_DENIED } from 'src/constants/exception-message.const';
 import { Role, User } from 'src/modules/users/entities/user.entity';
 import * as request from 'supertest';
 import { expectUserResponseSucceed } from 'test/expectations/user';
+import { cleanupDatabase } from 'test/lib/database';
 import {
   expectResponseFailed,
   fetchUserTokenAndHeaders,
@@ -69,7 +70,7 @@ describe('User resolver (e2e)', () => {
   });
 
   afterAll(async () => {
-    await userModel.deleteMany({});
+    await cleanupDatabase([userModel]);
     await app.close();
   });
 

@@ -1,7 +1,17 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Context,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { MongoId } from 'src/@types/datatype';
 import { RoleGuard } from 'src/common/guards/role.guard';
+import { CommentService } from '../comments/comment.service';
+import { Comment } from '../comments/entities/comment.entity';
 import { Role } from '../users/entities/user.entity';
 import { CreatePostInput } from './dtos/create.input';
 import { ReadPostInput } from './dtos/read.input';
@@ -12,7 +22,10 @@ import { PostService } from './post.service';
 @Resolver(() => Post)
 @UseGuards(RoleGuard([Role.ADMIN, Role.MEMBER]))
 export class PostResolver {
-  constructor(private readonly postService: PostService) {}
+  constructor(
+    private readonly postService: PostService,
+    private readonly commentService: CommentService,
+  ) {}
 
   @Mutation(() => Post)
   async createPost(
@@ -61,5 +74,11 @@ export class PostResolver {
   @Query(() => Post)
   async getPostById(@Args('id', { type: () => String }) _id: MongoId) {
     return (await this.postService.findByQuery({ _id }))[0];
+  }
+
+  @ResolveField(() => [Comment])
+  async comments(@Parent() post: Post): Promise<Comment[]> {
+    const { _id } = post;
+    return await this.commentService.findByQuery({ _id });
   }
 }

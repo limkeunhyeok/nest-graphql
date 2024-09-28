@@ -10,6 +10,7 @@ import { Post } from 'src/modules/posts/entities/post.entity';
 import { Role, User } from 'src/modules/users/entities/user.entity';
 import * as request from 'supertest';
 import { expectPostResponseSucceed } from 'test/expectations/post';
+import { cleanupDatabase } from 'test/lib/database';
 import {
   expectResponseFailed,
   fetchHeaders,
@@ -74,9 +75,7 @@ describe('Post resolver (e2e)', () => {
   });
 
   afterAll(async () => {
-    await postModel.deleteMany({});
-    await userModel.deleteMany({});
-
+    await cleanupDatabase([postModel, userModel]);
     await app.close();
   });
 
