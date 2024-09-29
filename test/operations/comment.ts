@@ -1,17 +1,19 @@
 import { MongoId } from 'src/@types/datatype';
 
-// TODO: create comment
+export const COMMENT_FIELDS = `{
+  _id
+  contents
+  published
+  authorId
+  postId
+  createdAt
+  updatedAt
+}`;
+
+// create comment
 export const CREATE_COMMENT_OPERATION = 'createComment';
 export const CREATE_COMMENT_QUERY = `mutation CreateComment($createCommentInput: CreateCommentInput!) {
-  createComment(createCommentInput: $createCommentInput) {
-    _id
-    contents
-    published
-    authorId
-    postId
-    createdAt
-    updatedAt
-  }
+  createComment(createCommentInput: $createCommentInput) ${COMMENT_FIELDS}
 }`;
 export const generateCreateCommentInput = (
   contents: string,
@@ -25,18 +27,10 @@ export const generateCreateCommentInput = (
   },
 });
 
-// TODO: get comments by query
+// get comments by query
 export const GET_COMMENTS_BY_QUERY_OPERATION = 'getCommentsByQuery';
 export const GET_COMMENTS_BY_QUERY_QUERY = `query GetCommentsByQuery($readCommentInput: ReadCommentInput!) {
-  getCommentsByQuery(readCommentInput: $readCommentInput) {
-    _id
-    contents
-    published
-    authorId
-    postId
-    createdAt
-    updatedAt
-  }
+  getCommentsByQuery(readCommentInput: $readCommentInput) ${COMMENT_FIELDS}
 }`;
 export const generateGetCommentsByQueryInput = ({
   published,
@@ -54,35 +48,19 @@ export const generateGetCommentsByQueryInput = ({
   },
 });
 
-// TODO: get comment by id
+// get comment by id
 export const GET_COMMENT_BY_ID_OPERATION = 'getCommentById';
 export const GET_COMMENT_BY_ID_QUERY = `query GetCommentById($getCommentById: String!) {
-  getCommentById(id: $getCommentById) {
-    _id
-    contents
-    published
-    authorId
-    postId
-    createdAt
-    updatedAt
-  }
+  getCommentById(id: $getCommentById) ${COMMENT_FIELDS}
 }`;
 export const generateGetCommentByIdInput = (id: MongoId) => ({
   getCommentById: id,
 });
 
-// TODO: update comment
+// update comment
 export const UPDATE_COMMENT_OPERATION = 'updateComment';
 export const UPDATE_COMMENT_QUERY = `mutation UpdateComment($updateCommentInput: UpdateCommentInput!) {
-  updateComment(updateCommentInput: $updateCommentInput) {
-    _id
-    contents
-    published
-    authorId
-    postId
-    createdAt
-    updatedAt
-  }
+  updateComment(updateCommentInput: $updateCommentInput) ${COMMENT_FIELDS}
 }`;
 export const generateUpdateCommentInput = (
   contents: string,
@@ -98,7 +76,7 @@ export const generateUpdateCommentInput = (
   },
 });
 
-// TODO: delete comment
+// delete comment
 export const DELETE_COMMENT_OPERATION = 'deleteComment';
 export const DELETE_COMMENT_QUERY = `mutation DeleteComment($commentId: String!, $postId: String!) {
   deleteComment(commentId: $commentId, postId: $postId) {

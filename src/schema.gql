@@ -57,6 +57,7 @@ type Mutation {
 
 type Post {
   _id: String!
+  author: User
   authorId: String!
   comments: [Comment!]
   contents: String!
@@ -70,7 +71,6 @@ type Query {
   getAllUsers: [User!]!
   getCommentById(id: String!): Comment!
   getCommentsByQuery(readCommentInput: ReadCommentInput!): [Comment!]!
-  getPostById(id: String!): Post!
   getPostsByQuery(readPostInput: ReadPostInput!): [Post!]!
   getUserById(id: String!): User!
 }
@@ -123,6 +123,7 @@ type User {
   email: String!
   name: String!
   password: String!
+  posts: [Post!]
   role: Role!
   updatedAt: DateTime!
 }

@@ -1,17 +1,23 @@
 import { MongoId } from 'src/@types/datatype';
+import { COMMENT_FIELDS } from './comment';
+import { USER_FIELDS } from './user';
+
+export const POST_FIELDS = `{
+  _id
+  authorId
+  contents
+  createdAt
+  published
+  title
+  updatedAt
+  comments ${COMMENT_FIELDS}
+  author ${USER_FIELDS}
+}`;
 
 // create post
 export const CREATE_POST_OPERATION = 'createPost';
 export const CREATE_POST_QUERY = `mutation CreatePost($createPostInput: CreatePostInput!) {
-  createPost(createPostInput: $createPostInput) {
-    _id
-    authorId
-    contents
-    published
-    title
-    createdAt
-    updatedAt
-  }
+  createPost(createPostInput: $createPostInput) ${POST_FIELDS}
 }`;
 export const generateCreatePostInput = (
   title: string,
@@ -28,15 +34,7 @@ export const generateCreatePostInput = (
 // get posts by query
 export const GET_POSTS_BY_QUERY_OPERATION = 'getPostsByQuery';
 export const GET_POSTS_BY_QUERY_QUERY = `query GetPostsByQuery($readPostInput: ReadPostInput!) {
-  getPostsByQuery(readPostInput: $readPostInput) {
-    _id
-    authorId
-    contents
-    published
-    title
-    createdAt
-    updatedAt
-  }
+  getPostsByQuery(readPostInput: $readPostInput) ${POST_FIELDS}
 }`;
 export const generateGetPostsByQueryInput = ({
   title,
@@ -57,15 +55,7 @@ export const generateGetPostsByQueryInput = ({
 // get post by id
 export const GET_POST_BY_ID_OPERATION = 'getPostById';
 export const GET_POST_BY_ID_QUERY = `query GetPostById($getPostById: String!) {
-  getPostById(id: $getPostById) {
-    _id
-    authorId
-    contents
-    published
-    title
-    createdAt
-    updatedAt
-  }
+  getPostById(id: $getPostById) ${POST_FIELDS}
 }`;
 export const generateGetPostByIdInput = (id: MongoId) => ({
   getPostById: id,
@@ -74,15 +64,7 @@ export const generateGetPostByIdInput = (id: MongoId) => ({
 // update post
 export const UPDATE_POST_OPERATION = 'updatePost';
 export const UPDATE_POST_QUERY = `mutation UpdatePost($updatePostInput: UpdatePostInput!) {
-  updatePost(updatePostInput: $updatePostInput) {
-    _id
-    authorId
-    contents
-    published
-    title
-    createdAt
-    updatedAt
-  }
+  updatePost(updatePostInput: $updatePostInput) ${POST_FIELDS}
 }`;
 export const generateUpdatePostInput = (
   postId: MongoId,
@@ -101,15 +83,7 @@ export const generateUpdatePostInput = (
 // delete post
 export const DELETE_POST_OPERATION = 'deletePost';
 export const DELETE_POST_QUERY = `mutation DeletePost($deletePostId: String!) {
-  deletePost(id: $deletePostId) {
-    _id
-    authorId
-    contents
-    createdAt
-    published
-    title
-    updatedAt
-  }
+  deletePost(id: $deletePostId) ${POST_FIELDS}
 }`;
 export const generateDeletePostInput = (id: MongoId) => ({
   deletePostId: id,

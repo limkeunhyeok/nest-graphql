@@ -3,7 +3,7 @@ import * as faker from 'faker';
 import * as mongoose from 'mongoose';
 import { Role, User } from 'src/modules/users/entities/user.entity';
 
-export function mockUserRaw(role: Role = Role.MEMBER): Omit<User, '_id'> {
+export function mockUserRaw(role: Role = Role.MEMBER): Partial<User> {
   const now = new Date();
   return {
     email: faker.internet.email(),
@@ -19,7 +19,7 @@ export async function createUser(
   userModel: mongoose.Model<User>,
   userRaw = mockUserRaw(),
 ) {
-  const data: Omit<User, '_id'> = JSON.parse(JSON.stringify(userRaw));
+  const data: Partial<User> = JSON.parse(JSON.stringify(userRaw));
   data.password = bcrypt.hashSync(data.password, 10);
   return await userModel.create(data);
 }

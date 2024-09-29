@@ -1,7 +1,16 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { Schema as MongooseSchema } from 'mongoose';
 import { RoleGuard } from 'src/common/guards/role.guard';
+import { Post } from '../posts/entities/post.entity';
+import { PostService } from '../posts/post.service';
 import { CreateUserInput } from './dtos/create.input';
 import { UpdateUserInput } from './dtos/update.input';
 import { Role, User } from './entities/user.entity';
@@ -9,7 +18,10 @@ import { UserService } from './user.service';
 
 @Resolver(() => User)
 export class UserResolver {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly postService: PostService,
+  ) {}
 
   @Mutation(() => User)
   @UseGuards(RoleGuard([Role.ADMIN]))
@@ -46,5 +58,11 @@ export class UserResolver {
     @Args('id', { type: () => String }) id: MongooseSchema.Types.ObjectId,
   ) {
     return await this.userService.findOneById(id);
+  }
+
+  @ResolveField(() => [Post])
+  async posts(@Parent() user: User): Promise<Post[]> {
+    const { _id } = user;
+    return await this.postService.findByQuery({ authorId: _id });
   }
 }

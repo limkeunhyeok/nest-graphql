@@ -2,6 +2,7 @@ import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { MongoId } from 'src/@types/datatype';
+import { Post } from 'src/modules/posts/entities/post.entity';
 
 export const Role = {
   ADMIN: 'ADMIN',
@@ -31,6 +32,9 @@ export class User {
   @Field(() => String)
   @Prop()
   password: string;
+
+  @Field(() => [Post], { nullable: true })
+  posts: Post[]; // 실제 DB에는 저장되지 않음
 
   @Field(() => Date)
   createdAt: Date;

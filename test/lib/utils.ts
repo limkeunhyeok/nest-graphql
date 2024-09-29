@@ -104,7 +104,7 @@ export async function fetchUserTokenAndHeaders(
 
 export async function fetchExistingUserTokenAndHeaders(
   req: request.SuperTest<request.Test>,
-  userRaw: Omit<User, '_id'>,
+  userRaw: Partial<User>,
 ) {
   const headers = await fetchHeaders(req);
   return await loginAndFetchHeaders(

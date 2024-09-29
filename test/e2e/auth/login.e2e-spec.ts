@@ -29,7 +29,7 @@ describe('Auth resolver (e2e)', () => {
 
   let userModel: mongoose.Model<User>;
 
-  let userRaw: Omit<User, '_id'>;
+  let userRaw: Partial<User>;
   let headers: Headers;
   let withHeaders: any;
 

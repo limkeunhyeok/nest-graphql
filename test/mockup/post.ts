@@ -3,9 +3,7 @@ import * as mongoose from 'mongoose';
 import { MongoId } from 'src/@types/datatype';
 import { Post } from 'src/modules/posts/entities/post.entity';
 
-export function mockPostRaw(
-  userId?: MongoId,
-): Omit<Post, '_id'> | Omit<Post, '_id' | 'authorId'> {
+export function mockPostRaw(userId?: MongoId): Partial<Post> {
   const now = new Date();
   const partialPost = {
     title: faker.lorem.sentence(),
@@ -29,6 +27,6 @@ export async function createPost(
   userId: MongoId,
   postRaw = mockPostRaw(userId),
 ) {
-  const data: Omit<Post, '_id'> = JSON.parse(JSON.stringify(postRaw));
+  const data: Partial<Post> = JSON.parse(JSON.stringify(postRaw));
   return await postModel.create(data);
 }

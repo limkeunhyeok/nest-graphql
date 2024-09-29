@@ -6,7 +6,7 @@ import { Comment } from 'src/modules/comments/entities/comment.entity';
 export function mockCommentRaw(
   postId: MongoId,
   userId?: MongoId,
-): Omit<Comment, '_id'> | Omit<Comment, '_id' | 'authorId'> {
+): Partial<Comment> {
   const now = new Date();
   const partialComment = {
     contents: faker.lorem.text(),
@@ -31,6 +31,6 @@ export async function createComment(
   postId: MongoId,
   commentRaw = mockCommentRaw(postId, userId),
 ) {
-  const data: Omit<Comment, '_id'> = JSON.parse(JSON.stringify(commentRaw));
+  const data: Partial<Comment> = JSON.parse(JSON.stringify(commentRaw));
   return await commentModel.create(data);
 }
