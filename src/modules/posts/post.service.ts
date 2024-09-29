@@ -70,6 +70,6 @@ export class PostService {
   }
 
   async findByQuery(query: FilterQuery<Post>) {
-    return await this.postModel.find(query);
+    return await this.postModel.find(query).limit(100);
   }
 }

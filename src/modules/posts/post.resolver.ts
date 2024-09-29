@@ -8,8 +8,10 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { Loader } from 'nestjs-dataloader';
 import { MongoId } from 'src/@types/datatype';
 import { RoleGuard } from 'src/common/guards/role.guard';
+import { CommentLoader } from '../comments/comment.loader';
 import { CommentService } from '../comments/comment.service';
 import { Comment } from '../comments/entities/comment.entity';
 import { Role, User } from '../users/entities/user.entity';
@@ -74,7 +76,15 @@ export class PostResolver {
   }
 
   @ResolveField(() => [Comment])
-  async comments(@Parent() post: Post): Promise<Comment[]> {
+  async commentsWithDataloader(
+    @Parent() post: Post,
+    @Loader(CommentLoader) commentLoader: Loader<string, Comment[]>,
+  ) {
+    return commentLoader.load(post._id.toString());
+  }
+
+  @ResolveField(() => [Comment])
+  async commentsWithoutDataloader(@Parent() post: Post): Promise<Comment[]> {
     const { _id } = post;
     const answer = await this.commentService.findByQuery({ postId: _id });
     return answer;
