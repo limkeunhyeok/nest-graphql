@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { MongoId } from 'src/@types/datatype';
 import {
   EMAIL_IS_ALREADY_REGISTERED,
@@ -62,6 +62,10 @@ export class UserService {
     return await this.userModel.findByIdAndDelete(id, {
       new: true,
     });
+  }
+
+  async findByQuery(query: FilterQuery<User>) {
+    return await this.userModel.find(query);
   }
 
   async findAll(): Promise<UserDocument[]> {

@@ -15,6 +15,7 @@ import { CommentLoader } from '../comments/comment.loader';
 import { CommentService } from '../comments/comment.service';
 import { Comment } from '../comments/entities/comment.entity';
 import { Role, User } from '../users/entities/user.entity';
+import { UserLoader } from '../users/user.loader';
 import { UserService } from '../users/user.service';
 import { CreatePostInput } from './dtos/create.input';
 import { ReadPostInput } from './dtos/read.input';
@@ -91,8 +92,10 @@ export class PostResolver {
   }
 
   @ResolveField(() => User)
-  async author(@Parent() post: Post): Promise<User> {
-    const { authorId } = post;
-    return await this.userService.findOneById(authorId);
+  async author(
+    @Parent() post: Post,
+    @Loader(UserLoader) userLoader: Loader<string, User>,
+  ): Promise<User> {
+    return userLoader.load(post.authorId.toString());
   }
 }
