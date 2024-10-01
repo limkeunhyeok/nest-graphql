@@ -12,30 +12,19 @@ import { Loader } from 'nestjs-dataloader';
 import { MongoId } from 'src/@types/datatype';
 import { RoleGuard } from 'src/common/guards/role.guard';
 import { CommentLoader } from '../comments/comment.loader';
-import { CommentService } from '../comments/comment.service';
 import { Comment } from '../comments/entities/comment.entity';
 import { Role, User } from '../users/entities/user.entity';
 import { UserLoader } from '../users/user.loader';
-import { UserService } from '../users/user.service';
 import { CreatePostInput } from './dtos/create.input';
 import { ReadPostInput } from './dtos/read.input';
 import { UpdatePostInput } from './dtos/update.input';
 import { Post } from './entities/post.entity';
 import { PostService } from './post.service';
 
-// create -> Post >> comment
-// read -> Post[] >> paiging & comment, id로 조회해도 그냥 페이징하자 귀찬
-// update -> Post >> comment
-// delete -> Post >> comment
-
 @Resolver(() => Post)
 @UseGuards(RoleGuard([Role.ADMIN, Role.MEMBER]))
 export class PostResolver {
-  constructor(
-    private readonly postService: PostService,
-    private readonly commentService: CommentService,
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly postService: PostService) {}
 
   @Mutation(() => Post)
   async createPost(
@@ -77,18 +66,11 @@ export class PostResolver {
   }
 
   @ResolveField(() => [Comment])
-  async commentsWithDataloader(
+  async comments(
     @Parent() post: Post,
     @Loader(CommentLoader) commentLoader: Loader<string, Comment[]>,
   ) {
     return commentLoader.load(post._id.toString());
-  }
-
-  @ResolveField(() => [Comment])
-  async commentsWithoutDataloader(@Parent() post: Post): Promise<Comment[]> {
-    const { _id } = post;
-    const answer = await this.commentService.findByQuery({ postId: _id });
-    return answer;
   }
 
   @ResolveField(() => User)

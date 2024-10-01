@@ -60,8 +60,6 @@ type Post {
   author: User
   authorId: String!
   comments: [Comment!]
-  commentsWithDataloader: [Comment!]!
-  commentsWithoutDataloader: [Comment!]!
   contents: String!
   createdAt: DateTime!
   published: Boolean!
@@ -70,11 +68,9 @@ type Post {
 }
 
 type Query {
-  getAllUsers: [User!]!
-  getCommentById(id: String!): Comment!
   getCommentsByQuery(readCommentInput: ReadCommentInput!): [Comment!]!
   getPostsByQuery(readPostInput: ReadPostInput!): [Post!]!
-  getUserById(id: String!): User!
+  getUsersByQuery(readUserInput: ReadUserInput!): [User!]!
 }
 
 input ReadCommentInput {
@@ -88,6 +84,11 @@ input ReadPostInput {
   authorId: String
   published: Boolean
   title: String
+}
+
+input ReadUserInput {
+  _id: String
+  role: String
 }
 
 enum Role {

@@ -52,15 +52,6 @@ export const generateGetPostsByQueryInput = ({
   },
 });
 
-// get post by id
-export const GET_POST_BY_ID_OPERATION = 'getPostById';
-export const GET_POST_BY_ID_QUERY = `query GetPostById($getPostById: String!) {
-  getPostById(id: $getPostById) ${POST_FIELDS}
-}`;
-export const generateGetPostByIdInput = (id: MongoId) => ({
-  getPostById: id,
-});
-
 // update post
 export const UPDATE_POST_OPERATION = 'updatePost';
 export const UPDATE_POST_QUERY = `mutation UpdatePost($updatePostInput: UpdatePostInput!) {

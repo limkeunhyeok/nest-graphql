@@ -21,13 +21,11 @@ import {
 } from 'test/lib/utils';
 import { createPost } from 'test/mockup/post';
 import { createUser } from 'test/mockup/user';
-import { COMMENT_FIELDS } from 'test/operations/comment';
 import {
   generateGetPostsByQueryInput,
   GET_POSTS_BY_QUERY_OPERATION,
   GET_POSTS_BY_QUERY_QUERY,
 } from 'test/operations/post';
-import { USER_FIELDS } from 'test/operations/user';
 
 describe('Post resolver (e2e)', () => {
   let app: INestApplication;
@@ -82,86 +80,15 @@ describe('Post resolver (e2e)', () => {
   });
 
   describe('Get posts by query', () => {
-    // it('success', async () => {
-    //   // given
-    //   const user = await createUser(userModel);
-    //   const post = await createPost(postModel, user.id);
-
-    //   const params = {
-    //     operationType: GET_POSTS_BY_QUERY_OPERATION,
-    //     query: GET_POSTS_BY_QUERY_QUERY,
-    //     variables: generateGetPostsByQueryInput({ authorId: post.authorId }),
-    //   };
-
-    //   // when
-    //   const res = await withHeadersIncludeMemberToken(
-    //     req.post(GRAPHQL).send(params),
-    //   ).expect(200);
-
-    //   const data = getResponseData(res, GET_POSTS_BY_QUERY_OPERATION);
-
-    //   // then
-    //   expectPostResponseSucceed(data[0]);
-    // });
-
-    it('test with dataloader', async () => {
+    it('success', async () => {
       // given
       const user = await createUser(userModel);
       const post = await createPost(postModel, user.id);
 
-      const WITH_DATALOADER_TEST_QUERY = `query GetPostsByQuery($readPostInput: ReadPostInput!) {
-        getPostsByQuery(readPostInput: $readPostInput) {
-          _id
-          authorId
-          contents
-          createdAt
-          published
-          title
-          updatedAt
-          commentsWithDataloader ${COMMENT_FIELDS}
-          author ${USER_FIELDS}
-        }
-      }`;
-
       const params = {
         operationType: GET_POSTS_BY_QUERY_OPERATION,
-        query: WITH_DATALOADER_TEST_QUERY,
+        query: GET_POSTS_BY_QUERY_QUERY,
         variables: generateGetPostsByQueryInput({ authorId: post.authorId }),
-      };
-
-      // when
-      const res = await withHeadersIncludeMemberToken(
-        req.post(GRAPHQL).send(params),
-      ).expect(200);
-
-      const data = getResponseData(res, GET_POSTS_BY_QUERY_OPERATION);
-
-      // then
-      expectPostResponseSucceed(data[0]);
-    });
-    it('test without dataloader', async () => {
-      // given
-      const user = await createUser(userModel);
-      const post = await createPost(postModel, user.id);
-
-      const WITHOUT_DATALOADER_TEST_QUERY = `query GetPostsByQuery($readPostInput: ReadPostInput!) {
-        getPostsByQuery(readPostInput: $readPostInput) {
-          _id
-          authorId
-          contents
-          createdAt
-          published
-          title
-          updatedAt
-          commentsWithoutDataloader ${COMMENT_FIELDS}
-          author ${USER_FIELDS}
-        }
-      }`;
-
-      const params = {
-        operationType: GET_POSTS_BY_QUERY_OPERATION,
-        query: WITHOUT_DATALOADER_TEST_QUERY,
-        variables: generateGetPostsByQueryInput({}),
       };
 
       // when

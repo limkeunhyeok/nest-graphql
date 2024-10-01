@@ -48,15 +48,6 @@ export const generateGetCommentsByQueryInput = ({
   },
 });
 
-// get comment by id
-export const GET_COMMENT_BY_ID_OPERATION = 'getCommentById';
-export const GET_COMMENT_BY_ID_QUERY = `query GetCommentById($getCommentById: String!) {
-  getCommentById(id: $getCommentById) ${COMMENT_FIELDS}
-}`;
-export const generateGetCommentByIdInput = (id: MongoId) => ({
-  getCommentById: id,
-});
-
 // update comment
 export const UPDATE_COMMENT_OPERATION = 'updateComment';
 export const UPDATE_COMMENT_QUERY = `mutation UpdateComment($updateCommentInput: UpdateCommentInput!) {

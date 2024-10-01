@@ -8,20 +8,19 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { Schema as MongooseSchema } from 'mongoose';
+import { Loader } from 'nestjs-dataloader';
 import { RoleGuard } from 'src/common/guards/role.guard';
 import { Post } from '../posts/entities/post.entity';
-import { PostService } from '../posts/post.service';
+import { PostLoader } from '../posts/post.loader';
 import { CreateUserInput } from './dtos/create.input';
+import { ReadUserInput } from './dtos/read.input';
 import { UpdateUserInput } from './dtos/update.input';
 import { Role, User } from './entities/user.entity';
 import { UserService } from './user.service';
 
 @Resolver(() => User)
 export class UserResolver {
-  constructor(
-    private readonly userService: UserService,
-    private readonly postService: PostService,
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
   @Mutation(() => User)
   @UseGuards(RoleGuard([Role.ADMIN]))
@@ -48,21 +47,15 @@ export class UserResolver {
 
   @Query(() => [User])
   @UseGuards(RoleGuard([Role.ADMIN]))
-  async getAllUsers() {
-    return await this.userService.findAll();
-  }
-
-  @Query(() => User)
-  @UseGuards(RoleGuard([Role.ADMIN]))
-  async getUserById(
-    @Args('id', { type: () => String }) id: MongooseSchema.Types.ObjectId,
-  ) {
-    return await this.userService.findOneById(id);
+  async getUsersByQuery(@Args('readUserInput') readUserInput: ReadUserInput) {
+    return await this.userService.findByQuery({ ...readUserInput });
   }
 
   @ResolveField(() => [Post])
-  async posts(@Parent() user: User): Promise<Post[]> {
-    const { _id } = user;
-    return await this.postService.findByQuery({ authorId: _id });
+  async posts(
+    @Parent() user: User,
+    @Loader(PostLoader) postLoader: Loader<string, Post[]>,
+  ): Promise<Post[]> {
+    return postLoader.load(user._id.toString());
   }
 }

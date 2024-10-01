@@ -59,9 +59,4 @@ export class CommentResolver {
       ...readCommentInput,
     });
   }
-
-  @Query(() => Comment)
-  async getCommentById(@Args('id', { type: () => String }) _id: MongoId) {
-    return (await this.commentService.findByQuery({ _id }))[0];
-  }
 }

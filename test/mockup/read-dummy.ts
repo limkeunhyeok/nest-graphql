@@ -30,12 +30,10 @@ const dbUrl = `mongodb://localhost:27017/graphql`;
   const CommentModel = model<CommentDocument>('comment', CommentSchema);
 
   const randomPosts = await PostModel.aggregate([{ $sample: { size: 2 } }]);
-  console.log('GOOD POSTS', randomPosts);
 
   const postIds = randomPosts.map((post) => post._id);
 
   const comments = await CommentModel.find({ postId: { $in: postIds } });
-  console.log('GOOD COMMENTS', comments);
 
   await mongoose.connection.close();
 })();

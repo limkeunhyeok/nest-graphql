@@ -17,11 +17,10 @@ import {
   Headers,
   withHeadersBy,
 } from 'test/lib/utils';
-import { createUser, mockUserRaw } from 'test/mockup/user';
 import {
-  generateGetUserByIdInput,
-  GET_USER_BY_ID_OPERATION,
-  GET_USER_BY_ID_QUERY,
+  generateGetUsersByQueryInput,
+  GET_USERS_BY_QUERY_OPERATION,
+  GET_USERS_BY_QUERY_QUERY,
 } from 'test/operations/user';
 
 describe('User resolver (e2e)', () => {
@@ -76,37 +75,33 @@ describe('User resolver (e2e)', () => {
     await app.close();
   });
 
-  describe('Get user by id', () => {
+  describe('Get users by query', () => {
     it('success', async () => {
       // given
-      const userRaw = mockUserRaw();
-      const user = await createUser(userModel, userRaw);
-
       const params = {
-        operationType: GET_USER_BY_ID_OPERATION,
-        query: GET_USER_BY_ID_QUERY,
-        variables: generateGetUserByIdInput(user._id.toString()),
+        operationType: GET_USERS_BY_QUERY_OPERATION,
+        query: GET_USERS_BY_QUERY_QUERY,
+        variables: generateGetUsersByQueryInput({ role: Role.MEMBER }),
       };
 
       // when
       const res = await withHeadersIncludeAdminToken(
         req.post(GRAPHQL).send(params),
       ).expect(200);
-      const data = getResponseData(res, GET_USER_BY_ID_OPERATION);
+      const data = getResponseData(res, GET_USERS_BY_QUERY_OPERATION);
 
       // then
-      expectUserResponseSucceed(data);
+      for (let user of data) {
+        expectUserResponseSucceed(user);
+      }
     });
 
     it('failed - access is denied.', async () => {
       // given
-      const userRaw = mockUserRaw();
-      const user = await createUser(userModel, userRaw);
-
       const params = {
-        operationType: GET_USER_BY_ID_OPERATION,
-        query: GET_USER_BY_ID_QUERY,
-        variables: generateGetUserByIdInput(user._id.toString()),
+        operationType: GET_USERS_BY_QUERY_OPERATION,
+        query: GET_USERS_BY_QUERY_QUERY,
+        variables: generateGetUsersByQueryInput({ role: Role.MEMBER }),
       };
 
       // when

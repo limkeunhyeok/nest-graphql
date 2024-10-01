@@ -68,10 +68,6 @@ export class UserService {
     return await this.userModel.find(query);
   }
 
-  async findAll(): Promise<UserDocument[]> {
-    return await this.userModel.find();
-  }
-
   async findOneById(id: MongoId): Promise<UserDocument> {
     const hasUser = await this.userModel.findById(id);
     if (!hasUser) {

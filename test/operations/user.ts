@@ -56,17 +56,13 @@ export const generateDeleteUserInput = (id: MongoId) => ({
   deleteUserId: id,
 });
 
-// get all users
-export const GET_ALL_USERS_OPERATION = 'getAllUsers';
-export const GET_ALL_USERS_QUERY = `query GetAllUsers {
-  getAllUsers ${USER_FIELDS}
+// get users by query
+export const GET_USERS_BY_QUERY_OPERATION = 'getUsersByQuery';
+export const GET_USERS_BY_QUERY_QUERY = `query GetUsersByQuery($readUserInput: ReadUserInput!) {
+  getUsersByQuery(readUserInput: $readUserInput) ${USER_FIELDS}
 }`;
-
-// get user by id
-export const GET_USER_BY_ID_OPERATION = 'getUserById';
-export const GET_USER_BY_ID_QUERY = `query GetUserById($getUserById: String!) {
-  getUserById(id: $getUserById) ${USER_FIELDS}
-}`;
-export const generateGetUserByIdInput = (id: MongoId) => ({
-  getUserById: id,
+export const generateGetUsersByQueryInput = ({ role }: { role?: Role }) => ({
+  readUserInput: {
+    role,
+  },
 });
