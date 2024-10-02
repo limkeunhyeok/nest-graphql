@@ -152,3 +152,11 @@ export function getResponseData(res: Response, operationName: string) {
   const body = res.body;
   return body['data'][operationName];
 }
+
+// NOTE: 테스트 관련 어디 적을지 몰라 여기다 적음.
+// 현재 graphql에 학습 중에 있어, resolve field를 사용한 부분도 모두 테스트에 추가하려고 했음.
+// 허나, 하나하나 쪼개는 것에 양이 많아지고 개발 시간이 많이 소요됨.
+// 따라서, e2e 테스트 시에는 단순히 도메인 모델에 대한 값들만 체크하며, dataloader같이 특이 사항만 따로 테스트.
+// 추가로 NOTE나, TODO 같은 키워드를 주석 태그라고 부르는 듯함.
+// 다만, 주석 태그라고 검색하면 html 태그만 나옴.
+// 만약 나중에 검색한다면, comment tags 또는 Comment tag keywords라고 검색하면 조금 나올듯.

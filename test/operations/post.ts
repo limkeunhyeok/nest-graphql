@@ -1,6 +1,4 @@
 import { MongoId } from 'src/@types/datatype';
-import { COMMENT_FIELDS } from './comment';
-import { USER_FIELDS } from './user';
 
 export const POST_FIELDS = `{
   _id
@@ -10,8 +8,6 @@ export const POST_FIELDS = `{
   published
   title
   updatedAt
-  comments ${COMMENT_FIELDS}
-  author ${USER_FIELDS}
 }`;
 
 // create post

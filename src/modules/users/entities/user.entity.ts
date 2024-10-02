@@ -29,7 +29,6 @@ export class User {
   @Prop()
   name: string;
 
-  @Field(() => String)
   @Prop()
   password: string;
 

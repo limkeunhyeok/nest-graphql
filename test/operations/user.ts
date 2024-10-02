@@ -4,7 +4,6 @@ import { Role } from 'src/modules/users/entities/user.entity';
 export const USER_FIELDS = `{
   _id,
   email,
-  password,
   name,
   role,
   createdAt,
