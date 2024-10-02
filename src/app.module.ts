@@ -6,6 +6,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
+import * as depthLimit from 'graphql-depth-limit';
 import * as path from 'path';
 import { AuthGuard } from './common/guards/auth.guard';
 import { HealthModule } from './common/health/health.module';
@@ -51,6 +52,7 @@ import { UserService } from './modules/users/user.service';
       sortSchema: true,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
       introspection: true,
+      validationRules: [depthLimit(2)],
       formatError: (error) => {
         const { message, path, extensions } = error;
 
