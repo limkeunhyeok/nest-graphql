@@ -1,4 +1,5 @@
 import { MongoId } from 'src/@types/datatype';
+import { SortOrder } from 'src/common/interfaces/sort.interface';
 
 export const POST_FIELDS = `{
   _id
@@ -27,24 +28,42 @@ export const generateCreatePostInput = (
   },
 });
 
-// get posts by query
-export const GET_POSTS_BY_QUERY_OPERATION = 'getPostsByQuery';
-export const GET_POSTS_BY_QUERY_QUERY = `query GetPostsByQuery($readPostInput: ReadPostInput!) {
-  getPostsByQuery(readPostInput: $readPostInput) ${POST_FIELDS}
+// paginate posts
+export const PAGINATE_POSTS_FIELDS = `{
+  total
+  limit
+  offset
+  docs ${POST_FIELDS}
 }`;
-export const generateGetPostsByQueryInput = ({
-  title,
-  authorId,
+export const PAGINATE_POSTS_OPERATION = 'paginatePosts';
+export const PAGINATE_POSTS_QUERY = `query PaginatePosts($readPostInput: ReadPostInput!) {
+  paginatePosts(readPostInput: $readPostInput) ${PAGINATE_POSTS_FIELDS}
+}`;
+export const generatePaginatePostsInput = ({
+  _id,
   published,
+  authorId,
+  sortBy,
+  sortOrder,
+  limit,
+  offset,
 }: {
-  title?: string;
+  _id?: MongoId;
   authorId?: MongoId;
   published?: boolean;
+  sortBy?: string;
+  sortOrder?: SortOrder;
+  limit?: number;
+  offset?: number;
 }) => ({
   readPostInput: {
-    title,
-    authorId,
+    _id,
     published,
+    authorId,
+    sortBy,
+    sortOrder,
+    limit,
+    offset,
   },
 });
 
@@ -70,8 +89,8 @@ export const generateUpdatePostInput = (
 // delete post
 export const DELETE_POST_OPERATION = 'deletePost';
 export const DELETE_POST_QUERY = `mutation DeletePost($deletePostId: String!) {
-  deletePost(id: $deletePostId) ${POST_FIELDS}
+  deletePost(postId: $deletePostId) ${POST_FIELDS}
 }`;
-export const generateDeletePostInput = (id: MongoId) => ({
-  deletePostId: id,
+export const generateDeletePostInput = (postId: MongoId) => ({
+  deletePostId: postId,
 });

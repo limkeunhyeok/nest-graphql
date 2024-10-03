@@ -46,13 +46,20 @@ type Mutation {
   createPost(createPostInput: CreatePostInput!): Post!
   createUser(createUserInput: CreateUserInput!): User!
   deleteComment(commentId: String!, postId: String!): Comment!
-  deletePost(id: String!): Post!
+  deletePost(postId: String!): Post!
   deleteUser(id: String!): User!
   login(loginInput: LoginInput!): TokenResponse!
   signup(signupInput: CreateUserInput!): TokenResponse!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
   updatePost(updatePostInput: UpdatePostInput!): Post!
   updateUser(updateUserInput: UpdateUserInput!): User!
+}
+
+type PaginatePostOutput {
+  docs: [Post!]!
+  limit: Float!
+  offset: Float!
+  total: Float!
 }
 
 type Post {
@@ -69,8 +76,8 @@ type Post {
 
 type Query {
   getCommentsByQuery(readCommentInput: ReadCommentInput!): [Comment!]!
-  getPostsByQuery(readPostInput: ReadPostInput!): [Post!]!
   getUsersByQuery(readUserInput: ReadUserInput!): [User!]!
+  paginatePosts(readPostInput: ReadPostInput!): PaginatePostOutput!
 }
 
 input ReadCommentInput {
@@ -82,8 +89,11 @@ input ReadCommentInput {
 input ReadPostInput {
   _id: String
   authorId: String
+  limit: Int! = 10
+  offset: Int! = 0
   published: Boolean
-  title: String
+  sortBy: String! = "createdAt"
+  sortOrder: String! = "desc"
 }
 
 input ReadUserInput {

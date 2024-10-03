@@ -22,9 +22,9 @@ import {
 import { createPost } from 'test/mockup/post';
 import { createUser } from 'test/mockup/user';
 import {
-  generateGetPostsByQueryInput,
-  GET_POSTS_BY_QUERY_OPERATION,
-  GET_POSTS_BY_QUERY_QUERY,
+  generatePaginatePostsInput,
+  PAGINATE_POSTS_OPERATION,
+  PAGINATE_POSTS_QUERY,
 } from 'test/operations/post';
 
 describe('Post resolver (e2e)', () => {
@@ -79,16 +79,22 @@ describe('Post resolver (e2e)', () => {
     await app.close();
   });
 
-  describe('Get posts by query', () => {
+  describe('Paginate posts', () => {
     it('success', async () => {
       // given
       const user = await createUser(userModel);
       const post = await createPost(postModel, user.id);
 
       const params = {
-        operationType: GET_POSTS_BY_QUERY_OPERATION,
-        query: GET_POSTS_BY_QUERY_QUERY,
-        variables: generateGetPostsByQueryInput({ authorId: post.authorId }),
+        operationType: PAGINATE_POSTS_OPERATION,
+        query: PAGINATE_POSTS_QUERY,
+        variables: generatePaginatePostsInput({
+          authorId: post.authorId,
+          sortBy: 'createdAt',
+          sortOrder: 'desc',
+          limit: 10,
+          offset: 0,
+        }),
       };
 
       // when
@@ -96,10 +102,14 @@ describe('Post resolver (e2e)', () => {
         req.post(GRAPHQL).send(params),
       ).expect(200);
 
-      const data = getResponseData(res, GET_POSTS_BY_QUERY_OPERATION);
+      const data = getResponseData(res, PAGINATE_POSTS_OPERATION);
 
       // then
-      expectPostResponseSucceed(data[0]);
+      expect(data).toHaveProperty('total');
+      expect(data).toHaveProperty('limit');
+      expect(data).toHaveProperty('offset');
+      expect(data).toHaveProperty('docs');
+      expectPostResponseSucceed(data['docs'][0]);
     });
 
     it('failed - invalid token.', async () => {
@@ -108,9 +118,15 @@ describe('Post resolver (e2e)', () => {
       const post = await createPost(postModel, user.id);
 
       const params = {
-        operationType: GET_POSTS_BY_QUERY_OPERATION,
-        query: GET_POSTS_BY_QUERY_QUERY,
-        variables: generateGetPostsByQueryInput({ authorId: post.authorId }),
+        operationType: PAGINATE_POSTS_OPERATION,
+        query: PAGINATE_POSTS_QUERY,
+        variables: generatePaginatePostsInput({
+          authorId: post.authorId,
+          sortBy: 'createdAt',
+          sortOrder: 'desc',
+          limit: 10,
+          offset: 0,
+        }),
       };
 
       // when

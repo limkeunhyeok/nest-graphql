@@ -16,6 +16,7 @@ import { Comment } from '../comments/entities/comment.entity';
 import { Role, User } from '../users/entities/user.entity';
 import { UserLoader } from '../users/user.loader';
 import { CreatePostInput } from './dtos/create.input';
+import { PaginatePostOutput } from './dtos/paginate.output';
 import { ReadPostInput } from './dtos/read.input';
 import { UpdatePostInput } from './dtos/update.input';
 import { Post } from './entities/post.entity';
@@ -32,7 +33,10 @@ export class PostResolver {
     @Context() context,
   ) {
     const user = context.req['user'];
-    return await this.postService.create(user.userId, createPostInput);
+    return await this.postService.create({
+      ...createPostInput,
+      authorId: user.userId,
+    });
   }
 
   @Mutation(() => Post)
@@ -43,26 +47,35 @@ export class PostResolver {
     const user = context.req['user'];
 
     return await this.postService.updateById(
-      user.userId,
       updatePostInput.postId,
+      user.userId,
       updatePostInput,
     );
   }
 
   @Mutation(() => Post)
   async deletePost(
-    @Args('id', { type: () => String }) id: MongoId,
+    @Args('postId', { type: () => String }) postId: MongoId,
     @Context() context,
   ) {
     const user = context.req['user'];
-    return await this.postService.deleteById(user.userId, id);
+    return await this.postService.deleteById(postId, user.userId);
   }
 
-  @Query(() => [Post])
-  async getPostsByQuery(@Args('readPostInput') readPostInput: ReadPostInput) {
-    return await this.postService.findByQuery({
-      ...readPostInput,
-    });
+  @Query(() => PaginatePostOutput)
+  async paginatePosts(@Args('readPostInput') readPostInput: ReadPostInput) {
+    const { _id, published, authorId, sortBy, sortOrder, limit, offset } =
+      readPostInput;
+    return await this.postService.paginateByQuery(
+      {
+        _id,
+        published,
+        authorId,
+      },
+      { sortBy, sortOrder },
+      limit,
+      offset,
+    );
   }
 
   @ResolveField(() => [Comment])

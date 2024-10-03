@@ -52,7 +52,7 @@ import { UserService } from './modules/users/user.service';
       sortSchema: true,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
       introspection: true,
-      validationRules: [depthLimit(2)],
+      validationRules: [depthLimit(3)], // Paginate의 경우가 있어 3으로 제한
       formatError: (error) => {
         const { message, path, extensions } = error;
 
