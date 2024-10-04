@@ -18,9 +18,9 @@ import {
   withHeadersBy,
 } from 'test/lib/utils';
 import {
-  generateGetUsersByQueryInput,
-  GET_USERS_BY_QUERY_OPERATION,
-  GET_USERS_BY_QUERY_QUERY,
+  generatePaginateUsersInput,
+  PAGINATE_USERS_OPERATION,
+  PAGINATE_USERS_QUERY,
 } from 'test/operations/user';
 
 describe('User resolver (e2e)', () => {
@@ -79,29 +79,43 @@ describe('User resolver (e2e)', () => {
     it('success', async () => {
       // given
       const params = {
-        operationType: GET_USERS_BY_QUERY_OPERATION,
-        query: GET_USERS_BY_QUERY_QUERY,
-        variables: generateGetUsersByQueryInput({ role: Role.MEMBER }),
+        operationType: PAGINATE_USERS_OPERATION,
+        query: PAGINATE_USERS_QUERY,
+        variables: generatePaginateUsersInput({
+          role: Role.MEMBER,
+          sortBy: 'createdAt',
+          sortOrder: 'desc',
+          limit: 10,
+          offset: 0,
+        }),
       };
 
       // when
       const res = await withHeadersIncludeAdminToken(
         req.post(GRAPHQL).send(params),
       ).expect(200);
-      const data = getResponseData(res, GET_USERS_BY_QUERY_OPERATION);
+      const data = getResponseData(res, PAGINATE_USERS_OPERATION);
 
       // then
-      for (let user of data) {
-        expectUserResponseSucceed(user);
-      }
+      expect(data).toHaveProperty('total');
+      expect(data).toHaveProperty('limit');
+      expect(data).toHaveProperty('offset');
+      expect(data).toHaveProperty('docs');
+      expectUserResponseSucceed(data['docs'][0]);
     });
 
     it('failed - access is denied.', async () => {
       // given
       const params = {
-        operationType: GET_USERS_BY_QUERY_OPERATION,
-        query: GET_USERS_BY_QUERY_QUERY,
-        variables: generateGetUsersByQueryInput({ role: Role.MEMBER }),
+        operationType: PAGINATE_USERS_OPERATION,
+        query: PAGINATE_USERS_QUERY,
+        variables: generatePaginateUsersInput({
+          role: Role.MEMBER,
+          sortBy: 'createdAt',
+          sortOrder: 'desc',
+          limit: 10,
+          offset: 0,
+        }),
       };
 
       // when

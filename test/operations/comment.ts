@@ -1,4 +1,5 @@
 import { MongoId } from 'src/@types/datatype';
+import { SortOrder } from 'src/common/interfaces/sort.interface';
 
 export const COMMENT_FIELDS = `{
   _id
@@ -27,24 +28,45 @@ export const generateCreateCommentInput = (
   },
 });
 
-// get comments by query
-export const GET_COMMENTS_BY_QUERY_OPERATION = 'getCommentsByQuery';
-export const GET_COMMENTS_BY_QUERY_QUERY = `query GetCommentsByQuery($readCommentInput: ReadCommentInput!) {
-  getCommentsByQuery(readCommentInput: $readCommentInput) ${COMMENT_FIELDS}
+// paginate comments
+export const PAGINATE_COMMENTS_FIELDS = `{
+  total
+  limit
+  offset
+  docs ${COMMENT_FIELDS}
 }`;
-export const generateGetCommentsByQueryInput = ({
+export const PAGINATE_COMMENTS_OPERATION = 'paginateComments';
+export const PAGINATE_COMMENTS_QUERY = `query PaginateComments($readCommentInput: ReadCommentInput!) {
+  paginateComments(readCommentInput: $readCommentInput) ${PAGINATE_COMMENTS_FIELDS}
+}`;
+export const generatePaginateCommentsInput = ({
+  _id,
   published,
   authorId,
   postId,
+  sortBy,
+  sortOrder,
+  limit,
+  offset,
 }: {
+  _id?: MongoId;
   published?: boolean;
   authorId?: MongoId;
   postId?: MongoId;
+  sortBy?: string;
+  sortOrder?: SortOrder;
+  limit?: number;
+  offset?: number;
 }) => ({
   readCommentInput: {
+    _id,
     published,
     authorId,
     postId,
+    sortBy,
+    sortOrder,
+    limit,
+    offset,
   },
 });
 

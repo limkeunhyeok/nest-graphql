@@ -1,83 +1,121 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model } from 'mongoose';
+import { FilterQuery, Model, UpdateQuery } from 'mongoose';
 import { MongoId } from 'src/@types/datatype';
+import { SortQuery } from 'src/common/interfaces/sort.interface';
 import {
   EMAIL_IS_ALREADY_REGISTERED,
   ID_DOES_NOT_EXIST,
 } from 'src/constants/exception-message.const';
+import { paginateResponse, PaginateResponse } from 'src/libs/paginate';
 import { encryptPassword } from 'src/libs/utils';
-import { CreateUserInput } from './dtos/create.input';
-import { UpdateUserInput } from './dtos/update.input';
 import { User, UserDocument } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  async create({
-    email,
-    password,
-    name,
-    role,
-  }: CreateUserInput): Promise<UserDocument> {
-    const hasUser = await this.findOneByEmail(email);
+  async create(userRaw: Partial<User>): Promise<UserDocument> {
+    const hasUser = await this.userModel
+      .findOne({ email: userRaw.email })
+      .exec();
     if (hasUser) {
       throw new BadRequestException(EMAIL_IS_ALREADY_REGISTERED);
     }
 
-    const createdUser = new this.userModel({
-      email,
-      password: encryptPassword(password),
-      name,
-      role,
-    });
+    const createdUser = new this.userModel(userRaw);
     return await createdUser.save();
   }
 
   async updateById(
-    id: MongoId,
-    { name, password }: UpdateUserInput,
+    userId: MongoId,
+    updateQuery: UpdateQuery<User>,
   ): Promise<UserDocument> {
-    const hasUser = await this.userModel.findById(id);
+    const hasUser = await this.userModel.findById(userId);
     if (!hasUser) {
       throw new BadRequestException(ID_DOES_NOT_EXIST);
     }
 
-    return await this.userModel.findByIdAndUpdate(
-      id,
-      { name, password: encryptPassword(password) },
-      {
+    return await this.userModel
+      .findByIdAndUpdate(
+        userId,
+        { ...updateQuery, password: encryptPassword(updateQuery.password) },
+        {
+          new: true,
+        },
+      )
+      .exec();
+  }
+
+  async deleteById(userId: MongoId): Promise<UserDocument> {
+    const hasUser = await this.userModel.findById(userId);
+    if (!hasUser) {
+      throw new BadRequestException(ID_DOES_NOT_EXIST);
+    }
+
+    return await this.userModel
+      .findByIdAndDelete(userId, {
         new: true,
-      },
-    );
-  }
-
-  async deleteById(id: MongoId): Promise<UserDocument> {
-    const hasUser = await this.userModel.findById(id);
-    if (!hasUser) {
-      throw new BadRequestException(ID_DOES_NOT_EXIST);
-    }
-
-    return await this.userModel.findByIdAndDelete(id, {
-      new: true,
-    });
-  }
-
-  async findByQuery(query: FilterQuery<User>) {
-    return await this.userModel.find(query);
-  }
-
-  async findOneById(id: MongoId): Promise<UserDocument> {
-    const hasUser = await this.userModel.findById(id);
-    if (!hasUser) {
-      throw new BadRequestException(ID_DOES_NOT_EXIST);
-    }
-
-    return hasUser;
+      })
+      .exec();
   }
 
   async findOneByEmail(email: string): Promise<UserDocument> {
     return await this.userModel.findOne({ email });
+  }
+
+  async findOneById(userId: MongoId) {
+    const hasUser = this.userModel.findById(userId);
+    if (!hasUser) {
+      throw new BadRequestException(ID_DOES_NOT_EXIST);
+    }
+    return hasUser;
+  }
+
+  async paginateByQuery(
+    filterQuery: FilterQuery<User>,
+    sortQuery: SortQuery,
+    limit: number,
+    offset: number,
+  ): Promise<PaginateResponse<User>> {
+    const sanitizedFilterQuery = this.sanitizeQuery(filterQuery);
+
+    const docsPromise = this.findDocsPromise(
+      sanitizedFilterQuery,
+      sortQuery,
+      limit,
+      offset,
+    );
+
+    const totalCountPromise = this.getTotalCountPromise(sanitizedFilterQuery);
+
+    const [total, docs] = await Promise.all([totalCountPromise, docsPromise]);
+    return paginateResponse({ total, limit, offset, docs });
+  }
+
+  private getTotalCountPromise(
+    filterQuery: FilterQuery<User>,
+  ): Promise<number> {
+    return this.userModel.countDocuments(filterQuery).exec();
+  }
+
+  private findDocsPromise(
+    filterQuery: FilterQuery<User>,
+    { sortBy, sortOrder }: SortQuery,
+    limit: number,
+    offset: number,
+  ): Promise<UserDocument[]> {
+    return this.userModel
+      .find(filterQuery)
+      .sort({ [sortBy]: sortOrder })
+      .skip(offset)
+      .limit(limit)
+      .exec();
+  }
+
+  private sanitizeQuery(query: Record<string, any>): Record<string, any> {
+    return Object.fromEntries(
+      Object.entries(query).filter(([_, value]) => value !== undefined),
+    );
   }
 }

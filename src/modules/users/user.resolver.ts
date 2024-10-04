@@ -1,18 +1,9 @@
 import { UseGuards } from '@nestjs/common';
-import {
-  Args,
-  Mutation,
-  Parent,
-  Query,
-  ResolveField,
-  Resolver,
-} from '@nestjs/graphql';
-import { Schema as MongooseSchema } from 'mongoose';
-import { Loader } from 'nestjs-dataloader';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { MongoId } from 'src/@types/datatype';
 import { RoleGuard } from 'src/common/guards/role.guard';
-import { Post } from '../posts/entities/post.entity';
-import { PostLoader } from '../posts/post.loader';
 import { CreateUserInput } from './dtos/create.input';
+import { PaginateUsersOutput } from './dtos/paginate.output';
 import { ReadUserInput } from './dtos/read.input';
 import { UpdateUserInput } from './dtos/update.input';
 import { Role, User } from './entities/user.entity';
@@ -39,23 +30,22 @@ export class UserResolver {
 
   @Mutation(() => User)
   @UseGuards(RoleGuard([Role.ADMIN, Role.MEMBER]))
-  async deleteUser(
-    @Args('id', { type: () => String }) id: MongooseSchema.Types.ObjectId,
-  ) {
-    return await this.userService.deleteById(id);
+  async deleteUser(@Args('userId', { type: () => String }) userId: MongoId) {
+    return await this.userService.deleteById(userId);
   }
 
-  @Query(() => [User])
+  @Query(() => PaginateUsersOutput)
   @UseGuards(RoleGuard([Role.ADMIN]))
-  async getUsersByQuery(@Args('readUserInput') readUserInput: ReadUserInput) {
-    return await this.userService.findByQuery({ ...readUserInput });
-  }
-
-  @ResolveField(() => [Post])
-  async posts(
-    @Parent() user: User,
-    @Loader(PostLoader) postLoader: Loader<string, Post[]>,
-  ): Promise<Post[]> {
-    return postLoader.load(user._id.toString());
+  async paginateUsers(@Args('readUserInput') readUserInput: ReadUserInput) {
+    const { _id, role, sortBy, sortOrder, limit, offset } = readUserInput;
+    return await this.userService.paginateByQuery(
+      {
+        _id,
+        role,
+      },
+      { sortBy, sortOrder },
+      limit,
+      offset,
+    );
   }
 }

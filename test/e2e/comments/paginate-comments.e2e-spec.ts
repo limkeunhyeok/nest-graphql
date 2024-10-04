@@ -23,9 +23,9 @@ import { createComment } from 'test/mockup/comment';
 import { createPost } from 'test/mockup/post';
 import { createUser, mockUserRaw } from 'test/mockup/user';
 import {
-  generateGetCommentsByQueryInput,
-  GET_COMMENTS_BY_QUERY_OPERATION,
-  GET_COMMENTS_BY_QUERY_QUERY,
+  generatePaginateCommentsInput,
+  PAGINATE_COMMENTS_OPERATION,
+  PAGINATE_COMMENTS_QUERY,
 } from 'test/operations/comment';
 
 describe('Comment resolver (e2e)', () => {
@@ -68,7 +68,7 @@ describe('Comment resolver (e2e)', () => {
     await app.close();
   });
 
-  describe('Get comments by query', () => {
+  describe('Paginate comments', () => {
     it('success', async () => {
       // given
       const userRaw = mockUserRaw(Role.MEMBER);
@@ -83,9 +83,16 @@ describe('Comment resolver (e2e)', () => {
       const withHeadersIncludeUserToken = withHeadersBy(userTokenHeaders);
 
       const params = {
-        operationType: GET_COMMENTS_BY_QUERY_OPERATION,
-        query: GET_COMMENTS_BY_QUERY_QUERY,
-        variables: generateGetCommentsByQueryInput({ postId: comment.postId }),
+        operationType: PAGINATE_COMMENTS_OPERATION,
+        query: PAGINATE_COMMENTS_QUERY,
+        variables: generatePaginateCommentsInput({
+          postId: comment.postId,
+          authorId: post.authorId,
+          sortBy: 'createdAt',
+          sortOrder: 'desc',
+          limit: 10,
+          offset: 0,
+        }),
       };
 
       // when
@@ -93,10 +100,14 @@ describe('Comment resolver (e2e)', () => {
         req.post(GRAPHQL).send(params),
       ).expect(200);
 
-      const data = getResponseData(res, GET_COMMENTS_BY_QUERY_OPERATION);
+      const data = getResponseData(res, PAGINATE_COMMENTS_OPERATION);
 
       // then
-      expectCommentResponseSucceed(data[0]);
+      expect(data).toHaveProperty('total');
+      expect(data).toHaveProperty('limit');
+      expect(data).toHaveProperty('offset');
+      expect(data).toHaveProperty('docs');
+      expectCommentResponseSucceed(data['docs'][0]);
     });
 
     it('failed - invalid token.', async () => {
@@ -110,9 +121,16 @@ describe('Comment resolver (e2e)', () => {
       const withHeaders = withHeadersBy(headers);
 
       const params = {
-        operationType: GET_COMMENTS_BY_QUERY_OPERATION,
-        query: GET_COMMENTS_BY_QUERY_QUERY,
-        variables: generateGetCommentsByQueryInput({ postId: comment.postId }),
+        operationType: PAGINATE_COMMENTS_OPERATION,
+        query: PAGINATE_COMMENTS_QUERY,
+        variables: generatePaginateCommentsInput({
+          postId: comment.postId,
+          authorId: post.authorId,
+          sortBy: 'createdAt',
+          sortOrder: 'desc',
+          limit: 10,
+          offset: 0,
+        }),
       };
 
       // when

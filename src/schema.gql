@@ -47,7 +47,7 @@ type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   deleteComment(commentId: String!, postId: String!): Comment!
   deletePost(postId: String!): Post!
-  deleteUser(id: String!): User!
+  deleteUser(userId: String!): User!
   login(loginInput: LoginInput!): TokenResponse!
   signup(signupInput: CreateUserInput!): TokenResponse!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
@@ -55,8 +55,22 @@ type Mutation {
   updateUser(updateUserInput: UpdateUserInput!): User!
 }
 
+type PaginateCommentOutput {
+  docs: [Comment!]!
+  limit: Float!
+  offset: Float!
+  total: Float!
+}
+
 type PaginatePostOutput {
   docs: [Post!]!
+  limit: Float!
+  offset: Float!
+  total: Float!
+}
+
+type PaginateUsersOutput {
+  docs: [User!]!
   limit: Float!
   offset: Float!
   total: Float!
@@ -75,15 +89,20 @@ type Post {
 }
 
 type Query {
-  getCommentsByQuery(readCommentInput: ReadCommentInput!): [Comment!]!
-  getUsersByQuery(readUserInput: ReadUserInput!): [User!]!
+  paginateComments(readCommentInput: ReadCommentInput!): PaginateCommentOutput!
   paginatePosts(readPostInput: ReadPostInput!): PaginatePostOutput!
+  paginateUsers(readUserInput: ReadUserInput!): PaginateUsersOutput!
 }
 
 input ReadCommentInput {
+  _id: String
   authorId: String
+  limit: Int! = 10
+  offset: Int! = 0
   postId: String
   published: Boolean
+  sortBy: String! = "createdAt"
+  sortOrder: String! = "desc"
 }
 
 input ReadPostInput {
@@ -98,7 +117,11 @@ input ReadPostInput {
 
 input ReadUserInput {
   _id: String
+  limit: Int! = 10
+  offset: Int! = 0
   role: String
+  sortBy: String! = "createdAt"
+  sortOrder: String! = "desc"
 }
 
 enum Role {

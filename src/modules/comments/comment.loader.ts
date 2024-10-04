@@ -1,12 +1,17 @@
 import { Injectable, Scope } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import * as DataLoader from 'dataloader';
-import mongoose from 'mongoose';
-import { Comment } from 'src/modules/comments/entities/comment.entity';
-import { CommentService } from './comment.service';
+import mongoose, { Model } from 'mongoose';
+import {
+  Comment,
+  CommentDocument,
+} from 'src/modules/comments/entities/comment.entity';
 
 @Injectable({ scope: Scope.REQUEST }) // 요청당 하나의 DataLoader 인스턴스
 export class CommentLoader {
-  constructor(private readonly commentService: CommentService) {}
+  constructor(
+    @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
+  ) {}
 
   generateDataLoader() {
     return new DataLoader<string, Comment[]>((postIds: string[]) =>
@@ -19,7 +24,7 @@ export class CommentLoader {
       (postId) => new mongoose.Types.ObjectId(postId),
     );
 
-    const comments: Comment[] = await this.commentService.findByQuery({
+    const comments: Comment[] = await this.commentModel.find({
       postId: { $in: postObjectIds },
     });
 

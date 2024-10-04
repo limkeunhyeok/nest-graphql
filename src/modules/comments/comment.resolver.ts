@@ -5,6 +5,7 @@ import { RoleGuard } from 'src/common/guards/role.guard';
 import { Role } from '../users/entities/user.entity';
 import { CommentService } from './comment.service';
 import { CreateCommentInput } from './dtos/create.input';
+import { PaginateCommentOutput } from './dtos/paginate.output';
 import { ReadCommentInput } from './dtos/read.input';
 import { UpdateCommentInput } from './dtos/update.input';
 import { Comment } from './entities/comment.entity';
@@ -20,7 +21,10 @@ export class CommentResolver {
     @Context() context,
   ) {
     const user = context.req['user'];
-    return await this.commentService.create(user.userId, createCommentInput);
+    return await this.commentService.create({
+      ...createCommentInput,
+      authorId: user.userId,
+    });
   }
 
   @Mutation(() => Comment)
@@ -31,9 +35,9 @@ export class CommentResolver {
     const user = context.req['user'];
 
     return await this.commentService.updateById(
-      user.userId,
-      updateCommentInput.postId,
       updateCommentInput.commentId,
+      updateCommentInput.postId,
+      user.userId,
       updateCommentInput,
     );
   }
@@ -45,18 +49,33 @@ export class CommentResolver {
     @Context() context,
   ) {
     const user = context.req['user'];
-    return await this.commentService.deleteById(user.userId, postId, commentId);
+    return await this.commentService.deleteById(commentId, postId, user.userId);
   }
 
-  @Query(() => [Comment])
-  async getCommentsByQuery(
+  @Query(() => PaginateCommentOutput)
+  async paginateComments(
     @Args('readCommentInput') readCommentInput: ReadCommentInput,
-    @Context() context,
   ) {
-    const user = context.req['user'];
-    return await this.commentService.findByQuery({
-      authorId: user.userId,
-      ...readCommentInput,
-    });
+    const {
+      _id,
+      published,
+      authorId,
+      postId,
+      sortBy,
+      sortOrder,
+      limit,
+      offset,
+    } = readCommentInput;
+    return await this.commentService.paginateByQuery(
+      {
+        _id,
+        published,
+        authorId,
+        postId,
+      },
+      { sortBy, sortOrder },
+      limit,
+      offset,
+    );
   }
 }

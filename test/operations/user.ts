@@ -1,4 +1,5 @@
 import { MongoId } from 'src/@types/datatype';
+import { SortOrder } from 'src/common/interfaces/sort.interface';
 import { Role } from 'src/modules/users/entities/user.entity';
 
 export const USER_FIELDS = `{
@@ -49,19 +50,44 @@ export const generateUpdateUserInput = (
 // delete user
 export const DELETE_USER_OPERATION = 'deleteUser';
 export const DELETE_USER_QUERY = `mutation DeleteUser($deleteUserId: String!) {
-  deleteUser(id: $deleteUserId) ${USER_FIELDS}
+  deleteUser(userId: $deleteUserId) ${USER_FIELDS}
 }`;
-export const generateDeleteUserInput = (id: MongoId) => ({
-  deleteUserId: id,
+export const generateDeleteUserInput = (userId: MongoId) => ({
+  deleteUserId: userId,
 });
 
-// get users by query
-export const GET_USERS_BY_QUERY_OPERATION = 'getUsersByQuery';
-export const GET_USERS_BY_QUERY_QUERY = `query GetUsersByQuery($readUserInput: ReadUserInput!) {
-  getUsersByQuery(readUserInput: $readUserInput) ${USER_FIELDS}
+// paginate users
+export const PAGINATE_USERS_FIELDS = `{
+  total
+  limit
+  offset
+  docs ${USER_FIELDS}
 }`;
-export const generateGetUsersByQueryInput = ({ role }: { role?: Role }) => ({
+export const PAGINATE_USERS_OPERATION = 'paginateUsers';
+export const PAGINATE_USERS_QUERY = `query PaginateUsers($readUserInput: ReadUserInput!) {
+  paginateUsers(readUserInput: $readUserInput) ${PAGINATE_USERS_FIELDS}
+}`;
+export const generatePaginateUsersInput = ({
+  _id,
+  role,
+  sortBy,
+  sortOrder,
+  limit,
+  offset,
+}: {
+  _id?: MongoId;
+  role?: Role;
+  sortBy?: string;
+  sortOrder?: SortOrder;
+  limit?: number;
+  offset?: number;
+}) => ({
   readUserInput: {
+    _id,
     role,
+    sortBy,
+    sortOrder,
+    limit,
+    offset,
   },
 });
