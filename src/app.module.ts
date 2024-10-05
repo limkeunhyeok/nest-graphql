@@ -55,13 +55,13 @@ import { UserService } from './modules/users/user.service';
       validationRules: [depthLimit(3)], // Paginate의 경우가 있어 3으로 제한
       formatError: (error) => {
         const { message, path, extensions } = error;
-
         // 일단, 아폴로 자체 에러는 400으로 처리
         const statusCode = extensions.originalError
           ? (extensions.originalError as any).statusCode
           : 400;
         const exceptionCode = extensions.code;
         const stack = extensions.stacktrace;
+        const timestamp = new Date();
 
         return {
           message: 'An error occurred.',
@@ -71,6 +71,7 @@ import { UserService } from './modules/users/user.service';
             statusCode,
             message,
             stack,
+            timestamp,
           },
         };
       },
