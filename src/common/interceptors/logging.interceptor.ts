@@ -71,8 +71,8 @@ export class LoggingInterceptor implements NestInterceptor {
       path,
       method,
       ip,
-      query,
-      body,
+      requestBody: query,
+      requestQuery: body,
       message: 'A request has arrived.',
     });
     return next.handle().pipe(
@@ -83,8 +83,8 @@ export class LoggingInterceptor implements NestInterceptor {
             path,
             method,
             ip,
-            query,
-            body,
+            requestBody: query,
+            requestQuery: body,
             message: 'Send a response.',
           });
         },
