@@ -5,8 +5,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { JwtModule } from '@nestjs/jwt';
-import { MongooseModule } from '@nestjs/mongoose';
+import { InjectConnection, MongooseModule } from '@nestjs/mongoose';
 import * as depthLimit from 'graphql-depth-limit';
+import { Connection } from 'mongoose';
 import * as path from 'path';
 import { AuthGuard } from './common/guards/auth.guard';
 import { HealthModule } from './common/health/health.module';
@@ -31,7 +32,6 @@ import { UserService } from './modules/users/user.service';
 @Module({
   imports: [
     ConfigModule.forRoot({ load: [config] }),
-    // TODO: 추후, db 연결이 끊어졌을 때, 전략 추가하기
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -99,7 +99,14 @@ import { UserService } from './modules/users/user.service';
   exports: [Logger],
 })
 export class AppModule implements OnModuleInit {
-  constructor(private readonly userService: UserService) {}
+  private logger: Logger;
+
+  constructor(
+    private readonly userService: UserService,
+    @InjectConnection() private connection: Connection,
+  ) {
+    this.logger = new Logger(this.constructor.name);
+  }
 
   async onModuleInit() {
     const email = 'admin@example.com';
@@ -111,5 +118,33 @@ export class AppModule implements OnModuleInit {
     if (!hasAdmin) {
       await this.userService.create({ email, password, name, role });
     }
+
+    this.connection.on('connected', () => {
+      this.logger.log('MongoDB connected');
+    });
+
+    this.connection.on('disconnected', () => {
+      this.logger.warn('MongoDB disconnected');
+    });
+
+    this.connection.on('reconnected', () => {
+      this.logger.log('MongoDB reconnected');
+    });
+
+    this.connection.on('error', (error) => {
+      this.logger.error(`MongoDB connection error: ${error}`);
+    });
+
+    this.connection.on('close', () => {
+      this.logger.log('MongoDB connection closed');
+    });
   }
 }
+
+// 초기에 db 재연결 로직을 작성하면서
+// Mongoose를 랩핑하는 dynamic module을 만들려고 했으나,
+// configService 때문에 생기는 의존성 문제로 그냥 onModuleInit에 작성
+// 아래는 dynamic 모듈을 만드는데 참고한 자료.
+// 근데, @nestjs/mongoose git에 들어가서 보니, 적당히 머리굴리면 다시 만들 수 있을거 같긴함.
+// https://dev.to/nestjs/advanced-nestjs-how-to-build-completely-dynamic-nestjs-modules-1370
+// https://the-masked-developer.github.io/wiki/%5Bnestjs%5Ddynamic-module/
