@@ -12,6 +12,7 @@ import { Loader } from 'nestjs-dataloader';
 import { MongoId } from 'src/@types/datatype';
 import { RoleGuard } from 'src/common/guards/role.guard';
 import { CommentLoader } from '../comments/comment.loader';
+import { CommentService } from '../comments/comment.service';
 import { Comment } from '../comments/entities/comment.entity';
 import { Role, User } from '../users/entities/user.entity';
 import { UserLoader } from '../users/user.loader';
@@ -25,7 +26,10 @@ import { PostService } from './post.service';
 @Resolver(() => Post)
 @UseGuards(RoleGuard([Role.ADMIN, Role.MEMBER]))
 export class PostResolver {
-  constructor(private readonly postService: PostService) {}
+  constructor(
+    private readonly postService: PostService,
+    private readonly commentService: CommentService,
+  ) {}
 
   @Mutation(() => Post)
   async createPost(
@@ -78,12 +82,26 @@ export class PostResolver {
     );
   }
 
+  @Query(() => [Post])
+  async getPostsForLoaderTest(
+    @Args('limit', { type: () => Number }) limit: number,
+  ) {
+    return await this.postService.getPostsForLoaderTest(limit);
+  }
+
   @ResolveField(() => [Comment])
-  async comments(
+  async commentsWithLoader(
     @Parent() post: Post,
     @Loader(CommentLoader) commentLoader: Loader<string, Comment[]>,
   ) {
     return commentLoader.load(post._id.toString());
+  }
+
+  @ResolveField(() => [Comment])
+  async commentsWithoutLoader(@Parent() post: Post): Promise<Comment[]> {
+    const { _id } = post;
+    const answer = await this.commentService.findByQuery({ postId: _id });
+    return answer;
   }
 
   @ResolveField(() => User)

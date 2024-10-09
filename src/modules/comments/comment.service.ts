@@ -69,6 +69,10 @@ export class CommentService {
       .exec();
   }
 
+  async findByQuery(query: FilterQuery<Comment>) {
+    return await this.commentModel.find(query).exec();
+  }
+
   async paginateByQuery(
     filterQuery: FilterQuery<Comment>,
     sortQuery: SortQuery,

@@ -81,6 +81,8 @@ type Post {
   author: User
   authorId: String!
   comments: [Comment!]
+  commentsWithLoader: [Comment!]!
+  commentsWithoutLoader: [Comment!]!
   contents: String!
   createdAt: DateTime!
   published: Boolean!
@@ -89,6 +91,7 @@ type Post {
 }
 
 type Query {
+  getPostsForLoaderTest(limit: Float!): [Post!]!
   paginateComments(readCommentInput: ReadCommentInput!): PaginateCommentOutput!
   paginatePosts(readPostInput: ReadPostInput!): PaginatePostOutput!
   paginateUsers(readUserInput: ReadUserInput!): PaginateUsersOutput!

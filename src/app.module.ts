@@ -6,6 +6,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { JwtModule } from '@nestjs/jwt';
 import { InjectConnection, MongooseModule } from '@nestjs/mongoose';
+import * as bcrypt from 'bcrypt';
 import * as depthLimit from 'graphql-depth-limit';
 import { Connection } from 'mongoose';
 import * as path from 'path';
@@ -110,7 +111,7 @@ export class AppModule implements OnModuleInit {
 
   async onModuleInit() {
     const email = 'admin@example.com';
-    const password = 'password';
+    const password = bcrypt.hashSync('password', 10);
     const name = 'admin';
     const role = Role.ADMIN;
 

@@ -82,6 +82,11 @@ export class PostService {
     return paginateResponse({ total, limit, offset, docs });
   }
 
+  async getPostsForLoaderTest(limit: number) {
+    const posts = await this.postModel.find({}).limit(limit).exec();
+    return posts;
+  }
+
   private getTotalCountPromise(
     filterQuery: FilterQuery<Post>,
   ): Promise<number> {
