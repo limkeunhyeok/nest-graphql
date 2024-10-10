@@ -10,7 +10,7 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
 import { ACCESS_IS_DENIED } from 'src/constants/exception-message.const';
-import { Role } from 'src/modules/users/entities/user.entity';
+import { Role } from 'src/constants/role.const';
 
 export const RoleGuard = (roles: Role[]): Type<CanActivate> => {
   @Injectable()

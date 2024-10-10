@@ -14,8 +14,12 @@ export class CommentLoader {
   ) {}
 
   generateDataLoader() {
-    return new DataLoader<string, Comment[]>((postIds: string[]) =>
-      this.batchLoadComments(postIds),
+    return new DataLoader<string, Comment[]>(
+      (postIds: string[]) => this.batchLoadComments(postIds),
+      {
+        // batchScheduleFn: (callback) => setTimeout(callback, 10),
+        // maxBatchSize: 16,
+      },
     );
   }
 

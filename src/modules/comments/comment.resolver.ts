@@ -2,7 +2,7 @@ import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { MongoId } from 'src/@types/datatype';
 import { RoleGuard } from 'src/common/guards/role.guard';
-import { Role } from '../users/entities/user.entity';
+import { Role } from 'src/constants/role.const';
 import { CommentService } from './comment.service';
 import { CreateCommentInput } from './dtos/create.input';
 import { PaginateCommentOutput } from './dtos/paginate.output';

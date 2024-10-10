@@ -11,10 +11,11 @@ import {
 import { Loader } from 'nestjs-dataloader';
 import { MongoId } from 'src/@types/datatype';
 import { RoleGuard } from 'src/common/guards/role.guard';
+import { Role } from 'src/constants/role.const';
 import { CommentLoader } from '../comments/comment.loader';
 import { CommentService } from '../comments/comment.service';
 import { Comment } from '../comments/entities/comment.entity';
-import { Role, User } from '../users/entities/user.entity';
+import { User } from '../users/entities/user.entity';
 import { UserLoader } from '../users/user.loader';
 import { CreatePostInput } from './dtos/create.input';
 import { PaginatePostOutput } from './dtos/paginate.output';

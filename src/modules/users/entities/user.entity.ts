@@ -1,19 +1,9 @@
-import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { MongoId } from 'src/@types/datatype';
+import { Role } from 'src/constants/role.const';
 import { Post } from 'src/modules/posts/entities/post.entity';
-
-export const Role = {
-  ADMIN: 'ADMIN',
-  MEMBER: 'MEMBER',
-} as const;
-
-export type Role = (typeof Role)[keyof typeof Role];
-
-registerEnumType(Role, {
-  name: 'Role',
-});
 
 @ObjectType()
 @Schema({ timestamps: true, _id: true })

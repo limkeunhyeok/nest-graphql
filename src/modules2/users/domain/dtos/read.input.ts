@@ -1,7 +1,7 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { MongoId } from 'src/@types/datatype';
 import { SortOrder } from 'src/common/interfaces/sort.interface';
-import { Role } from 'src/constants/role.const';
+import { Role } from '../../../../constants/role.const';
 
 @InputType()
 export class ReadUserInput {

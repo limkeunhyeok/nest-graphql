@@ -16,3 +16,11 @@ export const encryptPassword = (password: string) => {
 export const comparedPassword = (attemptPassword: string, password: string) => {
   return bcrypt.compareSync(attemptPassword, password);
 };
+
+export const sanitizeQuery = (
+  query: Record<string, any>,
+): Record<string, any> => {
+  return Object.fromEntries(
+    Object.entries(query).filter(([_, value]) => value !== undefined),
+  );
+};

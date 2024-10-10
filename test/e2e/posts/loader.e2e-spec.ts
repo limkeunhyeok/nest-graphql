@@ -64,6 +64,8 @@ describe('Post resolver (e2e)', () => {
 
     headers = await fetchHeaders(req);
     withHeaders = withHeadersBy(headers);
+
+    // mongoose.set('debug', true);
   });
 
   afterAll(async () => {
@@ -75,7 +77,7 @@ describe('Post resolver (e2e)', () => {
 
   describe('Loader performance test', () => {
     const GET_POSTS_FOR_LOADER_TEST = 'getPostsForLoaderTest';
-    const TEST_LIMIT = 500;
+    const TEST_LIMIT = 2000;
 
     it('test with dataloader', async () => {
       // given

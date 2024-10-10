@@ -1,10 +1,11 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { Role } from 'src/constants/role.const';
+import { MongoId } from 'src/@types/datatype';
+import { Role } from '../../../../constants/role.const';
 
 @InputType()
-export class CreateUserInput {
+export class UpdateUserInput {
   @Field(() => String)
-  email: string;
+  _id: MongoId;
 
   @Field(() => String)
   name: string;
@@ -12,6 +13,6 @@ export class CreateUserInput {
   @Field(() => String)
   password: string;
 
-  @Field(() => Role, { defaultValue: Role.MEMBER })
+  @Field(() => String)
   role: Role;
 }

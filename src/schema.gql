@@ -12,18 +12,6 @@ type Comment {
   updatedAt: DateTime!
 }
 
-input CreateCommentInput {
-  contents: String!
-  postId: String!
-  published: Boolean!
-}
-
-input CreatePostInput {
-  contents: String!
-  published: Boolean!
-  title: String!
-}
-
 input CreateUserInput {
   email: String!
   name: String!
@@ -36,41 +24,14 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-input LoginInput {
-  email: String!
-  password: String!
-}
-
 type Mutation {
-  createComment(createCommentInput: CreateCommentInput!): Comment!
-  createPost(createPostInput: CreatePostInput!): Post!
-  createUser(createUserInput: CreateUserInput!): User!
-  deleteComment(commentId: String!, postId: String!): Comment!
-  deletePost(postId: String!): Post!
-  deleteUser(userId: String!): User!
-  login(loginInput: LoginInput!): TokenResponse!
-  signup(signupInput: CreateUserInput!): TokenResponse!
-  updateComment(updateCommentInput: UpdateCommentInput!): Comment!
-  updatePost(updatePostInput: UpdatePostInput!): Post!
-  updateUser(updateUserInput: UpdateUserInput!): User!
-}
-
-type PaginateCommentOutput {
-  docs: [Comment!]!
-  limit: Float!
-  offset: Float!
-  total: Float!
-}
-
-type PaginatePostOutput {
-  docs: [Post!]!
-  limit: Float!
-  offset: Float!
-  total: Float!
+  createUser(createUserInput: CreateUserInput!): UserOutput!
+  deleteUser(userId: String!): UserOutput!
+  updateUser(updateUserInput: UpdateUserInput!): UserOutput!
 }
 
 type PaginateUsersOutput {
-  docs: [User!]!
+  docs: [UserOutput!]!
   limit: Float!
   offset: Float!
   total: Float!
@@ -81,8 +42,6 @@ type Post {
   author: User
   authorId: String!
   comments: [Comment!]
-  commentsWithLoader: [Comment!]!
-  commentsWithoutLoader: [Comment!]!
   contents: String!
   createdAt: DateTime!
   published: Boolean!
@@ -91,31 +50,7 @@ type Post {
 }
 
 type Query {
-  getPostsForLoaderTest(limit: Float!): [Post!]!
-  paginateComments(readCommentInput: ReadCommentInput!): PaginateCommentOutput!
-  paginatePosts(readPostInput: ReadPostInput!): PaginatePostOutput!
   paginateUsers(readUserInput: ReadUserInput!): PaginateUsersOutput!
-}
-
-input ReadCommentInput {
-  _id: String
-  authorId: String
-  limit: Int! = 10
-  offset: Int! = 0
-  postId: String
-  published: Boolean
-  sortBy: String! = "createdAt"
-  sortOrder: String! = "desc"
-}
-
-input ReadPostInput {
-  _id: String
-  authorId: String
-  limit: Int! = 10
-  offset: Int! = 0
-  published: Boolean
-  sortBy: String! = "createdAt"
-  sortOrder: String! = "desc"
 }
 
 input ReadUserInput {
@@ -132,28 +67,11 @@ enum Role {
   MEMBER
 }
 
-type TokenResponse {
-  accessToken: String!
-}
-
-input UpdateCommentInput {
-  commentId: String!
-  contents: String!
-  postId: String!
-  published: Boolean!
-}
-
-input UpdatePostInput {
-  contents: String!
-  postId: String!
-  published: Boolean!
-  title: String!
-}
-
 input UpdateUserInput {
   _id: String!
   name: String!
   password: String!
+  role: String!
 }
 
 type User {
@@ -164,4 +82,14 @@ type User {
   posts: [Post!]
   role: Role!
   updatedAt: DateTime!
+}
+
+type UserOutput {
+  _id: String!
+  createdAt: String!
+  email: String!
+  name: String!
+  posts: [Post!]
+  role: Role!
+  updatedAt: String!
 }
