@@ -12,6 +12,22 @@ type Comment {
   updatedAt: DateTime!
 }
 
+type CommentOutput {
+  _id: String!
+  authorId: String!
+  contents: String!
+  createdAt: String!
+  postId: String!
+  published: Boolean!
+  updatedAt: String!
+}
+
+input CreateCommentInput {
+  contents: String!
+  postId: String!
+  published: Boolean!
+}
+
 input CreatePostInput {
   contents: String!
   published: Boolean!
@@ -31,12 +47,22 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Mutation {
+  createComment(createCommentInput: CreateCommentInput!): CommentOutput!
   createPost(createPostInput: CreatePostInput!): PostOutput!
   createUser(createUserInput: CreateUserInput!): UserOutput!
+  deleteComment(commentId: String!, postId: String!): CommentOutput!
   deletePost(PostId: String!): PostOutput!
   deleteUser(userId: String!): UserOutput!
+  updateComment(updateCommentInput: UpdateCommentInput!): CommentOutput!
   updatePost(updatePostInput: UpdatePostInput!): PostOutput!
   updateUser(updateUserInput: UpdateUserInput!): UserOutput!
+}
+
+type PaginateCommentOutput {
+  docs: [CommentOutput!]!
+  limit: Float!
+  offset: Float!
+  total: Float!
 }
 
 type PaginatePostOutput {
@@ -76,8 +102,20 @@ type PostOutput {
 }
 
 type Query {
+  paginateComments(readCommentInput: ReadCommentInput!): PaginateCommentOutput!
   paginatePosts(readPostInput: ReadPostInput!): PaginatePostOutput!
   paginateUsers(readUserInput: ReadUserInput!): PaginateUsersOutput!
+}
+
+input ReadCommentInput {
+  _id: String
+  authorId: String
+  limit: Int! = 10
+  offset: Int! = 0
+  postId: String
+  published: Boolean
+  sortBy: String! = "createdAt"
+  sortOrder: String! = "desc"
 }
 
 input ReadPostInput {
@@ -102,6 +140,13 @@ input ReadUserInput {
 enum Role {
   ADMIN
   MEMBER
+}
+
+input UpdateCommentInput {
+  commentId: String!
+  contents: String!
+  postId: String!
+  published: Boolean!
 }
 
 input UpdatePostInput {

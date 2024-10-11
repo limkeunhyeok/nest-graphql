@@ -10,7 +10,7 @@ export class PostRepository
   extends BaseRepository<PostDocument>
   implements PostRepositoryPort
 {
-  constructor(@InjectModel(Post.name) userModel: Model<PostDocument>) {
-    super(userModel);
+  constructor(@InjectModel(Post.name) postModel: Model<PostDocument>) {
+    super(postModel);
   }
 }

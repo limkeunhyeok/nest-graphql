@@ -22,6 +22,7 @@ import {
 } from './constants/database.const';
 import { Role } from './constants/role.const';
 import { SECRET_KEY } from './constants/server.const';
+import { CommentModule } from './modules2/comments/comment.module';
 import { PostModule } from './modules2/posts/post.module';
 import { UserService } from './modules2/users/domain/services/user.service';
 import { UserModule } from './modules2/users/user.module';
@@ -79,6 +80,7 @@ import { UserModule } from './modules2/users/user.module';
     // CommentModule,
     UserModule,
     PostModule,
+    CommentModule,
     JwtModule.registerAsync({
       inject: [ConfigService],
       imports: [ConfigModule],
