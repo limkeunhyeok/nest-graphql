@@ -27,7 +27,6 @@ export class UserService implements UserServicePort {
         this.configService.get(SALT_ROUND),
       ),
     });
-
     return UserDomain.fromJson(createdUser).toJson();
   }
 

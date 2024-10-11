@@ -1,5 +1,6 @@
 import { Document, FilterQuery, Model, UpdateQuery } from 'mongoose';
 import { MongoId } from 'src/@types/datatype';
+import { SortQuery } from '../interfaces/sort.interface';
 
 // 여러 entity를 업데이트 또는 삭제하는 작업은 신중해야 하는 작업이므로,
 // 이는 상속 받은 자식 클래스에서 추가 메서드 작성
@@ -31,5 +32,23 @@ export abstract class BaseRepository<T extends Document> {
 
   async deleteById(id: MongoId): Promise<T> {
     return await this.model.findByIdAndDelete(id, { new: true });
+  }
+
+  getTotalCountPromise(filterQuery: FilterQuery<T>): Promise<number> {
+    return this.model.countDocuments(filterQuery).exec();
+  }
+
+  findDocsPromise(
+    filterQuery: FilterQuery<T>,
+    { sortBy, sortOrder }: SortQuery,
+    limit: number,
+    offset: number,
+  ): Promise<T[]> {
+    return this.model
+      .find(filterQuery)
+      .sort({ [sortBy]: sortOrder })
+      .skip(offset)
+      .limit(limit)
+      .exec();
   }
 }
