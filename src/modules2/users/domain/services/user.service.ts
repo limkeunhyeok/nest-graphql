@@ -36,6 +36,8 @@ export class UserService implements UserServicePort {
   ): Promise<UserJson> {
     const hasUser = await this.userRepository.findById(userId);
 
+    // TODO: password가 다른 경우 로직 추가 필요
+
     if (!hasUser) {
       throw new BadRequestException(ID_DOES_NOT_EXIST);
     }

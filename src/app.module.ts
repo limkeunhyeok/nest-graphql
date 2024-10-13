@@ -22,6 +22,7 @@ import {
 } from './constants/database.const';
 import { Role } from './constants/role.const';
 import { SECRET_KEY } from './constants/server.const';
+import { AuthModule } from './modules2/auth/auth.module';
 import { CommentModule } from './modules2/comments/comment.module';
 import { PostModule } from './modules2/posts/post.module';
 import { UserService } from './modules2/users/domain/services/user.service';
@@ -78,6 +79,7 @@ import { UserModule } from './modules2/users/user.module';
     // AuthModule,
     // PostModule,
     // CommentModule,
+    AuthModule,
     UserModule,
     PostModule,
     CommentModule,
