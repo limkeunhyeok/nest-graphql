@@ -46,13 +46,20 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input LoginInput {
+  email: String!
+  password: String!
+}
+
 type Mutation {
   createComment(createCommentInput: CreateCommentInput!): CommentOutput!
   createPost(createPostInput: CreatePostInput!): PostOutput!
   createUser(createUserInput: CreateUserInput!): UserOutput!
   deleteComment(commentId: String!, postId: String!): CommentOutput!
-  deletePost(PostId: String!): PostOutput!
+  deletePost(postId: String!): PostOutput!
   deleteUser(userId: String!): UserOutput!
+  login(loginInput: LoginInput!): TokenOutput!
+  signup(signupInput: SignupInput!): TokenOutput!
   updateComment(updateCommentInput: UpdateCommentInput!): CommentOutput!
   updatePost(updatePostInput: UpdatePostInput!): PostOutput!
   updateUser(updateUserInput: UpdateUserInput!): UserOutput!
@@ -142,6 +149,17 @@ enum Role {
   MEMBER
 }
 
+input SignupInput {
+  email: String!
+  name: String!
+  password: String!
+  role: Role! = MEMBER
+}
+
+type TokenOutput {
+  accessToken: String!
+}
+
 input UpdateCommentInput {
   commentId: String!
   contents: String!
@@ -159,8 +177,8 @@ input UpdatePostInput {
 input UpdateUserInput {
   _id: String!
   name: String!
-  password: String!
-  role: String!
+  password: String
+  role: String
 }
 
 type User {

@@ -42,7 +42,7 @@ export class PostResolver {
 
   @Mutation(() => PostOutput)
   async deletePost(
-    @Args('PostId', { type: () => String }) postId: MongoId,
+    @Args('postId', { type: () => String }) postId: MongoId,
     @Context() context,
   ) {
     const user = context.req['user'];

@@ -1,10 +1,11 @@
-import { INestApplication } from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as mongoose from 'mongoose';
 import { AppModule } from 'src/app.module';
 import { AllExceptionsFilter } from 'src/common/filters/all-exceptions.filter';
 import { LoggingInterceptor } from 'src/common/interceptors/logging.interceptor';
+import { EMAIL_IS_ALREADY_REGISTERED } from 'src/constants/exception-message.const';
 import { User } from 'src/modules/users/entities/user.entity';
 import * as request from 'supertest';
 import { expectTokenResponseSucceed } from 'test/expectations/auth';
@@ -105,7 +106,11 @@ describe('Auth resolver (e2e)', () => {
       const res = await withHeaders(req.post(GRAPHQL).send(params)).expect(200);
 
       // then
-      expectResponseFailed(res);
+      expectResponseFailed(
+        res,
+        EMAIL_IS_ALREADY_REGISTERED,
+        HttpStatus.BAD_REQUEST,
+      );
     });
   });
 });

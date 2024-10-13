@@ -6,7 +6,8 @@ import { AppModule } from 'src/app.module';
 import { AllExceptionsFilter } from 'src/common/filters/all-exceptions.filter';
 import { LoggingInterceptor } from 'src/common/interceptors/logging.interceptor';
 import { ID_DOES_NOT_EXIST } from 'src/constants/exception-message.const';
-import { Role, User } from 'src/modules/users/entities/user.entity';
+import { Role } from 'src/constants/role.const';
+import { User } from 'src/modules/users/entities/user.entity';
 import * as request from 'supertest';
 import { expectUserResponseSucceed } from 'test/expectations/user';
 import { cleanupDatabase } from 'test/lib/database';
@@ -32,9 +33,6 @@ describe('User resolver (e2e)', () => {
 
   let adminTokenHeaders: Headers;
   let withHeadersIncludeAdminToken: any;
-
-  let memberTokenHeaders: Headers;
-  let withHeadersIncludeMemberToken: any;
 
   const GRAPHQL = '/graphql';
 
@@ -62,13 +60,6 @@ describe('User resolver (e2e)', () => {
       Role.ADMIN,
     );
     withHeadersIncludeAdminToken = withHeadersBy(adminTokenHeaders);
-
-    memberTokenHeaders = await fetchUserTokenAndHeaders(
-      req,
-      userModel,
-      Role.MEMBER,
-    );
-    withHeadersIncludeMemberToken = withHeadersBy(memberTokenHeaders);
   });
 
   afterAll(async () => {
@@ -113,7 +104,7 @@ describe('User resolver (e2e)', () => {
       };
 
       // when
-      const res = await withHeadersIncludeMemberToken(
+      const res = await withHeadersIncludeAdminToken(
         req.post(GRAPHQL).send(params),
       ).expect(200);
 

@@ -23,7 +23,10 @@ export class UserService {
       throw new BadRequestException(EMAIL_IS_ALREADY_REGISTERED);
     }
 
-    const createdUser = new this.userModel(userRaw);
+    const createdUser = new this.userModel({
+      ...userRaw,
+      password: encryptPassword(userRaw.password),
+    });
     return await createdUser.save();
   }
 

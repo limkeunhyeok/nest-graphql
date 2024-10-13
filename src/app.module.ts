@@ -2,6 +2,7 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Logger, Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { JwtModule } from '@nestjs/jwt';
 import { InjectConnection, MongooseModule } from '@nestjs/mongoose';
@@ -9,6 +10,7 @@ import * as bcrypt from 'bcrypt';
 import * as depthLimit from 'graphql-depth-limit';
 import { Connection } from 'mongoose';
 import * as path from 'path';
+import { AuthGuard } from './common/guards/auth.guard';
 import { HealthModule } from './common/health/health.module';
 import config from './config';
 import {
@@ -98,10 +100,7 @@ import { UserModule } from './modules2/users/user.module';
     }),
     HealthModule,
   ],
-  providers: [
-    Logger,
-    // { provide: APP_GUARD, useClass: AuthGuard }
-  ],
+  providers: [Logger, { provide: APP_GUARD, useClass: AuthGuard }],
   exports: [Logger],
 })
 export class AppModule implements OnModuleInit {

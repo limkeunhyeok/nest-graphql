@@ -36,7 +36,7 @@ export class UserResolver {
   }
 
   @Query(() => PaginateUsersOutput)
-  // @UseGuards(RoleGuard([Role.ADMIN]))
+  @UseGuards(RoleGuard([Role.ADMIN, Role.MEMBER]))
   async paginateUsers(@Args('readUserInput') readUserInput: ReadUserInput) {
     const { _id, role, sortBy, sortOrder, limit, offset } = readUserInput;
     return await this.userService.paginateByQuery(

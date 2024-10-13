@@ -1,5 +1,6 @@
 import * as faker from 'faker';
 import mongoose, { model } from 'mongoose';
+import { Role } from 'src/constants/role.const';
 import {
   Comment,
   CommentDocument,
@@ -11,7 +12,6 @@ import {
   PostSchema,
 } from 'src/modules/posts/entities/post.entity';
 import {
-  Role,
   UserDocument,
   UserSchema,
 } from 'src/modules/users/entities/user.entity';

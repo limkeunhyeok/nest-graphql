@@ -4,7 +4,10 @@ import * as bcrypt from 'bcrypt';
 import { FilterQuery, UpdateQuery } from 'mongoose';
 import { MongoId } from 'src/@types/datatype';
 import { SortQuery } from 'src/common/interfaces/sort.interface';
-import { ID_DOES_NOT_EXIST } from 'src/constants/exception-message.const';
+import {
+  EMAIL_IS_ALREADY_REGISTERED,
+  ID_DOES_NOT_EXIST,
+} from 'src/constants/exception-message.const';
 import { SALT_ROUND } from 'src/constants/server.const';
 import { paginateResponse, PaginateResponse } from 'src/libs/paginate';
 import { sanitizeQuery } from 'src/libs/utils';
@@ -20,6 +23,13 @@ export class UserService implements UserServicePort {
   ) {}
 
   async create(userInfo: UserInfo): Promise<UserJson> {
+    const hasUser = await this.userRepository.findOne({
+      email: userInfo.email,
+    });
+    if (hasUser) {
+      throw new BadRequestException(EMAIL_IS_ALREADY_REGISTERED);
+    }
+
     const createdUser = await this.userRepository.create({
       ...userInfo,
       password: bcrypt.hashSync(
@@ -36,16 +46,17 @@ export class UserService implements UserServicePort {
   ): Promise<UserJson> {
     const hasUser = await this.userRepository.findById(userId);
 
-    // TODO: password가 다른 경우 로직 추가 필요
-
     if (!hasUser) {
       throw new BadRequestException(ID_DOES_NOT_EXIST);
     }
 
-    const updatedUser = await this.userRepository.updateById(
-      userId,
-      updateQuery,
-    );
+    const updatedUser = await this.userRepository.updateById(userId, {
+      ...updateQuery,
+      password: bcrypt.hashSync(
+        updateQuery.password,
+        this.configService.get(SALT_ROUND),
+      ),
+    });
 
     return UserDomain.fromJson(updatedUser).toJson();
   }

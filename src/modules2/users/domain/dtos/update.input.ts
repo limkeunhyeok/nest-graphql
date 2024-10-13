@@ -10,9 +10,9 @@ export class UpdateUserInput {
   @Field(() => String)
   name: string;
 
-  @Field(() => String)
-  password: string;
+  @Field(() => String, { nullable: true })
+  password?: string;
 
-  @Field(() => String)
-  role: Role;
+  @Field(() => String, { nullable: true })
+  role?: Role;
 }

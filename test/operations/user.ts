@@ -1,6 +1,6 @@
 import { MongoId } from 'src/@types/datatype';
 import { SortOrder } from 'src/common/interfaces/sort.interface';
-import { Role } from 'src/modules/users/entities/user.entity';
+import { Role } from 'src/constants/role.const';
 
 export const USER_FIELDS = `{
   _id,

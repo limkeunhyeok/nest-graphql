@@ -1,4 +1,4 @@
-import { Role } from 'src/modules/users/entities/user.entity';
+import { Role } from 'src/constants/role.const';
 
 export const TOKEN_FIELDS = `{
   accessToken
@@ -18,7 +18,7 @@ export const generateLoginInput = (email: string, password: string) => ({
 
 // signup
 export const SIGNUP_OPERATION = 'signup';
-export const SIGNUP_QUERY = `mutation Signup($signupInput: CreateUserInput!) {
+export const SIGNUP_QUERY = `mutation Signup($signupInput: SignupInput!) {
   signup(signupInput: $signupInput) ${TOKEN_FIELDS}
 }`;
 export const generateSignupInput = (

@@ -5,13 +5,15 @@ import * as mongoose from 'mongoose';
 import { AppModule } from 'src/app.module';
 import { AllExceptionsFilter } from 'src/common/filters/all-exceptions.filter';
 import { LoggingInterceptor } from 'src/common/interceptors/logging.interceptor';
-import { ACCESS_IS_DENIED } from 'src/constants/exception-message.const';
-import { Role, User } from 'src/modules/users/entities/user.entity';
+import { INVALID_TOKEN } from 'src/constants/exception-message.const';
+import { Role } from 'src/constants/role.const';
+import { User } from 'src/modules/users/entities/user.entity';
 import * as request from 'supertest';
 import { expectUserResponseSucceed } from 'test/expectations/user';
 import { cleanupDatabase } from 'test/lib/database';
 import {
   expectResponseFailed,
+  fetchHeaders,
   fetchUserTokenAndHeaders,
   getResponseData,
   Headers,
@@ -32,8 +34,8 @@ describe('User resolver (e2e)', () => {
   let adminTokenHeaders: Headers;
   let withHeadersIncludeAdminToken: any;
 
-  let memberTokenHeaders: Headers;
-  let withHeadersIncludeMemberToken: any;
+  let headers: Headers;
+  let withHeaders: any;
 
   const GRAPHQL = '/graphql';
 
@@ -62,12 +64,8 @@ describe('User resolver (e2e)', () => {
     );
     withHeadersIncludeAdminToken = withHeadersBy(adminTokenHeaders);
 
-    memberTokenHeaders = await fetchUserTokenAndHeaders(
-      req,
-      userModel,
-      Role.MEMBER,
-    );
-    withHeadersIncludeMemberToken = withHeadersBy(memberTokenHeaders);
+    headers = await fetchHeaders(req);
+    withHeaders = withHeadersBy(headers);
   });
 
   afterAll(async () => {
@@ -104,7 +102,7 @@ describe('User resolver (e2e)', () => {
       expectUserResponseSucceed(data['docs'][0]);
     });
 
-    it('failed - access is denied.', async () => {
+    it('failed - invalid token.', async () => {
       // given
       const params = {
         operationType: PAGINATE_USERS_OPERATION,
@@ -119,12 +117,10 @@ describe('User resolver (e2e)', () => {
       };
 
       // when
-      const res = await withHeadersIncludeMemberToken(
-        req.post(GRAPHQL).send(params),
-      ).expect(200);
+      const res = await withHeaders(req.post(GRAPHQL).send(params)).expect(200);
 
       // then
-      expectResponseFailed(res, ACCESS_IS_DENIED, HttpStatus.FORBIDDEN);
+      expectResponseFailed(res, INVALID_TOKEN, HttpStatus.UNAUTHORIZED);
     });
   });
 });
