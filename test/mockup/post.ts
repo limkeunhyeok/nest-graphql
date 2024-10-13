@@ -1,7 +1,7 @@
 import * as faker from 'faker';
 import * as mongoose from 'mongoose';
 import { MongoId } from 'src/@types/datatype';
-import { Post } from 'src/modules/posts/entities/post.entity';
+import { Post } from 'src/modules/api/v2/posts/domain/models/post.entity';
 
 export function mockPostRaw(userId?: MongoId): Partial<Post> {
   const now = new Date();

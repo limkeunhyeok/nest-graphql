@@ -1,7 +1,7 @@
 import * as faker from 'faker';
 import * as mongoose from 'mongoose';
 import { MongoId } from 'src/@types/datatype';
-import { Comment } from 'src/modules/comments/entities/comment.entity';
+import { Comment } from 'src/modules/api/v2/comments/domain/models/comment.entity';
 
 export function mockCommentRaw(
   postId: MongoId,

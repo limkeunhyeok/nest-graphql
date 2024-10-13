@@ -2,16 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Comment {
-  _id: String!
-  authorId: String!
-  contents: String!
-  createdAt: DateTime!
-  postId: String!
-  published: Boolean!
-  updatedAt: DateTime!
-}
-
 type CommentOutput {
   _id: String!
   authorId: String!
@@ -40,11 +30,6 @@ input CreateUserInput {
   password: String!
   role: Role! = MEMBER
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 input LoginInput {
   email: String!
@@ -84,18 +69,6 @@ type PaginateUsersOutput {
   limit: Float!
   offset: Float!
   total: Float!
-}
-
-type Post {
-  _id: String!
-  author: User
-  authorId: String!
-  comments: [Comment!]
-  contents: String!
-  createdAt: DateTime!
-  published: Boolean!
-  title: String!
-  updatedAt: DateTime!
 }
 
 type PostOutput {
@@ -181,22 +154,11 @@ input UpdateUserInput {
   role: String
 }
 
-type User {
-  _id: String!
-  createdAt: DateTime!
-  email: String!
-  name: String!
-  posts: [Post!]
-  role: Role!
-  updatedAt: DateTime!
-}
-
 type UserOutput {
   _id: String!
   createdAt: String!
   email: String!
   name: String!
-  posts: [Post!]
   role: Role!
   updatedAt: String!
 }

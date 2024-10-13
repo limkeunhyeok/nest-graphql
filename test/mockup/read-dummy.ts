@@ -2,15 +2,15 @@ import mongoose, { model } from 'mongoose';
 import {
   CommentDocument,
   CommentSchema,
-} from 'src/modules/comments/entities/comment.entity';
+} from 'src/modules/api/v2/comments/domain/models/comment.entity';
 import {
   PostDocument,
   PostSchema,
-} from 'src/modules/posts/entities/post.entity';
+} from 'src/modules/api/v2/posts/domain/models/post.entity';
 import {
   UserDocument,
   UserSchema,
-} from 'src/modules/users/entities/user.entity';
+} from 'src/modules/api/v2/users/domain/models/user.entity';
 
 const dbUrl = `mongodb://localhost:27017/graphql`;
 

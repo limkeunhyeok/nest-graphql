@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 import { Role } from 'src/constants/role.const';
-import { User } from 'src/modules/users/entities/user.entity';
+import { User } from 'src/modules/api/v2/users/domain/models/user.entity';
 import request, { Response } from 'supertest';
 import { createUser, mockUserRaw } from 'test/mockup/user';
 import {

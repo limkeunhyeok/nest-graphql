@@ -6,7 +6,7 @@ import { AppModule } from 'src/app.module';
 import { AllExceptionsFilter } from 'src/common/filters/all-exceptions.filter';
 import { LoggingInterceptor } from 'src/common/interceptors/logging.interceptor';
 import { INCORRECT_EMAIL_OR_PASSWORD } from 'src/constants/exception-message.const';
-import { User } from 'src/modules/users/entities/user.entity';
+import { User } from 'src/modules/api/v2/users/domain/models/user.entity';
 import * as request from 'supertest';
 import { expectTokenResponseSucceed } from 'test/expectations/auth';
 import { cleanupDatabase } from 'test/lib/database';
