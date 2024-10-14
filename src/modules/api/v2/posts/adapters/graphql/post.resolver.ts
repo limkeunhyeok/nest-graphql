@@ -3,12 +3,12 @@ import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { MongoId } from 'src/@types/datatype';
 import { RoleGuard } from 'src/common/guards/role.guard';
 import { Role } from 'src/constants/role.const';
-import { CreatePostInput } from '../../domain/dtos/create.input';
-import { PaginatePostOutput } from '../../domain/dtos/paginate.output';
-import { PostOutput } from '../../domain/dtos/post.output';
-import { ReadPostInput } from '../../domain/dtos/read.input';
-import { UpdatePostInput } from '../../domain/dtos/update.input';
 import { PostService } from '../../domain/services/post.service';
+import { CreatePostInput } from '../dtos/create.input';
+import { PaginatePostOutput } from '../dtos/paginate.output';
+import { PostOutput } from '../dtos/post.output';
+import { ReadPostInput } from '../dtos/read.input';
+import { UpdatePostInput } from '../dtos/update.input';
 
 @Resolver(() => PostOutput)
 @UseGuards(RoleGuard([Role.ADMIN, Role.MEMBER]))

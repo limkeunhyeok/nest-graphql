@@ -3,12 +3,12 @@ import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { MongoId } from 'src/@types/datatype';
 import { RoleGuard } from 'src/common/guards/role.guard';
 import { Role } from 'src/constants/role.const';
-import { CommentOutput } from '../../domain/dtos/comment.output';
-import { CreateCommentInput } from '../../domain/dtos/create.input';
-import { PaginateCommentOutput } from '../../domain/dtos/paginate.output';
-import { ReadCommentInput } from '../../domain/dtos/read.input';
-import { UpdateCommentInput } from '../../domain/dtos/update.input';
 import { CommentService } from '../../domain/services/comment.service';
+import { CommentOutput } from '../dtos/comment.output';
+import { CreateCommentInput } from '../dtos/create.input';
+import { PaginateCommentOutput } from '../dtos/paginate.output';
+import { ReadCommentInput } from '../dtos/read.input';
+import { UpdateCommentInput } from '../dtos/update.input';
 
 @Resolver(() => CommentOutput)
 @UseGuards(RoleGuard([Role.ADMIN, Role.MEMBER]))

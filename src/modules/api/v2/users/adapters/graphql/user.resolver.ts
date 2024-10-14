@@ -3,12 +3,12 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { MongoId } from 'src/@types/datatype';
 import { RoleGuard } from 'src/common/guards/role.guard';
 import { Role } from 'src/constants/role.const';
-import { CreateUserInput } from '../../domain/dtos/create.input';
-import { PaginateUsersOutput } from '../../domain/dtos/paginate.output';
-import { ReadUserInput } from '../../domain/dtos/read.input';
-import { UpdateUserInput } from '../../domain/dtos/update.input';
-import { UserOutput } from '../../domain/dtos/user.output';
 import { UserService } from '../../domain/services/user.service';
+import { CreateUserInput } from '../dtos/create.input';
+import { PaginateUsersOutput } from '../dtos/paginate.output';
+import { ReadUserInput } from '../dtos/read.input';
+import { UpdateUserInput } from '../dtos/update.input';
+import { UserOutput } from '../dtos/user.output';
 
 @Resolver(() => UserOutput)
 export class UserResolver {

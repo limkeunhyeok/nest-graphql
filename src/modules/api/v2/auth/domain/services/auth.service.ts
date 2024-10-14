@@ -4,9 +4,9 @@ import { INCORRECT_EMAIL_OR_PASSWORD } from 'src/constants/exception-message.con
 import { comparedPassword } from 'src/libs/utils';
 import { UserRaw } from '../../../users/domain/models/user.domain';
 import { UserService } from '../../../users/domain/services/user.service';
+import { LoginParams } from '../../adapters/dtos/login.input';
+import { SignupParams } from '../../adapters/dtos/signup.input';
 import { AuthServicePort } from '../../ports/in/auth.service.port';
-import { LoginParams } from '../dtos/login.input';
-import { SignupParams } from '../dtos/signup.input';
 
 @Injectable()
 export class AuthService implements AuthServicePort {
