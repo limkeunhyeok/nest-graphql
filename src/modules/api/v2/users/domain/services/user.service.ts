@@ -108,4 +108,8 @@ export class UserService implements UserServicePort {
     const users = docs.map((doc) => UserDomain.fromJson(doc).toJson());
     return paginateResponse({ total, limit, offset, docs: users });
   }
+
+  async findByQuery(filterQuery: FilterQuery<UserJson>) {
+    return await this.userRepository.find(filterQuery);
+  }
 }

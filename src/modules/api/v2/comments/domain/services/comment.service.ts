@@ -21,7 +21,6 @@ import {
   CommentJson,
   CommentRaw,
 } from '../models/comment.domain';
-import { Comment } from '../models/comment.entity';
 
 @Injectable()
 export class CommentService implements CommentServicePort {
@@ -85,7 +84,7 @@ export class CommentService implements CommentServicePort {
   }
 
   async paginateByQuery(
-    filterQuery: FilterQuery<Comment>,
+    filterQuery: FilterQuery<CommentJson>,
     sortQuery: SortQuery,
     limit: number,
     offset: number,
@@ -105,5 +104,9 @@ export class CommentService implements CommentServicePort {
     const [total, docs] = await Promise.all([totalCountPromise, docsPromise]);
     const comments = docs.map((doc) => CommentDomain.fromJson(doc).toJson());
     return paginateResponse({ total, limit, offset, docs: comments });
+  }
+
+  async findByQuery(filterQuery: FilterQuery<CommentJson>) {
+    return await this.commentRepository.find(filterQuery);
   }
 }

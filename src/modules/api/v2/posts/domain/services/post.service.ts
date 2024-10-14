@@ -89,4 +89,8 @@ export class PostService implements PostServicePort {
     const posts = docs.map((doc) => PostDomain.fromJson(doc).toJson());
     return paginateResponse({ total, limit, offset, docs: posts });
   }
+
+  async findByQuery(filterQuery: FilterQuery<PostJson>) {
+    return await this.postRepository.find(filterQuery);
+  }
 }
