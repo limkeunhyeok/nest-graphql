@@ -73,7 +73,9 @@ type PaginateUsersOutput {
 
 type PostOutput {
   _id: String!
+  author: UserOutput!
   authorId: String!
+  comments: [CommentOutput!]!
   contents: String!
   createdAt: String!
   published: Boolean!
@@ -159,6 +161,7 @@ type UserOutput {
   createdAt: String!
   email: String!
   name: String!
+  posts: [PostOutput!]!
   role: Role!
   updatedAt: String!
 }

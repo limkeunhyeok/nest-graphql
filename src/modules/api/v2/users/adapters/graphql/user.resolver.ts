@@ -1,8 +1,18 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import { Loader } from 'nestjs-dataloader';
 import { MongoId } from 'src/@types/datatype';
 import { RoleGuard } from 'src/common/guards/role.guard';
 import { Role } from 'src/constants/role.const';
+import { PostOutput } from '../../../posts/adapters/dtos/post.output';
+import { PostLoader } from '../../../posts/domain/loaders/post.loader';
 import { UserService } from '../../domain/services/user.service';
 import { CreateUserInput } from '../dtos/create.input';
 import { PaginateUsersOutput } from '../dtos/paginate.output';
@@ -48,5 +58,13 @@ export class UserResolver {
       limit,
       offset,
     );
+  }
+
+  @ResolveField(() => [PostOutput])
+  async posts(
+    @Parent() user: UserOutput,
+    @Loader(PostLoader) postLoader: Loader<string, PostOutput[]>,
+  ) {
+    return postLoader.load(user._id.toString());
   }
 }
