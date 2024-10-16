@@ -1,6 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-export interface TokenResponse {
+export interface Tokens {
   accessToken: string;
 }
 

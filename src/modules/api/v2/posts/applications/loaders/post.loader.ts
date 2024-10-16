@@ -1,7 +1,7 @@
 import { Injectable, Scope } from '@nestjs/common';
 import * as DataLoader from 'dataloader';
 import mongoose from 'mongoose';
-import { Post } from '../models/post.entity';
+import { PostJson } from '../../domain/models/post.domain';
 import { PostService } from '../services/post.service';
 
 @Injectable({ scope: Scope.REQUEST }) // 요청당 하나의 DataLoader 인스턴스
@@ -9,7 +9,7 @@ export class PostLoader {
   constructor(private readonly postService: PostService) {}
 
   generateDataLoader() {
-    return new DataLoader<string, Post[]>(
+    return new DataLoader<string, PostJson[]>(
       (authorIds: string[]) => this.batchLoadPosts(authorIds),
       {
         maxBatchSize: 16,
@@ -17,12 +17,12 @@ export class PostLoader {
     );
   }
 
-  private async batchLoadPosts(authorIds: string[]): Promise<Post[][]> {
+  private async batchLoadPosts(authorIds: string[]): Promise<PostJson[][]> {
     const authorObjectIds = authorIds.map(
       (authorId) => new mongoose.Types.ObjectId(authorId),
     );
 
-    const posts: Post[] = await this.postService.findByQuery({
+    const posts: PostJson[] = await this.postService.findByQuery({
       _id: { $in: authorObjectIds },
     });
 

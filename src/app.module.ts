@@ -25,7 +25,7 @@ import {
 import { Role } from './constants/role.const';
 import { SECRET_KEY } from './constants/server.const';
 import { ApiModule } from './modules/api/v2/api.module';
-import { UserService } from './modules/api/v2/users/domain/services/user.service';
+import { UserService } from './modules/api/v2/users/applications/services/user.service';
 
 @Module({
   imports: [

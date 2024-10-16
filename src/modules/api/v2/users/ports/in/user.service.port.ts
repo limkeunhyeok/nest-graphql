@@ -20,4 +20,5 @@ export interface UserServicePort {
     limit: number,
     offset: number,
   ): Promise<PaginateResponse<UserJson>>;
+  findByQuery(filterQuery: FilterQuery<UserJson>): Promise<UserJson[]>;
 }

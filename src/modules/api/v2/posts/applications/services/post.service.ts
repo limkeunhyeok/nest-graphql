@@ -13,8 +13,13 @@ import {
 import { paginateResponse, PaginateResponse } from 'src/libs/paginate';
 import { sanitizeQuery } from 'src/libs/utils';
 import { PostRepository } from '../../adapters/repositories/post.repository';
+import {
+  PostDomain,
+  PostInfo,
+  PostJson,
+  PostRaw,
+} from '../../domain/models/post.domain';
 import { PostServicePort } from '../../ports/in/post.service.port';
-import { PostDomain, PostInfo, PostJson, PostRaw } from '../models/post.domain';
 
 @Injectable()
 export class PostService implements PostServicePort {
@@ -91,6 +96,7 @@ export class PostService implements PostServicePort {
   }
 
   async findByQuery(filterQuery: FilterQuery<PostJson>) {
-    return await this.postRepository.find(filterQuery);
+    const posts = await this.postRepository.find(filterQuery);
+    return posts.map((post) => PostDomain.fromJson(post).toJson());
   }
 }

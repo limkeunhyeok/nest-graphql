@@ -7,9 +7,9 @@ import { CommentModule } from '../comments/comment.module';
 import { UserModule } from '../users/user.module';
 import { PostResolver } from './adapters/graphql/post.resolver';
 import { PostRepository } from './adapters/repositories/post.repository';
-import { PostLoader } from './domain/loaders/post.loader';
+import { PostLoader } from './applications/loaders/post.loader';
+import { PostService } from './applications/services/post.service';
 import { Post, PostSchema } from './domain/models/post.entity';
-import { PostService } from './domain/services/post.service';
 
 @Module({
   imports: [

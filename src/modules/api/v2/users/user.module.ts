@@ -6,9 +6,9 @@ import { DataLoaderInterceptor } from 'nestjs-dataloader';
 import { PostModule } from '../posts/post.module';
 import { UserResolver } from './adapters/graphql/user.resolver';
 import { UserRepository } from './adapters/repositories/user.repository';
-import { UserLoader } from './domain/loaders/user.loader';
+import { UserLoader } from './applications/loaders/user.loader';
+import { UserService } from './applications/services/user.service';
 import { User, UserSchema } from './domain/models/user.entity';
-import { UserService } from './domain/services/user.service';
 
 @Module({
   imports: [

@@ -1,6 +1,6 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { Public } from 'src/common/decorators/public.decorator';
-import { AuthService } from '../../domain/services/auth.service';
+import { AuthService } from '../../applications/services/auth.service';
 import { LoginInput } from '../dtos/login.input';
 import { SignupInput } from '../dtos/signup.input';
 import { TokenOutput } from '../dtos/token.output';

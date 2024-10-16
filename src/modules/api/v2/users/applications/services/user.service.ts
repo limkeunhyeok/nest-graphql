@@ -12,8 +12,13 @@ import { SALT_ROUND } from 'src/constants/server.const';
 import { paginateResponse, PaginateResponse } from 'src/libs/paginate';
 import { sanitizeQuery } from 'src/libs/utils';
 import { UserRepository } from '../../adapters/repositories/user.repository';
+import {
+  UserDomain,
+  UserInfo,
+  UserJson,
+  UserRaw,
+} from '../../domain/models/user.domain';
 import { UserServicePort } from '../../ports/in/user.service.port';
-import { UserDomain, UserInfo, UserJson, UserRaw } from '../models/user.domain';
 
 @Injectable()
 export class UserService implements UserServicePort {
@@ -78,7 +83,7 @@ export class UserService implements UserServicePort {
     return UserDomain.fromJson(user);
   }
 
-  async findOneById(userId: MongoId) {
+  async findOneById(userId: MongoId): Promise<UserRaw> {
     const hasUser = await this.userRepository.findById(userId);
     if (!hasUser) {
       throw new BadRequestException(ID_DOES_NOT_EXIST);
@@ -109,7 +114,8 @@ export class UserService implements UserServicePort {
     return paginateResponse({ total, limit, offset, docs: users });
   }
 
-  async findByQuery(filterQuery: FilterQuery<UserJson>) {
-    return await this.userRepository.find(filterQuery);
+  async findByQuery(filterQuery: FilterQuery<UserJson>): Promise<UserJson[]> {
+    const users = await this.userRepository.find(filterQuery);
+    return users.map((user) => UserDomain.fromJson(user).toJson());
   }
 }

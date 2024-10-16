@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import * as DataLoader from 'dataloader';
 import mongoose from 'mongoose';
 import { NestDataLoader } from 'nestjs-dataloader';
-import { User } from '../models/user.entity';
+import { UserJson } from '../../domain/models/user.domain';
+import { User } from '../../domain/models/user.entity';
 import { UserService } from '../services/user.service';
 
 // CacheMap을 사용하기 때문에, 객체를 key로 삼지 않는 이상 키가 중복되지 않음
@@ -12,7 +13,7 @@ export class UserLoader implements NestDataLoader<string, User> {
   constructor(private readonly userService: UserService) {}
 
   generateDataLoader() {
-    return new DataLoader<string, User>(
+    return new DataLoader<string, UserJson>(
       (userIds: string[]) => this.batchLoadUsers(userIds),
       {
         maxBatchSize: 16,
@@ -20,12 +21,12 @@ export class UserLoader implements NestDataLoader<string, User> {
     );
   }
 
-  private async batchLoadUsers(userIds: string[]): Promise<User[]> {
+  private async batchLoadUsers(userIds: string[]): Promise<UserJson[]> {
     const userObjectIds = userIds.map(
       (userId) => new mongoose.Types.ObjectId(userId),
     );
 
-    const users: User[] = await this.userService.findByQuery({
+    const users: UserJson[] = await this.userService.findByQuery({
       _id: { $in: userObjectIds },
     });
 

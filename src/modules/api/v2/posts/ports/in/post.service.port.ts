@@ -19,4 +19,5 @@ export interface PostServicePort {
     limit: number,
     offset: number,
   ): Promise<PaginateResponse<PostJson>>;
+  findByQuery(filterQuery: FilterQuery<PostJson>): Promise<PostJson[]>;
 }
