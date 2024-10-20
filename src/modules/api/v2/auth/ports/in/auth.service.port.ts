@@ -1,6 +1,20 @@
-import { LoginParams } from '../../adapters/dtos/login.input';
-import { SignupParams } from '../../adapters/dtos/signup.input';
-import { Tokens } from '../../adapters/dtos/token.output';
+import { Role } from 'src/constants/role.const';
+
+export interface LoginParams {
+  email: string;
+  password: string;
+}
+
+export interface SignupParams {
+  email: string;
+  name: string;
+  password: string;
+  role: Role;
+}
+
+export interface Tokens {
+  accessToken: string;
+}
 
 export interface AuthServicePort {
   login(loginParams: LoginParams): Promise<Tokens>;

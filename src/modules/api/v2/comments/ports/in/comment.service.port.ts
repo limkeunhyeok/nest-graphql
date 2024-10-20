@@ -2,12 +2,12 @@ import { FilterQuery, UpdateQuery } from 'mongoose';
 import { MongoId } from 'src/@types/datatype';
 import { SortQuery } from 'src/common/interfaces/sort.interface';
 import { PaginateResponse } from 'src/libs/paginate';
+import { Comment } from '../../adapters/persistence/entities/comment.entity';
 import {
   CommentInfo,
   CommentJson,
   CommentRaw,
-} from '../../domain/models/comment.domain';
-import { Comment } from '../../domain/models/comment.entity';
+} from '../../domain/comment.domain';
 
 export interface CommentServicePort {
   create(commentRaw: CommentInfo): Promise<CommentJson>;
@@ -28,4 +28,5 @@ export interface CommentServicePort {
     limit: number,
     offset: number,
   ): Promise<PaginateResponse<CommentJson>>;
+  findByQuery(filterQuery: FilterQuery<CommentJson>): Promise<Comment[]>;
 }

@@ -1,0 +1,64 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36" version="24.8.0">
+  <diagram name="페이지-1" id="hPF5od2ribOyWSFeC4v7">
+    <mxGraphModel dx="1320" dy="3611" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="kFL-kj_fplT8bTexZafS-2" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="587" y="405" width="480" height="360" as="geometry" />
+        </mxCell>
+        <mxCell id="kFL-kj_fplT8bTexZafS-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=block;endFill=1;" edge="1" parent="kFL-kj_fplT8bTexZafS-2" source="kFL-kj_fplT8bTexZafS-4" target="kFL-kj_fplT8bTexZafS-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="kFL-kj_fplT8bTexZafS-4" value="Resolver&lt;div&gt;Adapter&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="kFL-kj_fplT8bTexZafS-2">
+          <mxGeometry x="20" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="kFL-kj_fplT8bTexZafS-5" value="&amp;lt;&amp;lt;Interface&amp;gt;&amp;gt;&lt;div&gt;ServicePort&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="kFL-kj_fplT8bTexZafS-2">
+          <mxGeometry x="180" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="kFL-kj_fplT8bTexZafS-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=block;endFill=0;" edge="1" parent="kFL-kj_fplT8bTexZafS-2" source="kFL-kj_fplT8bTexZafS-9" target="kFL-kj_fplT8bTexZafS-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="kFL-kj_fplT8bTexZafS-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=block;endFill=1;" edge="1" parent="kFL-kj_fplT8bTexZafS-2" source="kFL-kj_fplT8bTexZafS-9" target="kFL-kj_fplT8bTexZafS-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="kFL-kj_fplT8bTexZafS-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=block;endFill=1;" edge="1" parent="kFL-kj_fplT8bTexZafS-2" source="kFL-kj_fplT8bTexZafS-9" target="kFL-kj_fplT8bTexZafS-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="kFL-kj_fplT8bTexZafS-9" value="&lt;div&gt;Service&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="kFL-kj_fplT8bTexZafS-2">
+          <mxGeometry x="180" y="100" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="kFL-kj_fplT8bTexZafS-10" value="&lt;div&gt;&amp;lt;&amp;lt;Interface&amp;gt;&amp;gt;&lt;/div&gt;&lt;div&gt;RepositoryPort&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="kFL-kj_fplT8bTexZafS-2">
+          <mxGeometry x="340" y="100" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="kFL-kj_fplT8bTexZafS-11" value="&lt;div&gt;Domain&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="kFL-kj_fplT8bTexZafS-2">
+          <mxGeometry x="180" y="200" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="kFL-kj_fplT8bTexZafS-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=block;endFill=0;" edge="1" parent="kFL-kj_fplT8bTexZafS-2" source="kFL-kj_fplT8bTexZafS-13" target="kFL-kj_fplT8bTexZafS-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="kFL-kj_fplT8bTexZafS-13" value="&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;Repository&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;Adapter&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="kFL-kj_fplT8bTexZafS-2">
+          <mxGeometry x="340" y="300" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="kFL-kj_fplT8bTexZafS-14" value="" style="endArrow=none;dashed=1;html=1;rounded=0;" edge="1" parent="kFL-kj_fplT8bTexZafS-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint y="79" as="sourcePoint" />
+            <mxPoint x="480" y="79" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="kFL-kj_fplT8bTexZafS-15" value="" style="endArrow=none;dashed=1;html=1;rounded=0;" edge="1" parent="kFL-kj_fplT8bTexZafS-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint y="180" as="sourcePoint" />
+            <mxPoint x="480" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="kFL-kj_fplT8bTexZafS-16" value="" style="endArrow=none;dashed=1;html=1;rounded=0;" edge="1" parent="kFL-kj_fplT8bTexZafS-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint y="280" as="sourcePoint" />
+            <mxPoint x="480" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

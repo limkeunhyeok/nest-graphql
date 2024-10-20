@@ -1,8 +1,8 @@
 import { FilterQuery, UpdateQuery } from 'mongoose';
 import { MongoId } from 'src/@types/datatype';
 import { SortQuery } from 'src/common/interfaces/sort.interface';
-import { PostInfo, PostJson, PostRaw } from '../../domain/models/post.domain';
-import { PostDocument } from '../../domain/models/post.entity';
+import { PostDocument } from '../../adapters/persistence/entities/post.entity';
+import { PostInfo, PostJson, PostRaw } from '../../domain/post.domain';
 
 export interface PostRepositoryPort {
   findById(id: MongoId): Promise<PostDocument | null>;

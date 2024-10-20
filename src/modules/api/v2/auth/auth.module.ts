@@ -3,8 +3,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { SECRET_KEY } from 'src/constants/server.const';
 import { UserModule } from '../users/user.module';
-import { AuthResovler } from './adapters/graphql/auth.resolver';
+import { AuthResovler } from './adapters/graphql/resolver/auth.resolver';
 import { AuthService } from './applications/services/auth.service';
+import { AUTH_SERVICE } from './auth.const';
 
 @Module({
   imports: [
@@ -24,7 +25,18 @@ import { AuthService } from './applications/services/auth.service';
       },
     }),
   ],
-  exports: [AuthService],
-  providers: [AuthResovler, AuthService],
+  exports: [
+    {
+      provide: AUTH_SERVICE,
+      useClass: AuthService,
+    },
+  ],
+  providers: [
+    AuthResovler,
+    {
+      provide: AUTH_SERVICE,
+      useClass: AuthService,
+    },
+  ],
 })
 export class AuthModule {}

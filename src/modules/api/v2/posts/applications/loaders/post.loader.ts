@@ -1,12 +1,15 @@
-import { Injectable, Scope } from '@nestjs/common';
+import { Inject, Injectable, Scope } from '@nestjs/common';
 import * as DataLoader from 'dataloader';
 import mongoose from 'mongoose';
-import { PostJson } from '../../domain/models/post.domain';
-import { PostService } from '../services/post.service';
+import { PostJson } from '../../domain/post.domain';
+import { PostServicePort } from '../../ports/in/post.service.port';
+import { POST_SERVICE } from '../../post.const';
 
 @Injectable({ scope: Scope.REQUEST }) // 요청당 하나의 DataLoader 인스턴스
 export class PostLoader {
-  constructor(private readonly postService: PostService) {}
+  constructor(
+    @Inject(POST_SERVICE) private readonly postService: PostServicePort,
+  ) {}
 
   generateDataLoader() {
     return new DataLoader<string, PostJson[]>(

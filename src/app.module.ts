@@ -1,6 +1,6 @@
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { Logger, Module, OnModuleInit } from '@nestjs/common';
+import { Inject, Logger, Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -25,7 +25,8 @@ import {
 import { Role } from './constants/role.const';
 import { SECRET_KEY } from './constants/server.const';
 import { ApiModule } from './modules/api/v2/api.module';
-import { UserService } from './modules/api/v2/users/applications/services/user.service';
+import { UserServicePort } from './modules/api/v2/users/ports/in/user.service.port';
+import { USER_SERVICE } from './modules/api/v2/users/user.const';
 
 @Module({
   imports: [
@@ -97,7 +98,7 @@ export class AppModule implements OnModuleInit {
   private logger: Logger;
 
   constructor(
-    private readonly userService: UserService,
+    @Inject(USER_SERVICE) private readonly userService: UserServicePort,
     @InjectConnection() private connection: Connection,
   ) {
     this.logger = new Logger(this.constructor.name);

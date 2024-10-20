@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { FilterQuery, UpdateQuery } from 'mongoose';
@@ -11,20 +11,22 @@ import {
 import { SALT_ROUND } from 'src/constants/server.const';
 import { paginateResponse, PaginateResponse } from 'src/libs/paginate';
 import { sanitizeQuery } from 'src/libs/utils';
-import { UserRepository } from '../../adapters/repositories/user.repository';
 import {
   UserDomain,
   UserInfo,
   UserJson,
   UserRaw,
-} from '../../domain/models/user.domain';
+} from '../../domain/user.domain';
 import { UserServicePort } from '../../ports/in/user.service.port';
+import { UserRepositoryPort } from '../../ports/out/user.repository.port';
+import { USER_REPOSITORY } from '../../user.const';
 
 @Injectable()
 export class UserService implements UserServicePort {
   constructor(
     private readonly configService: ConfigService,
-    private readonly userRepository: UserRepository,
+    @Inject(USER_REPOSITORY)
+    private readonly userRepository: UserRepositoryPort,
   ) {}
 
   async create(userInfo: UserInfo): Promise<UserJson> {

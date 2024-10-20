@@ -7,7 +7,7 @@ import { AllExceptionsFilter } from 'src/common/filters/all-exceptions.filter';
 import { LoggingInterceptor } from 'src/common/interceptors/logging.interceptor';
 import { INVALID_TOKEN } from 'src/constants/exception-message.const';
 import { Role } from 'src/constants/role.const';
-import { User } from 'src/modules/api/v2/users/domain/models/user.entity';
+import { User } from 'src/modules/api/v2/users/adapters/persistence/entities/user.entity';
 import * as request from 'supertest';
 import { expectUserResponseSucceed } from 'test/expectations/user';
 import { cleanupDatabase } from 'test/lib/database';

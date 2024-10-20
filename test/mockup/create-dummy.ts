@@ -5,16 +5,16 @@ import {
   Comment,
   CommentDocument,
   CommentSchema,
-} from 'src/modules/api/v2/comments/domain/models/comment.entity';
+} from 'src/modules/api/v2/comments/adapters/persistence/entities/comment.entity';
 import {
   Post,
   PostDocument,
   PostSchema,
-} from 'src/modules/api/v2/posts/domain/models/post.entity';
+} from 'src/modules/api/v2/posts/adapters/persistence/entities/post.entity';
 import {
   UserDocument,
   UserSchema,
-} from 'src/modules/api/v2/users/domain/models/user.entity';
+} from 'src/modules/api/v2/users/adapters/persistence/entities/user.entity';
 import { mockCommentRaw } from './comment';
 import { mockPostRaw } from './post';
 import { mockUserRaw } from './user';

@@ -1,8 +1,8 @@
 import { FilterQuery, UpdateQuery } from 'mongoose';
 import { MongoId } from 'src/@types/datatype';
 import { SortQuery } from 'src/common/interfaces/sort.interface';
-import { UserInfo, UserJson, UserRaw } from '../../domain/models/user.domain';
-import { UserDocument } from '../../domain/models/user.entity';
+import { UserDocument } from '../../adapters/persistence/entities/user.entity';
+import { UserInfo, UserJson, UserRaw } from '../../domain/user.domain';
 
 export interface UserRepositoryPort {
   findById(id: MongoId): Promise<UserDocument | null>;

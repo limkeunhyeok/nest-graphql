@@ -2,8 +2,8 @@ import { FilterQuery, UpdateQuery } from 'mongoose';
 import { MongoId } from 'src/@types/datatype';
 import { SortQuery } from 'src/common/interfaces/sort.interface';
 import { PaginateResponse } from 'src/libs/paginate';
-import { UserInfo, UserJson, UserRaw } from '../../domain/models/user.domain';
-import { User } from '../../domain/models/user.entity';
+import { User } from '../../adapters/persistence/entities/user.entity';
+import { UserInfo, UserJson, UserRaw } from '../../domain/user.domain';
 
 export interface UserServicePort {
   create(userRaw: UserInfo): Promise<UserJson>;

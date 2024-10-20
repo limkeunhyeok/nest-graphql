@@ -2,7 +2,7 @@ import * as bcrypt from 'bcrypt';
 import * as faker from 'faker';
 import * as mongoose from 'mongoose';
 import { Role } from 'src/constants/role.const';
-import { User } from 'src/modules/api/v2/users/domain/models/user.entity';
+import { User } from 'src/modules/api/v2/users/adapters/persistence/entities/user.entity';
 
 export function mockUserRaw(role: Role = Role.MEMBER): Partial<User> {
   const now = new Date();

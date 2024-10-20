@@ -1,18 +1,21 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { INCORRECT_EMAIL_OR_PASSWORD } from 'src/constants/exception-message.const';
 import { comparedPassword } from 'src/libs/utils';
-import { UserService } from '../../../users/applications/services/user.service';
-import { UserRaw } from '../../../users/domain/models/user.domain';
-import { LoginParams } from '../../adapters/dtos/login.input';
-import { SignupParams } from '../../adapters/dtos/signup.input';
-import { Tokens } from '../../adapters/dtos/token.output';
-import { AuthServicePort } from '../../ports/in/auth.service.port';
+import { UserRaw } from '../../../users/domain/user.domain';
+import { UserServicePort } from '../../../users/ports/in/user.service.port';
+import { USER_SERVICE } from '../../../users/user.const';
+import {
+  AuthServicePort,
+  LoginParams,
+  SignupParams,
+  Tokens,
+} from '../../ports/in/auth.service.port';
 
 @Injectable()
 export class AuthService implements AuthServicePort {
   constructor(
-    private readonly userService: UserService,
+    @Inject(USER_SERVICE) private readonly userService: UserServicePort,
     private readonly jwtService: JwtService,
   ) {}
 

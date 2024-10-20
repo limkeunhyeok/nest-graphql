@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ForbiddenException,
+  Inject,
   Injectable,
 } from '@nestjs/common';
 import { FilterQuery, UpdateQuery } from 'mongoose';
@@ -12,18 +13,22 @@ import {
 } from 'src/constants/exception-message.const';
 import { paginateResponse, PaginateResponse } from 'src/libs/paginate';
 import { sanitizeQuery } from 'src/libs/utils';
-import { PostRepository } from '../../adapters/repositories/post.repository';
 import {
   PostDomain,
   PostInfo,
   PostJson,
   PostRaw,
-} from '../../domain/models/post.domain';
+} from '../../domain/post.domain';
 import { PostServicePort } from '../../ports/in/post.service.port';
+import { PostRepositoryPort } from '../../ports/out/post.repository.port';
+import { POST_REPOSITORY } from '../../post.const';
 
 @Injectable()
 export class PostService implements PostServicePort {
-  constructor(private readonly postRepository: PostRepository) {}
+  constructor(
+    @Inject(POST_REPOSITORY)
+    private readonly postRepository: PostRepositoryPort,
+  ) {}
 
   async create(postInfo: PostInfo): Promise<PostJson> {
     const createdPost = await this.postRepository.create({

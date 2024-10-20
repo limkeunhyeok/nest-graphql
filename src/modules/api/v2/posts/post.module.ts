@@ -5,11 +5,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { DataLoaderInterceptor } from 'nestjs-dataloader';
 import { CommentModule } from '../comments/comment.module';
 import { UserModule } from '../users/user.module';
-import { PostResolver } from './adapters/graphql/post.resolver';
-import { PostRepository } from './adapters/repositories/post.repository';
+import { PostResolver } from './adapters/graphql/resolver/post.resolver';
+import { Post, PostSchema } from './adapters/persistence/entities/post.entity';
+import { PostRepository } from './adapters/persistence/repositories/post.repository';
 import { PostLoader } from './applications/loaders/post.loader';
 import { PostService } from './applications/services/post.service';
-import { Post, PostSchema } from './domain/models/post.entity';
+import { POST_REPOSITORY, POST_SERVICE } from './post.const';
 
 @Module({
   imports: [
@@ -23,15 +24,26 @@ import { Post, PostSchema } from './domain/models/post.entity';
     CommentModule,
     forwardRef(() => UserModule),
   ],
-  exports: [PostService],
+  exports: [
+    {
+      provide: POST_SERVICE,
+      useClass: PostService,
+    },
+  ],
   providers: [
     PostResolver,
-    PostService,
-    PostRepository,
     PostLoader,
     {
       provide: APP_INTERCEPTOR,
       useClass: DataLoaderInterceptor,
+    },
+    {
+      provide: POST_SERVICE,
+      useClass: PostService,
+    },
+    {
+      provide: POST_REPOSITORY,
+      useClass: PostRepository,
     },
   ],
 })

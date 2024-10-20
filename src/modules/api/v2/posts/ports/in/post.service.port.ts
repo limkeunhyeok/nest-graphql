@@ -2,8 +2,8 @@ import { FilterQuery, UpdateQuery } from 'mongoose';
 import { MongoId } from 'src/@types/datatype';
 import { SortQuery } from 'src/common/interfaces/sort.interface';
 import { PaginateResponse } from 'src/libs/paginate';
-import { PostInfo, PostJson } from '../../domain/models/post.domain';
-import { Post } from '../../domain/models/post.entity';
+import { Post } from '../../adapters/persistence/entities/post.entity';
+import { PostInfo, PostJson } from '../../domain/post.domain';
 
 export interface PostServicePort {
   create(postRaw: PostInfo): Promise<PostJson>;

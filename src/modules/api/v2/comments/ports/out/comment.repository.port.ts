@@ -1,12 +1,12 @@
 import { FilterQuery, UpdateQuery } from 'mongoose';
 import { MongoId } from 'src/@types/datatype';
 import { SortQuery } from 'src/common/interfaces/sort.interface';
+import { CommentDocument } from '../../adapters/persistence/entities/comment.entity';
 import {
   CommentInfo,
   CommentJson,
   CommentRaw,
-} from '../../domain/models/comment.domain';
-import { CommentDocument } from '../../domain/models/comment.entity';
+} from '../../domain/comment.domain';
 
 export interface CommentRepositoryPort {
   findById(id: MongoId): Promise<CommentDocument | null>;
