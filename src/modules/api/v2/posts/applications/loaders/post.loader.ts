@@ -1,12 +1,13 @@
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import * as DataLoader from 'dataloader';
 import mongoose from 'mongoose';
-import { PostJson } from '../../domain/post.domain';
+import { NestDataLoader } from 'nestjs-dataloader';
+import { PostDomain, PostJson, PostRaw } from '../../domain/post.domain';
 import { PostServicePort } from '../../ports/in/post.service.port';
 import { POST_SERVICE } from '../../post.const';
 
 @Injectable({ scope: Scope.REQUEST }) // 요청당 하나의 DataLoader 인스턴스
-export class PostLoader {
+export class PostLoader implements NestDataLoader<string, PostJson> {
   constructor(
     @Inject(POST_SERVICE) private readonly postService: PostServicePort,
   ) {}
@@ -25,12 +26,14 @@ export class PostLoader {
       (authorId) => new mongoose.Types.ObjectId(authorId),
     );
 
-    const posts: PostJson[] = await this.postService.findByQuery({
+    const posts: PostRaw[] = await this.postService.findByQuery({
       _id: { $in: authorObjectIds },
     });
 
     const postsByAuthorId = authorIds.map((authorId) =>
-      posts.filter((post) => post._id.toString() === authorId.toString()),
+      posts
+        .filter((post) => post._id.toString() === authorId.toString())
+        .map((post) => PostDomain.fromJson(post).toJson()),
     );
     return postsByAuthorId;
   }

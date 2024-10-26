@@ -94,7 +94,7 @@ export class UserService implements UserServicePort {
   }
 
   async paginateByQuery(
-    filterQuery: FilterQuery<UserJson>,
+    filterQuery: FilterQuery<UserRaw>,
     sortQuery: SortQuery,
     limit: number,
     offset: number,
@@ -116,8 +116,8 @@ export class UserService implements UserServicePort {
     return paginateResponse({ total, limit, offset, docs: users });
   }
 
-  async findByQuery(filterQuery: FilterQuery<UserJson>): Promise<UserJson[]> {
+  async findByQuery(filterQuery: FilterQuery<UserRaw>): Promise<UserRaw[]> {
     const users = await this.userRepository.find(filterQuery);
-    return users.map((user) => UserDomain.fromJson(user).toJson());
+    return users.map((user) => UserDomain.fromJson(user));
   }
 }

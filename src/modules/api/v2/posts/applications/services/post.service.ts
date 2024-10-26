@@ -78,7 +78,7 @@ export class PostService implements PostServicePort {
   }
 
   async paginateByQuery(
-    filterQuery: FilterQuery<PostJson>,
+    filterQuery: FilterQuery<PostRaw>,
     sortQuery: SortQuery,
     limit: number,
     offset: number,
@@ -100,8 +100,8 @@ export class PostService implements PostServicePort {
     return paginateResponse({ total, limit, offset, docs: posts });
   }
 
-  async findByQuery(filterQuery: FilterQuery<PostJson>) {
+  async findByQuery(filterQuery: FilterQuery<PostJson>): Promise<PostRaw[]> {
     const posts = await this.postRepository.find(filterQuery);
-    return posts.map((post) => PostDomain.fromJson(post).toJson());
+    return posts;
   }
 }

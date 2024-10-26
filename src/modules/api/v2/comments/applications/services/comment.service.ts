@@ -89,7 +89,7 @@ export class CommentService implements CommentServicePort {
   }
 
   async paginateByQuery(
-    filterQuery: FilterQuery<CommentJson>,
+    filterQuery: FilterQuery<CommentRaw>,
     sortQuery: SortQuery,
     limit: number,
     offset: number,
@@ -111,7 +111,9 @@ export class CommentService implements CommentServicePort {
     return paginateResponse({ total, limit, offset, docs: comments });
   }
 
-  async findByQuery(filterQuery: FilterQuery<CommentJson>) {
+  async findByQuery(
+    filterQuery: FilterQuery<CommentJson>,
+  ): Promise<CommentRaw[]> {
     return await this.commentRepository.find(filterQuery);
   }
 }
