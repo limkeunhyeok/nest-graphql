@@ -10,7 +10,6 @@ import {
 } from 'src/constants/exception-message.const';
 import { SALT_ROUND } from 'src/constants/server.const';
 import { paginateResponse, PaginateResponse } from 'src/libs/paginate';
-import { sanitizeQuery } from 'src/libs/utils';
 import {
   UserDomain,
   UserInfo,
@@ -44,7 +43,7 @@ export class UserService implements UserServicePort {
         this.configService.get(SALT_ROUND),
       ),
     });
-    return UserDomain.fromJson(createdUser).toJson();
+    return createdUser.toJson();
   }
 
   async updateById(
@@ -65,7 +64,7 @@ export class UserService implements UserServicePort {
       ),
     });
 
-    return UserDomain.fromJson(updatedUser).toJson();
+    return updatedUser.toJson();
   }
 
   async deleteById(userId: MongoId): Promise<UserJson> {
@@ -77,20 +76,19 @@ export class UserService implements UserServicePort {
 
     const deletedUser = await this.userRepository.deleteById(userId);
 
-    return UserDomain.fromJson(deletedUser).toJson();
+    return deletedUser.toJson();
   }
 
-  async findOneByEmail(email: string): Promise<UserRaw> {
-    const user = await this.userRepository.findOne({ email });
-    return UserDomain.fromJson(user);
+  async findOneByEmail(email: string): Promise<UserDomain> {
+    return await this.userRepository.findOne({ email });
   }
 
-  async findOneById(userId: MongoId): Promise<UserRaw> {
+  async findOneById(userId: MongoId): Promise<UserDomain> {
     const hasUser = await this.userRepository.findById(userId);
     if (!hasUser) {
       throw new BadRequestException(ID_DOES_NOT_EXIST);
     }
-    return UserDomain.fromJson(hasUser);
+    return hasUser;
   }
 
   async paginateByQuery(
@@ -99,25 +97,17 @@ export class UserService implements UserServicePort {
     limit: number,
     offset: number,
   ): Promise<PaginateResponse<UserJson>> {
-    const sanitizedFilterQuery = sanitizeQuery(filterQuery);
-
-    const docsPromise = this.userRepository.findDocsPromise(
-      sanitizedFilterQuery,
+    const { total, docs } = await this.userRepository.getTotalAndDocs(
+      filterQuery,
       sortQuery,
       limit,
       offset,
     );
-
-    const totalCountPromise =
-      this.userRepository.getTotalCountPromise(sanitizedFilterQuery);
-
-    const [total, docs] = await Promise.all([totalCountPromise, docsPromise]);
-    const users = docs.map((doc) => UserDomain.fromJson(doc).toJson());
-    return paginateResponse({ total, limit, offset, docs: users });
+    return paginateResponse({ total, limit, offset, docs });
   }
 
-  async findByQuery(filterQuery: FilterQuery<UserRaw>): Promise<UserRaw[]> {
+  async findByQuery(filterQuery: FilterQuery<UserRaw>): Promise<UserDomain[]> {
     const users = await this.userRepository.find(filterQuery);
-    return users.map((user) => UserDomain.fromJson(user));
+    return users;
   }
 }

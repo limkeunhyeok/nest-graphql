@@ -2,7 +2,12 @@ import { FilterQuery, UpdateQuery } from 'mongoose';
 import { MongoId } from 'src/@types/datatype';
 import { SortQuery } from 'src/common/interfaces/sort.interface';
 import { PaginateResponse } from 'src/libs/paginate';
-import { PostInfo, PostJson, PostRaw } from '../../domain/post.domain';
+import {
+  PostDomain,
+  PostInfo,
+  PostJson,
+  PostRaw,
+} from '../../domain/post.domain';
 
 export interface PostServicePort {
   create(postRaw: PostInfo): Promise<PostJson>;
@@ -18,5 +23,5 @@ export interface PostServicePort {
     limit: number,
     offset: number,
   ): Promise<PaginateResponse<PostJson>>;
-  findByQuery(filterQuery: FilterQuery<PostJson>): Promise<PostRaw[]>;
+  findByQuery(filterQuery: FilterQuery<PostJson>): Promise<PostDomain[]>;
 }

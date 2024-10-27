@@ -1,4 +1,5 @@
 import { ISODateTime, MongoId } from 'src/@types/datatype';
+import { BaseDomain } from 'src/common/interfaces/domain.interface';
 
 export interface PostRaw {
   readonly _id: MongoId;
@@ -27,7 +28,7 @@ export interface PostInfo {
   readonly authorId: MongoId;
 }
 
-export class PostDomain {
+export class PostDomain implements BaseDomain<PostJson> {
   constructor(
     public readonly _id: MongoId,
     public readonly title: string,

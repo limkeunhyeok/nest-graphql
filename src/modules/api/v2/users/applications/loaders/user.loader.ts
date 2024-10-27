@@ -2,7 +2,7 @@ import { Inject, Injectable, Scope } from '@nestjs/common';
 import * as DataLoader from 'dataloader';
 import mongoose from 'mongoose';
 import { NestDataLoader } from 'nestjs-dataloader';
-import { UserDomain, UserJson, UserRaw } from '../../domain/user.domain';
+import { UserDomain, UserJson } from '../../domain/user.domain';
 import { UserServicePort } from '../../ports/in/user.service.port';
 import { USER_SERVICE } from '../../user.const';
 
@@ -28,14 +28,12 @@ export class UserLoader implements NestDataLoader<string, UserJson> {
       (userId) => new mongoose.Types.ObjectId(userId),
     );
 
-    const users: UserRaw[] = await this.userService.findByQuery({
+    const users: UserDomain[] = await this.userService.findByQuery({
       _id: { $in: userObjectIds },
     });
 
     const usersById = userIds.map((userId) =>
-      UserDomain.fromJson(
-        users.find((user) => user._id.toString() === userId.toString()),
-      ).toJson(),
+      users.find((user) => user._id.toString() === userId.toString()).toJson(),
     );
     return usersById;
   }

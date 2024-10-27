@@ -12,7 +12,6 @@ import {
   ID_DOES_NOT_EXIST,
 } from 'src/constants/exception-message.const';
 import { paginateResponse, PaginateResponse } from 'src/libs/paginate';
-import { sanitizeQuery } from 'src/libs/utils';
 import {
   PostDomain,
   PostInfo,
@@ -35,7 +34,7 @@ export class PostService implements PostServicePort {
       ...postInfo,
     });
 
-    return PostDomain.fromJson(createdPost).toJson();
+    return createdPost.toJson();
   }
 
   async updateById(
@@ -58,7 +57,7 @@ export class PostService implements PostServicePort {
       updateQuery,
     );
 
-    return PostDomain.fromJson(updatedPost).toJson();
+    return updatedPost.toJson();
   }
 
   async deleteById(postId: MongoId, authorId: MongoId): Promise<PostJson> {
@@ -74,7 +73,7 @@ export class PostService implements PostServicePort {
 
     const deletedPost = await this.postRepository.deleteById(postId);
 
-    return PostDomain.fromJson(deletedPost).toJson();
+    return deletedPost.toJson();
   }
 
   async paginateByQuery(
@@ -83,24 +82,16 @@ export class PostService implements PostServicePort {
     limit: number,
     offset: number,
   ): Promise<PaginateResponse<PostJson>> {
-    const sanitizedFilterQuery = sanitizeQuery(filterQuery);
-
-    const docsPromise = this.postRepository.findDocsPromise(
-      sanitizedFilterQuery,
+    const { total, docs } = await this.postRepository.getTotalAndDocs(
+      filterQuery,
       sortQuery,
       limit,
       offset,
     );
-
-    const totalCountPromise =
-      this.postRepository.getTotalCountPromise(sanitizedFilterQuery);
-
-    const [total, docs] = await Promise.all([totalCountPromise, docsPromise]);
-    const posts = docs.map((doc) => PostDomain.fromJson(doc).toJson());
-    return paginateResponse({ total, limit, offset, docs: posts });
+    return paginateResponse({ total, limit, offset, docs });
   }
 
-  async findByQuery(filterQuery: FilterQuery<PostJson>): Promise<PostRaw[]> {
+  async findByQuery(filterQuery: FilterQuery<PostJson>): Promise<PostDomain[]> {
     const posts = await this.postRepository.find(filterQuery);
     return posts;
   }

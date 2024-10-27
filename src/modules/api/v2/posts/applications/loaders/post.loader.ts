@@ -2,7 +2,7 @@ import { Inject, Injectable, Scope } from '@nestjs/common';
 import * as DataLoader from 'dataloader';
 import mongoose from 'mongoose';
 import { NestDataLoader } from 'nestjs-dataloader';
-import { PostDomain, PostJson, PostRaw } from '../../domain/post.domain';
+import { PostDomain, PostJson } from '../../domain/post.domain';
 import { PostServicePort } from '../../ports/in/post.service.port';
 import { POST_SERVICE } from '../../post.const';
 
@@ -26,14 +26,14 @@ export class PostLoader implements NestDataLoader<string, PostJson> {
       (authorId) => new mongoose.Types.ObjectId(authorId),
     );
 
-    const posts: PostRaw[] = await this.postService.findByQuery({
+    const posts: PostDomain[] = await this.postService.findByQuery({
       _id: { $in: authorObjectIds },
     });
 
     const postsByAuthorId = authorIds.map((authorId) =>
       posts
         .filter((post) => post._id.toString() === authorId.toString())
-        .map((post) => PostDomain.fromJson(post).toJson()),
+        .map((post) => post.toJson()),
     );
     return postsByAuthorId;
   }

@@ -21,9 +21,9 @@ import { USER_SERVICE } from './modules/api/v2/users/user.const';
   imports: [
     ConfigModule.forRoot({ load: [serverConfig] }),
     MongooseModule.forRootAsync({
+      inject: [ConfigService],
       imports: [ConfigModule],
       useClass: MongodbConfigService,
-      inject: [ConfigService],
     }),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -60,7 +60,7 @@ export class AppModule implements OnModuleInit {
 
 // 초기에 db 재연결 로직을 작성하면서
 // Mongoose를 랩핑하는 dynamic module을 만들려고 했으나,
-// configService 때문에 생기는 의존성 문제로 그냥 onModuleInit에 작성
+// configService 때문에 생기는 의존성 문제로 그냥 MongodbConfigService 작성
 // 아래는 dynamic 모듈을 만드는데 참고한 자료.
 // 근데, @nestjs/mongoose git에 들어가서 보니, 적당히 머리굴리면 다시 만들 수 있을거 같긴함.
 // https://dev.to/nestjs/advanced-nestjs-how-to-build-completely-dynamic-nestjs-modules-1370

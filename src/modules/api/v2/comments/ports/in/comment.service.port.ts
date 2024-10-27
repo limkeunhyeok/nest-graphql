@@ -3,6 +3,7 @@ import { MongoId } from 'src/@types/datatype';
 import { SortQuery } from 'src/common/interfaces/sort.interface';
 import { PaginateResponse } from 'src/libs/paginate';
 import {
+  CommentDomain,
   CommentInfo,
   CommentJson,
   CommentRaw,
@@ -27,5 +28,5 @@ export interface CommentServicePort {
     limit: number,
     offset: number,
   ): Promise<PaginateResponse<CommentJson>>;
-  findByQuery(filterQuery: FilterQuery<CommentJson>): Promise<CommentRaw[]>;
+  findByQuery(filterQuery: FilterQuery<CommentJson>): Promise<CommentDomain[]>;
 }

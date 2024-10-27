@@ -1,4 +1,5 @@
 import { ISODateTime, MongoId } from 'src/@types/datatype';
+import { BaseDomain } from 'src/common/interfaces/domain.interface';
 import { Role } from 'src/constants/role.const';
 
 export interface UserRaw {
@@ -27,7 +28,7 @@ export interface UserInfo {
   readonly role: Role;
 }
 
-export class UserDomain {
+export class UserDomain implements BaseDomain<UserJson> {
   constructor(
     public readonly _id: MongoId,
     public readonly email: string,

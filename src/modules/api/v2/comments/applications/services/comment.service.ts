@@ -13,7 +13,6 @@ import {
   RELATION_ID_MISMATCH,
 } from 'src/constants/exception-message.const';
 import { paginateResponse, PaginateResponse } from 'src/libs/paginate';
-import { sanitizeQuery } from 'src/libs/utils';
 import { COMMENT_REPOSITORY } from '../../comment.const';
 import {
   CommentDomain,
@@ -36,7 +35,7 @@ export class CommentService implements CommentServicePort {
       ...commentInfo,
     });
 
-    return CommentDomain.fromJson(createdComment).toJson();
+    return createdComment.toJson();
   }
 
   async updateById(
@@ -62,7 +61,7 @@ export class CommentService implements CommentServicePort {
       commentId,
       updateQuery,
     );
-    return CommentDomain.fromJson(updatedComment).toJson();
+    return updatedComment.toJson();
   }
 
   async deleteById(
@@ -85,7 +84,7 @@ export class CommentService implements CommentServicePort {
 
     const deletedComment = await this.commentRepository.deleteById(commentId);
 
-    return CommentDomain.fromJson(deletedComment).toJson();
+    return deletedComment.toJson();
   }
 
   async paginateByQuery(
@@ -94,26 +93,19 @@ export class CommentService implements CommentServicePort {
     limit: number,
     offset: number,
   ): Promise<PaginateResponse<CommentJson>> {
-    const sanitizedFilterQuery = sanitizeQuery(filterQuery);
-
-    const docsPromise = this.commentRepository.findDocsPromise(
-      sanitizedFilterQuery,
+    const { total, docs } = await this.commentRepository.getTotalAndDocs(
+      filterQuery,
       sortQuery,
       limit,
       offset,
     );
-
-    const totalCountPromise =
-      this.commentRepository.getTotalCountPromise(sanitizedFilterQuery);
-
-    const [total, docs] = await Promise.all([totalCountPromise, docsPromise]);
-    const comments = docs.map((doc) => CommentDomain.fromJson(doc).toJson());
-    return paginateResponse({ total, limit, offset, docs: comments });
+    return paginateResponse({ total, limit, offset, docs });
   }
 
   async findByQuery(
     filterQuery: FilterQuery<CommentJson>,
-  ): Promise<CommentRaw[]> {
-    return await this.commentRepository.find(filterQuery);
+  ): Promise<CommentDomain[]> {
+    const comments = await this.commentRepository.find(filterQuery);
+    return comments;
   }
 }

@@ -1,4 +1,5 @@
 import { ISODateTime, MongoId } from 'src/@types/datatype';
+import { BaseDomain } from 'src/common/interfaces/domain.interface';
 
 export interface CommentRaw {
   readonly _id: MongoId;
@@ -27,7 +28,7 @@ export interface CommentInfo {
   readonly postId: MongoId;
 }
 
-export class CommentDomain {
+export class CommentDomain implements BaseDomain<CommentJson> {
   constructor(
     public readonly _id: MongoId,
     public readonly contents: string,
@@ -38,7 +39,7 @@ export class CommentDomain {
     public readonly updatedAt: Date,
   ) {}
 
-  static fromJson(json: CommentRaw) {
+  static fromJson(json: CommentRaw): CommentDomain | null {
     if (!json) {
       return null;
     }
