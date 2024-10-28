@@ -1,2 +1,0 @@
-export const POST_SERVICE = 'POST_SERVICE';
-export const POST_REPOSITORY = 'POST_REPOSITORY';

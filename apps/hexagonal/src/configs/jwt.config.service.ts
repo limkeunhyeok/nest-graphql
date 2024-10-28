@@ -1,7 +1,7 @@
+import { SECRET_KEY } from '@common/core/constants/server.const';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModuleOptions, JwtOptionsFactory } from '@nestjs/jwt';
-import { SECRET_KEY } from 'src/constants/server.const';
 
 @Injectable()
 export class JwtConfigService implements JwtOptionsFactory {

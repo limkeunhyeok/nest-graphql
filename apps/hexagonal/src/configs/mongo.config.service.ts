@@ -1,10 +1,3 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import {
-  MongooseModuleOptions,
-  MongooseOptionsFactory,
-} from '@nestjs/mongoose';
-import { Connection } from 'mongoose';
 import {
   AUTH_SOURCE,
   MONGO_DB,
@@ -13,7 +6,14 @@ import {
   MONGO_PASS,
   MONGO_PORT,
   MONGO_USER,
-} from 'src/constants/database.const';
+} from '@common/core/constants/database.const';
+import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import {
+  MongooseModuleOptions,
+  MongooseOptionsFactory,
+} from '@nestjs/mongoose';
+import { Connection } from 'mongoose';
 
 @Injectable()
 export class MongodbConfigService implements MongooseOptionsFactory {
