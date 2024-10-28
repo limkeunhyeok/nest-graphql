@@ -1,5 +1,59 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src"
+  "sourceRoot": "apps/hexagonal/src",
+  "monorepo": true,
+  "root": "apps/hexagonal",
+  "compilerOptions": {
+    "plugins": ["@nestjs/swagger"],
+    "webpack": true,
+    "tsConfigPath": "apps/hexagonal/tsconfig.app.json"
+  },
+  "projects": {
+    "hexagonal": {
+      "type": "application",
+      "root": "apps/hexagonal",
+      "entryFile": "main",
+      "sourceRoot": "apps/hexagonal/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/hexagonal/tsconfig.app.json"
+      }
+    },
+    "layered": {
+      "type": "application",
+      "root": "apps/layered",
+      "entryFile": "main",
+      "sourceRoot": "apps/layered/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/layered/tsconfig.app.json"
+      }
+    },
+    "core": {
+      "type": "library",
+      "root": "libs/core",
+      "entryFile": "index",
+      "sourceRoot": "libs/core/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/core/tsconfig.lib.json"
+      }
+    },
+    "modules": {
+      "type": "library",
+      "root": "libs/modules",
+      "entryFile": "index",
+      "sourceRoot": "libs/modules/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/modules/tsconfig.lib.json"
+      }
+    },
+    "utils": {
+      "type": "library",
+      "root": "libs/utils",
+      "entryFile": "index",
+      "sourceRoot": "libs/utils/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/utils/tsconfig.lib.json"
+      }
+    }
+  }
 }
