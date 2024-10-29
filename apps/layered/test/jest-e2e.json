@@ -2,7 +2,7 @@
   "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": ".",
   "moduleNameMapper": {
-    "^apps/hexagonal(|/.*)$": "<rootDir>/../../../apps/hexagonal/$1",
+    "^apps/layered(|/.*)$": "<rootDir>/../../../apps/layered/$1",
     "^@common/core(|/.*)$": "<rootDir>/../../../libs/core/src/$1",
     "^@common/modules(|/.*)$": "<rootDir>/../../../libs/modules/src/$1",
     "^@common/utils(|/.*)$": "<rootDir>/../../../libs/utils/src/$1"
