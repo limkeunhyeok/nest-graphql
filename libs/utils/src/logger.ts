@@ -27,6 +27,11 @@ export const getWinstonLogger = () => {
           winston.format.timestamp(),
           winston.format.ms(),
           winston.format.json({ space: 2 }),
+          // 만약 로그에 컬러를 입히고 싶으면 아래 주석 해제
+          // json 로그 전체에 색을 입힘
+          // json의 일부 property만 색깔 변경하는 방법은 없는듯?
+          // 대충 원리는 콘솔에 찍히는건 json이라고 한들 내부적으로 json을 stringfy 한듯
+          // winston.format.colorize({ all: true }),
         ),
       }),
     ],

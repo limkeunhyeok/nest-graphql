@@ -24,6 +24,13 @@ import {
   LOGIN_QUERY,
 } from '../../operations/auth';
 
+// NOTE: 테스트 관련 어디에 적을지 몰라 여기다 적음.
+// 특정 경로만 테스트 하고 싶다면,
+// 'npm run test:hexa:e2e -- <path>'
+// 커서에서 오른쪽으로 한 번에 다 지우려면 'Crtl + K'
+// 커서에서 오른쪽으로 한글자씩 지우려면 'Crtl + D'
+// 커서에서 왼쪽으로 한글자씩 지우려면 'Crtl + H'
+// 커서에서 왼쪽으로 한단어씩 지우려면 'Crtl + W'
 describe('Auth resolver (e2e)', () => {
   let app: INestApplication;
   let req: request.SuperTest<request.Test>;

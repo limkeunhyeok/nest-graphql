@@ -7,6 +7,8 @@ import { NestFactory } from '@nestjs/core';
 import mongoose from 'mongoose';
 import { AppModule } from './app.module';
 
+declare const module: any;
+
 async function bootstrap() {
   const logger = getWinstonLogger();
 
@@ -26,5 +28,10 @@ async function bootstrap() {
       )}`,
     });
   });
+
+  if (module.hot) {
+    module.hot.accept();
+    module.hot.dispose(() => app.close());
+  }
 }
 bootstrap();
