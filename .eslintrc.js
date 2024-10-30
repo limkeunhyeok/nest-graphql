@@ -2,7 +2,7 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: 'tsconfig.json',
-    tsconfigRootDir : __dirname, 
+    tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
   plugins: ['@typescript-eslint/eslint-plugin'],
@@ -21,5 +21,15 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    // _를 사용한 경우, 해당 warning 무시
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': [
+      'warn',
+      {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
+      },
+    ],
   },
 };

@@ -48,7 +48,7 @@ export class LoggingInterceptor implements NestInterceptor {
 
       return next.handle().pipe(
         tap({
-          next: (val: unknown): void => {
+          next: (_: unknown): void => {
             this.logger.log({
               level: LogLevel.INFO,
               operationType,
@@ -76,7 +76,7 @@ export class LoggingInterceptor implements NestInterceptor {
     });
     return next.handle().pipe(
       tap({
-        next: (val: unknown): void => {
+        next: (_: unknown): void => {
           this.logger.log({
             level: LogLevel.INFO,
             path,

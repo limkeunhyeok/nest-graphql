@@ -42,7 +42,7 @@ const dbUrl = `mongodb://localhost:27017/graphql`;
   const users = await UserModel.create(userRaws);
 
   let postRaws: Omit<Post, '_id'>[] = [];
-  for (let user of users) {
+  for (const user of users) {
     const newPostRaws = Array.from({
       length: faker.datatype.number({ min: 10, max: 30 }),
     }).map(() => mockPostRaw(user._id)) as Omit<Post, '_id'>[];
@@ -53,7 +53,7 @@ const dbUrl = `mongodb://localhost:27017/graphql`;
   const posts = await PostModel.create(postRaws);
 
   let commentRaws: Omit<Comment, '_id'>[] = [];
-  for (let post of posts) {
+  for (const post of posts) {
     const newCommentRaws = Array.from({
       length: faker.datatype.number({ min: 20, max: 30 }),
     }).map(() => mockCommentRaw(post._id, post.authorId)) as Omit<

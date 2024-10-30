@@ -25,7 +25,7 @@ const dbUrl = `mongodb://localhost:27017/graphql`;
 
   mongoose.set('debug', true);
 
-  const UserModel = model<UserDocument>('user', UserSchema);
+  const _UserModel = model<UserDocument>('user', UserSchema);
   const PostModel = model<PostDocument>('post', PostSchema);
   const CommentModel = model<CommentDocument>('comment', CommentSchema);
 
@@ -33,7 +33,7 @@ const dbUrl = `mongodb://localhost:27017/graphql`;
 
   const postIds = randomPosts.map((post) => post._id);
 
-  const comments = await CommentModel.find({ postId: { $in: postIds } });
+  await CommentModel.find({ postId: { $in: postIds } });
 
   await mongoose.connection.close();
 })();

@@ -1,7 +1,6 @@
-import * as mongoose from 'mongoose';
-
 import { Role } from '@common/core/constants/role.const';
 import { User } from 'apps/layered/src/modules/users/entities/user.entity';
+import * as mongoose from 'mongoose';
 import request, { Response } from 'supertest';
 import { createUser, mockUserRaw } from '../mockup/user';
 import {
@@ -130,7 +129,7 @@ export function expectResponseFailed(
   const body = res.body;
 
   expect(body).toHaveProperty('errors');
-  for (let err of body['errors']) {
+  for (const err of body['errors']) {
     expect(err).toHaveProperty('message');
     expect(err).toHaveProperty('path');
     expect(err).toHaveProperty('extensions');

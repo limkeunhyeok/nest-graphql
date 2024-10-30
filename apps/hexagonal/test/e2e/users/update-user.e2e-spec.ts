@@ -107,9 +107,6 @@ describe('User resolver (e2e)', () => {
 
     it('failed - id does not exist.', async () => {
       // given
-      const userRaw = mockUserRaw();
-      const user = await createUser(userModel, userRaw);
-
       const newUserRaw = mockUserRaw();
 
       const params = {

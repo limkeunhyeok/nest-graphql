@@ -92,9 +92,6 @@ describe('User resolver (e2e)', () => {
 
     it('failed - id does not exist.', async () => {
       // given
-      const userRaw = mockUserRaw();
-      const user = await createUser(userModel, userRaw);
-
       const params = {
         operationType: DELETE_USER_OPERATION,
         query: DELETE_USER_QUERY,
