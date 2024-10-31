@@ -19,7 +19,10 @@ import { USER_SERVICE } from './modules/users/user.const';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ load: [serverConfig] }),
+    ConfigModule.forRoot({
+      load: [serverConfig],
+      envFilePath: `.env.${process.env.NODE_ENV}`,
+    }),
     MongooseModule.forRootAsync({
       inject: [ConfigService],
       imports: [ConfigModule],

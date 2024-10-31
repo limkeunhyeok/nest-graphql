@@ -23,9 +23,9 @@ async function bootstrap() {
   await app.listen(configService.get(SERVER_PORT), () => {
     logger.log({
       context: 'NestApplication',
-      message: `Hexagonal Server listening to port ${configService.get(
-        SERVER_PORT,
-      )}`,
+      message: `Hexagonal ${configService.get(
+        'NODE_ENV',
+      )} Server listening to port ${configService.get(SERVER_PORT)}`,
     });
   });
 

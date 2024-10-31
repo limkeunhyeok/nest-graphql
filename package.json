@@ -11,6 +11,8 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start:hexa:dev": "cross-env NODE_ENV=dev nest build hexagonal --webpack --webpackPath webpack-hmr.config.js",
     "start:layered:dev": "cross-env NODE_ENV=dev nest build layered --webpack --webpackPath webpack-hmr.config.js",
+    "start:hexa:local": "cross-env NODE_ENV=local nest build hexagonal --webpack --webpackPath webpack-hmr.config.js",
+    "start:layered:local": "cross-env NODE_ENV=local nest build layered --webpack --webpackPath webpack-hmr.config.js",
     "start:hexa:prod": "node dist/apps/hexagonal/main.js",
     "start:layered:prod": "node dist/apps/layered/main.js",
     "test:hexa:e2e": "cross-env IS_CLEANUP=false jest --verbose --maxWorkers 1 --config ./apps/hexagonal/test/jest-e2e.json",
