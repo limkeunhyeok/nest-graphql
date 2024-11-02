@@ -28,6 +28,15 @@
         "tsConfigPath": "apps/layered/tsconfig.app.json"
       }
     },
+    "visualize": {
+      "type": "application",
+      "root": "apps/visualize",
+      "entryFile": "main",
+      "sourceRoot": "apps/visualize/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/visualize/tsconfig.app.json"
+      }
+    },
     "core": {
       "type": "library",
       "root": "libs/core",

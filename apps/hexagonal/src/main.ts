@@ -35,3 +35,6 @@ async function bootstrap() {
   }
 }
 bootstrap();
+
+// 3. 인프라 구축
+// 4. 모듈 분석 spleanker?
