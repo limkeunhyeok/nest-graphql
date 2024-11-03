@@ -71,7 +71,7 @@ export class UserService {
   }
 
   async findOneById(userId: MongoId) {
-    const hasUser = this.userModel.findById(userId);
+    const hasUser = await this.userModel.findById(userId);
     if (!hasUser) {
       throw new BadRequestException(ID_DOES_NOT_EXIST);
     }
