@@ -1,16 +1,17 @@
 import { NestFactory } from '@nestjs/core';
+import { Model } from 'mongoose';
 import { Command, CommandRunner, Option } from 'nest-commander';
 import { SpelunkerModule } from 'nestjs-spelunker';
-import { MermaidService } from '../services/mermaid.service';
+import { ErdService } from '../services/erd.service';
 import { ProjectService } from '../services/project.service';
 
 @Command({
-  name: 'dependency:graph',
-  description: 'visualize module depenency',
+  name: 'model:inspect',
+  description: 'visualize model schema',
 })
-export class DependencyGraphCommand extends CommandRunner {
+export class ModelInspectCommand extends CommandRunner {
   constructor(
-    private readonly mermaidService: MermaidService,
+    private readonly erdService: ErdService,
     private readonly projectService: ProjectService,
   ) {
     super();
@@ -22,7 +23,8 @@ export class DependencyGraphCommand extends CommandRunner {
   ): Promise<void> {
     const AppModule = this.projectService.getAppModule(options.project);
 
-    const message = `Draw a dependency graph
+    const message = `Draw a mongo erd
+      type: ${options.type}
       project: ${options.project}
     `;
 
@@ -32,21 +34,27 @@ export class DependencyGraphCommand extends CommandRunner {
       logger: false,
     });
 
-    const tree = SpelunkerModule.explore(app, {
-      ignoreImports: [
-        /^MongooseModule/i,
-        /^ConfigModule/i,
-        /^MongooseCoreModule/i,
-        /^ConfigHostModule/i,
-      ],
-    });
-    const root = SpelunkerModule.graph(tree);
-    const edges = SpelunkerModule.findGraphEdges(root);
+    const tree = SpelunkerModule.explore(app);
+    const allModelList = tree
+      .filter((moduleInfo) => moduleInfo.name === 'MongooseModule')
+      .map((moduleInfo) => moduleInfo.exports)
+      .flat(2);
 
-    this.mermaidService.writeMermaidFile(options.name, edges);
+    const answer = [];
+    for (const modelName of allModelList) {
+      const model = app.get<Model<any>>(modelName);
 
-    console.log('Completed drawing dependency graph');
+      const collection = model.collection.name;
+      const fields = this.erdService.convertToJson(model.schema.paths);
+      answer.push({
+        collection,
+        fields,
+      });
+    }
 
+    this.erdService.writeJsonFile(JSON.stringify(answer));
+
+    console.log('Completed drawing schema erd');
     return;
   }
 
