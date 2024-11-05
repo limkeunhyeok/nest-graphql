@@ -12,10 +12,10 @@ export class Comment {
   @Prop()
   published: boolean;
 
-  @Prop({ required: true, type: Types.ObjectId, ref: 'user' })
+  @Prop({ required: true, type: Types.ObjectId, ref: 'users' })
   authorId: MongoId;
 
-  @Prop({ required: true, type: Types.ObjectId, ref: 'post' })
+  @Prop({ required: true, type: Types.ObjectId, ref: 'posts' })
   postId: MongoId;
 
   @Prop()

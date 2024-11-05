@@ -24,8 +24,8 @@ export class ModelInspectCommand extends CommandRunner {
     const AppModule = this.projectService.getAppModule(options.project);
 
     const message = `Draw a mongo erd
-      type: ${options.type}
       project: ${options.project}
+      name: ${options.name}
     `;
 
     console.log(message);
@@ -35,24 +35,16 @@ export class ModelInspectCommand extends CommandRunner {
     });
 
     const tree = SpelunkerModule.explore(app);
-    const allModelList = tree
-      .filter((moduleInfo) => moduleInfo.name === 'MongooseModule')
-      .map((moduleInfo) => moduleInfo.exports)
-      .flat(2);
+    const allModels = this.erdService.getAllModels(tree);
 
-    const answer = [];
-    for (const modelName of allModelList) {
+    const mappingInfos = allModels.map((modelName) => {
       const model = app.get<Model<any>>(modelName);
+      return this.erdService.getMappingInfos(model);
+    });
 
-      const collection = model.collection.name;
-      const fields = this.erdService.convertToJson(model.schema.paths);
-      answer.push({
-        collection,
-        fields,
-      });
-    }
+    this.erdService.writeJsonFile(JSON.stringify(mappingInfos), options.name);
 
-    this.erdService.writeJsonFile(JSON.stringify(answer));
+    this.erdService.writeMermaidFile(mappingInfos, 'models.mmd');
 
     console.log('Completed drawing schema erd');
     return;
@@ -70,7 +62,7 @@ export class ModelInspectCommand extends CommandRunner {
   @Option({
     flags: '-n, --name [name]',
     description: 'A basic name parser',
-    defaultValue: 'hexagonal.mmd',
+    defaultValue: 'models.json',
   })
   parseName(val: string) {
     return val;

@@ -24,6 +24,7 @@ export class DependencyGraphCommand extends CommandRunner {
 
     const message = `Draw a dependency graph
       project: ${options.project}
+      name: ${options.name}
     `;
 
     console.log(message);
