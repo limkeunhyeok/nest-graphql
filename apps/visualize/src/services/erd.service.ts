@@ -39,7 +39,7 @@ export class ErdService {
 
   getMappingInfos(model: Model<any>): MappingInfo {
     const collection = model.collection.name;
-    const fields = this.convertToJson(model.schema.paths);
+    const fields = this.convertToJson(model.schema.paths, collection);
     return {
       collection,
       fields,
@@ -89,10 +89,21 @@ export class ErdService {
     return lines.join('\n');
   }
 
-  private convertToJson(fields: {
-    [key: string]: SchemaType<any, any>;
-  }): FieldInfo[] {
+  private convertToJson(
+    fields: {
+      [key: string]: SchemaType<any, any>;
+    },
+    collection: string,
+  ): FieldInfo[] {
     const answer = [];
+    if (collection === 'posts') {
+      console.log(fields['objectField'].schema.paths);
+      // console.log(fields.arrayOfObject.instance);
+      // console.log('---------------------------------------------');
+      // console.log(fields.arrayOfObject['schema']['paths']);
+      // console.log('---------------------------------------------');
+      // console.log(fields.arrayOfString['$embeddedSchemaType'].instance);
+    }
     const keys = Object.keys(fields);
 
     for (const key of keys) {
@@ -100,27 +111,92 @@ export class ErdService {
         continue;
       }
 
-      const name = fields[key].path;
-      const type = fields[key].instance;
-      const isRequired = fields[key].isRequired ? true : false;
-      const options = fields[key].options;
+      const propertyInfo = this.getPropertyInfo(fields[key]);
+      answer.push(propertyInfo);
+      // const name = fields[key].path;
+      // const type = fields[key].instance;
+      // const isRequired = fields[key].isRequired ? true : false;
+      // const options = fields[key].options;
 
-      if (!isEmptyObject(options) && options.ref) {
-        answer.push({
-          name,
-          type,
-          isRequired,
-          ref: options.ref,
-        });
-        continue;
-      }
+      // if (!isEmptyObject(options) && options.ref) {
+      //   answer.push({
+      //     name,
+      //     type,
+      //     isRequired,
+      //     ref: options.ref,
+      //   });
+      //   continue;
+      // }
 
-      answer.push({
+      // answer.push({
+      //   name,
+      //   type,
+      //   isRequired,
+      // });
+    }
+    return answer;
+  }
+
+  private getPropertyInfo(field: SchemaType<any, any>) {
+    const name = field.path;
+    const type = field.instance;
+    const isRequired = field.isRequired ? true : false;
+    const options = field.options;
+
+    const propertyInfo = {
+      name,
+      type,
+      isRequired,
+    };
+
+    if (!isEmptyObject(options) && options.ref) {
+      propertyInfo['ref'] = options.ref;
+    }
+
+    if (type === 'Array') {
+      propertyInfo['array'] = this.getPropertyInfoForArray(field);
+    }
+
+    if (type === 'Embedded') {
+      propertyInfo['embedded'] = this.getPropertyInfoForEmbedded(field);
+    }
+
+    return propertyInfo;
+  }
+
+  private getPropertyInfoForArray(field: SchemaType<any, any>) {
+    if (!field.schema) {
+      return [field['$embeddedSchemaType'].instance];
+    }
+
+    return Object.keys(field.schema.paths).map((key) => {
+      const name = key;
+      const type = field.schema.paths[key].instance;
+      const isRequired = field.schema.paths[key].options.isRequired
+        ? true
+        : false;
+
+      return {
         name,
         type,
         isRequired,
-      });
-    }
-    return answer;
+      };
+    });
+  }
+
+  private getPropertyInfoForEmbedded(field: SchemaType<any, any>) {
+    return Object.keys(field.schema.paths).map((key) => {
+      const name = key;
+      const type = field.schema.paths[key].instance;
+      const isRequired = field.schema.paths[key].options.isRequired
+        ? true
+        : false;
+
+      return {
+        name,
+        type,
+        isRequired,
+      };
+    });
   }
 }
