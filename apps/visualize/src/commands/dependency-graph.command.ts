@@ -48,6 +48,7 @@ export class DependencyGraphCommand extends CommandRunner {
 
     console.log('Completed drawing dependency graph');
 
+    app.close();
     return;
   }
 

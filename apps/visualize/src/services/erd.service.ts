@@ -1,71 +1,30 @@
-import { isEmptyObject } from '@common/utils';
 import { Injectable } from '@nestjs/common';
-import * as fs from 'fs';
-import { Model, SchemaType } from 'mongoose';
-import { SpelunkedTree } from 'nestjs-spelunker';
-import * as path from 'path';
-
-export interface FieldInfo {
-  name: string;
-  type: string;
-  isRequired: string;
-  ref?: string;
-}
-
-export interface MappingInfo {
-  collection: string;
-  fields: FieldInfo[];
-}
+import { MappingInfo } from './model-parser.service';
 
 @Injectable()
 export class ErdService {
-  writeJsonFile(data: string, filename: string) {
-    fs.writeFileSync(path.join(process.cwd(), filename), data);
-    return;
-  }
-
-  writeMermaidFile(data: MappingInfo[], filename) {
-    const contents = this.generateMermaidERD(data);
-    fs.writeFileSync(path.join(process.cwd(), filename), contents);
-    return;
-  }
-
-  getAllModels(tree: SpelunkedTree[]) {
-    return tree
-      .filter((moduleInfo) => moduleInfo.name === 'MongooseModule')
-      .map((moduleInfo) => moduleInfo.exports)
-      .flat(2);
-  }
-
-  getMappingInfos(model: Model<any>): MappingInfo {
-    const collection = model.collection.name;
-    const fields = this.convertToJson(model.schema.paths, collection);
-    return {
-      collection,
-      fields,
-    };
-  }
-
-  private generateMermaidERD(mappingInfos: MappingInfo[]): string {
-    const lines: string[] = ['erDiagram'];
+  generateMermaidERD(mappingInfos: MappingInfo[]): string {
+    let lines: string[] = ['erDiagram'];
 
     mappingInfos.forEach((model) => {
       const tableName = model.collection;
 
       // 테이블 생성
       lines.push(`  ${tableName} {`);
-      model.fields.forEach((field) => {
-        if (field.name === '_id') {
+      model.fields.forEach((field, index, filteredArr) => {
+        const isLast = filteredArr.length === index ? true : false;
+
+        if (field.name === '_id' && !isLast) {
           lines.push(`    ${field.type} ${field.name} PK`);
           return;
         }
 
-        if (field.ref) {
+        if (field.ref && !isLast) {
           lines.push(`    ${field.type} ${field.name} FK`);
           return;
         }
 
-        if (field.isRequired) {
+        if (field.isRequired && !isLast) {
           lines.push(`    ${field.type} ${field.name} "required"`);
           return;
         }
@@ -75,128 +34,81 @@ export class ErdService {
       lines.push('  }');
       lines.push('');
 
+      // array
+      lines = lines.concat(this.generateArrayLines(model, tableName));
+
+      // embedded
+      lines = lines.concat(this.generateEmbeddedLines(model, tableName));
+
       // 관계 설정
-      model.fields
-        .filter((field) => field.ref)
-        .forEach((field) => {
-          const relation = field.isRequired ? '||--||' : '||--o|';
-          lines.push(
-            `  ${tableName} ${relation} ${field.ref} : "${field.name}"`,
-          );
-        });
+      lines = lines.concat(this.generateRelationshipLines(model, tableName));
     });
 
     return lines.join('\n');
   }
 
-  private convertToJson(
-    fields: {
-      [key: string]: SchemaType<any, any>;
-    },
-    collection: string,
-  ): FieldInfo[] {
-    const answer = [];
-    if (collection === 'posts') {
-      console.log(fields['objectField'].schema.paths);
-      // console.log(fields.arrayOfObject.instance);
-      // console.log('---------------------------------------------');
-      // console.log(fields.arrayOfObject['schema']['paths']);
-      // console.log('---------------------------------------------');
-      // console.log(fields.arrayOfString['$embeddedSchemaType'].instance);
-    }
-    const keys = Object.keys(fields);
+  private generateArrayLines(model: MappingInfo, tableName: string): string[] {
+    const lines: string[] = [];
+    model.fields
+      .filter((field) => field.array)
+      .filter((field) => typeof field.array[0] !== 'string')
+      .forEach((field) => {
+        lines.push(`  ${field.name} {`);
 
-    for (const key of keys) {
-      if (fields[key].path === '__v') {
-        continue;
-      }
+        field.array.forEach((f) => {
+          if (field.isRequired) {
+            console.log(field);
+            lines.push(`    ${f.type} ${f.name} "required"`);
+            return;
+          }
+          lines.push(`    ${f.type} ${f.name}`);
+        });
 
-      const propertyInfo = this.getPropertyInfo(fields[key]);
-      answer.push(propertyInfo);
-      // const name = fields[key].path;
-      // const type = fields[key].instance;
-      // const isRequired = fields[key].isRequired ? true : false;
-      // const options = fields[key].options;
+        lines.push('  }');
+        lines.push('');
 
-      // if (!isEmptyObject(options) && options.ref) {
-      //   answer.push({
-      //     name,
-      //     type,
-      //     isRequired,
-      //     ref: options.ref,
-      //   });
-      //   continue;
-      // }
-
-      // answer.push({
-      //   name,
-      //   type,
-      //   isRequired,
-      // });
-    }
-    return answer;
+        const relation = field.isRequired ? '||--||' : '||--o|';
+        lines.push(`  ${tableName} ${relation} ${field.name} : "field"`);
+      });
+    return lines;
   }
 
-  private getPropertyInfo(field: SchemaType<any, any>) {
-    const name = field.path;
-    const type = field.instance;
-    const isRequired = field.isRequired ? true : false;
-    const options = field.options;
+  private generateEmbeddedLines(
+    model: MappingInfo,
+    tableName: string,
+  ): string[] {
+    const lines: string[] = [];
+    model.fields
+      .filter((field) => field.embedded)
+      .forEach((field) => {
+        lines.push(`  ${field.name} {`);
 
-    const propertyInfo = {
-      name,
-      type,
-      isRequired,
-    };
+        field.embedded.forEach((f) => {
+          if (field.isRequired) {
+            lines.push(`    ${f.type} ${f.name} "required"`);
+            return;
+          }
+          lines.push(`    ${f.type} ${f.name}`);
+        });
 
-    if (!isEmptyObject(options) && options.ref) {
-      propertyInfo['ref'] = options.ref;
-    }
+        lines.push('  }');
+        lines.push('');
 
-    if (type === 'Array') {
-      propertyInfo['array'] = this.getPropertyInfoForArray(field);
-    }
-
-    if (type === 'Embedded') {
-      propertyInfo['embedded'] = this.getPropertyInfoForEmbedded(field);
-    }
-
-    return propertyInfo;
+        const relation = field.isRequired ? '||--||' : '||--o|';
+        lines.push(`  ${tableName} ${relation} ${field.name} : "field"`);
+      });
+    return lines;
   }
 
-  private getPropertyInfoForArray(field: SchemaType<any, any>) {
-    if (!field.schema) {
-      return [field['$embeddedSchemaType'].instance];
-    }
-
-    return Object.keys(field.schema.paths).map((key) => {
-      const name = key;
-      const type = field.schema.paths[key].instance;
-      const isRequired = field.schema.paths[key].options.isRequired
-        ? true
-        : false;
-
-      return {
-        name,
-        type,
-        isRequired,
-      };
-    });
-  }
-
-  private getPropertyInfoForEmbedded(field: SchemaType<any, any>) {
-    return Object.keys(field.schema.paths).map((key) => {
-      const name = key;
-      const type = field.schema.paths[key].instance;
-      const isRequired = field.schema.paths[key].options.isRequired
-        ? true
-        : false;
-
-      return {
-        name,
-        type,
-        isRequired,
-      };
-    });
+  private generateRelationshipLines(
+    model: MappingInfo,
+    tableName: string,
+  ): string[] {
+    return model.fields
+      .filter((field) => field.ref)
+      .map((field) => {
+        const relation = field.isRequired ? '||--||' : '||--o|';
+        return `  ${tableName} ${relation} ${field.ref} : "${field.name}"`;
+      });
   }
 }
