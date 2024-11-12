@@ -38,3 +38,5 @@ mongodb
 
 # sonarqube
 .scannerwork
+
+data/

@@ -1,17 +1,88 @@
-version: '3.7'
+# version: '3.7'
+
+# services:
+#   mongodb:
+#     container_name: mongodb
+#     image: mongo
+#     restart: 'unless-stopped'
+#     expose:
+#       - '27017'
+#     ports:
+#       - 27017:27017
+#     volumes:
+#       - ./mongodb:/data/db
+#     environment:
+# - MONGO_INITDB_ROOT_USERNAME=root
+# - MONGO_INITDB_ROOT_PASSWORD=password
+# - MONGO_INITDB_DATABASE=graphql
+
+version: '3.8'
 
 services:
-  mongodb:
-    container_name: mongodb
-    image: mongo
-    restart: 'unless-stopped'
-    expose:
-      - '27017'
+  mongo1:
+    image: mongo:latest
+    hostname: mongo1
+    container_name: mongo1
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
     ports:
+      # 로컬 27017 포트로 요청이 들어오면 컨테이너의 27017 포트로 리다이렉트되도록 설정
       - 27017:27017
     volumes:
-      - ./mongodb:/data/db
+      - ./data/db/replica/mongo1:/data/db
+      - ./mongodb.key:/etc/mongodb.key
+    command:
+      - '--replSet'
+      - 'myReplicaSet'
+      - '--keyFile'
+      - '/etc/mongodb.key'
+      - '--bind_ip_all'
+  mongo2:
+    image: mongo:latest
+    hostname: mongo2
+    container_name: mongo2
+    restart: always
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=password
-      - MONGO_INITDB_DATABASE=graphql
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    depends_on:
+      - mongo1
+    ports:
+      - 27018:27017
+    volumes:
+      - ./data/db/replica/mongo2:/data/db
+      - ./mongodb.key:/etc/mongodb.key
+    command:
+      - '--replSet'
+      - 'myReplicaSet'
+      - '--keyFile'
+      - '/etc/mongodb.key'
+      - '--bind_ip_all'
+  mongo3:
+    image: mongo:latest
+    hostname: mongo3
+    container_name: mongo3
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    depends_on:
+      - mongo2
+    ports:
+      - 27019:27017
+    volumes:
+      - ./data/db/replica/mongo3:/data/db
+      - ./mongodb.key:/etc/mongodb.key
+    command:
+      - '--replSet'
+      - 'myReplicaSet'
+      - '--keyFile'
+      - '/etc/mongodb.key'
+      - '--bind_ip_all'
+networks:
+  default:
+    name: mongoCluster
+# https://velog.io/@youngeui_hong/Docker%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%98%EC%97%AC-MongoDB-Replica-Set-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0
+# https://velog.io/@woo94/MongoDB-replica-set-with-Docker-Compose

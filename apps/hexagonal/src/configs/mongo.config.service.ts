@@ -1,10 +1,6 @@
 import {
   AUTH_SOURCE,
-  MONGO_DB,
-  MONGO_HOST,
-  MONGO_NAME,
   MONGO_PASS,
-  MONGO_PORT,
   MONGO_USER,
 } from '@common/core/constants/database.const';
 import { Injectable, Logger } from '@nestjs/common';
@@ -25,11 +21,7 @@ export class MongodbConfigService implements MongooseOptionsFactory {
 
   public createMongooseOptions(): MongooseModuleOptions {
     return {
-      uri: `${MONGO_DB}://${this.configService.get(
-        MONGO_HOST,
-      )}:${this.configService.get(MONGO_PORT)}/${this.configService.get(
-        MONGO_NAME,
-      )}`,
+      uri: 'mongodb://mongo1:27017,mongo2:27018,mongo3:27019/',
       authSource: AUTH_SOURCE,
       user: this.configService.get(MONGO_USER),
       pass: this.configService.get(MONGO_PASS),
