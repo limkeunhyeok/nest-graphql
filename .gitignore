@@ -40,3 +40,6 @@ mongodb
 .scannerwork
 
 data/
+
+# replica key
+mongodb.key

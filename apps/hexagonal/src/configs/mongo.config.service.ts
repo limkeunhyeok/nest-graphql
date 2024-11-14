@@ -1,6 +1,10 @@
 import {
   AUTH_SOURCE,
+  MONGO_NAME,
   MONGO_PASS,
+  MONGO_REPLICA_SET,
+  MONGO_SCHEME,
+  MONGO_URI,
   MONGO_USER,
 } from '@common/core/constants/database.const';
 import { Injectable, Logger } from '@nestjs/common';
@@ -21,10 +25,13 @@ export class MongodbConfigService implements MongooseOptionsFactory {
 
   public createMongooseOptions(): MongooseModuleOptions {
     return {
-      uri: 'mongodb://mongo1:27017,mongo2:27018,mongo3:27019/',
+      uri: `${MONGO_SCHEME}://${this.configService.get(
+        MONGO_URI,
+      )}/${this.configService.get(MONGO_NAME)}`,
       authSource: AUTH_SOURCE,
       user: this.configService.get(MONGO_USER),
       pass: this.configService.get(MONGO_PASS),
+      replicaSet: this.configService.get(MONGO_REPLICA_SET),
       onConnectionCreate: (connection: Connection) => {
         connection.on('connected', () => {
           this.logger.log('MongoDB connected');
@@ -37,7 +44,6 @@ export class MongodbConfigService implements MongooseOptionsFactory {
         connection.on('reconnected', () => {
           this.logger.log('MongoDB reconnected');
         });
-
         connection.on('error', (error) => {
           this.logger.error(`MongoDB connection error: ${error}`);
         });

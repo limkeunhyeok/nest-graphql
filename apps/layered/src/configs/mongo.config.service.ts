@@ -1,10 +1,10 @@
 import {
   AUTH_SOURCE,
-  MONGO_DB,
   MONGO_HOST,
   MONGO_NAME,
   MONGO_PASS,
   MONGO_PORT,
+  MONGO_SCHEME,
   MONGO_USER,
 } from '@common/core/constants/database.const';
 import { Injectable, Logger } from '@nestjs/common';
@@ -25,7 +25,7 @@ export class MongodbConfigService implements MongooseOptionsFactory {
 
   public createMongooseOptions(): MongooseModuleOptions {
     return {
-      uri: `${MONGO_DB}://${this.configService.get(
+      uri: `${MONGO_SCHEME}://${this.configService.get(
         MONGO_HOST,
       )}:${this.configService.get(MONGO_PORT)}/${this.configService.get(
         MONGO_NAME,
