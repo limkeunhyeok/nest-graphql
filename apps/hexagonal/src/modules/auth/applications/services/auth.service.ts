@@ -1,8 +1,7 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-
 import { INCORRECT_EMAIL_OR_PASSWORD } from '@common/core/constants/exception-message.const';
 import { comparedPassword } from '@common/utils/utils';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { UserRaw } from '../../../users/domain/user.domain';
 import { UserServicePort } from '../../../users/ports/in/user.service.port';
 import { USER_SERVICE } from '../../../users/user.const';

@@ -4,11 +4,10 @@ export default () => ({
   port: Number(process.env.PORT) || 3333,
 
   // DB
-  mongoUri: process.env.MONGO_URI || 'mongo1:27017,mongo2:27018,mongo3:27019',
+  mongoUri: process.env.MONGO_URI || 'localhost',
   mongoUser: process.env.MONGO_USER || 'root',
   mongoPass: process.env.MONGO_PASS || 'password',
   mongoName: process.env.MONGO_NAME || 'graphql',
-  mongoReplicaSet: process.env.MONGO_REPLICA_SET || 'myReplicaSet',
 
   // auth
   secretKey: process.env.SECRET_KEY || 'secretKey',
