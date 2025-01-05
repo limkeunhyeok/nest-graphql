@@ -1,31 +1,22 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "apps/hexagonal/src",
+  "sourceRoot": "apps/api/src",
   "monorepo": true,
-  "root": "apps/hexagonal",
+  "root": "apps/api",
   "compilerOptions": {
     "plugins": ["@nestjs/swagger"],
     "webpack": true,
-    "tsConfigPath": "apps/hexagonal/tsconfig.app.json"
+    "tsConfigPath": "apps/api/tsconfig.app.json"
   },
   "projects": {
-    "hexagonal": {
+    "api": {
       "type": "application",
-      "root": "apps/hexagonal",
+      "root": "apps/api",
       "entryFile": "main",
-      "sourceRoot": "apps/hexagonal/src",
+      "sourceRoot": "apps/api/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/hexagonal/tsconfig.app.json"
-      }
-    },
-    "layered": {
-      "type": "application",
-      "root": "apps/layered",
-      "entryFile": "main",
-      "sourceRoot": "apps/layered/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/layered/tsconfig.app.json"
+        "tsConfigPath": "apps/api/tsconfig.app.json"
       }
     },
     "visualize": {
