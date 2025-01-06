@@ -17,11 +17,16 @@
 module.exports = {
   apps: [
     {
-      name: 'hexa',
-      script: './dist/apps/hexagonal/main.js',
+      name: 'api',
+      script: './dist/apps/api/main.js',
       instances: 3, // 'max',
       exec_mode: 'cluster',
-      watch: ['./dist/apps/hexagonal/main.js'],
+      watch: ['./dist/apps/api/main.js'],
+      log_file: './logs/api-out.log', // 통합 로그 파일 경로
+      error_file: './logs/api-error.log', // 에러 로그 파일 경로
+      out_file: './logs/api-out.log', // 출력 로그 파일 경로
+      // merge_logs: true, // 모든 로그를 하나의 파일로 병합
+      log_type: 'json',
       env_production: {
         NODE_ENV: 'prod',
       },

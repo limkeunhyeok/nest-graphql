@@ -44,3 +44,9 @@ data/
 
 # replica key
 mongodb.key
+
+# ELK
+es01
+kibana
+logstash
+logs

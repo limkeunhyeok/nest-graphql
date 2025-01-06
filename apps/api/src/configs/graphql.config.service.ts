@@ -11,11 +11,7 @@ export class GraphqlConfigService implements GqlOptionsFactory {
     return {
       playground: false,
       debug: true,
-      autoSchemaFile: path.join(
-        process.cwd(),
-        'apps/hexagonal/src',
-        'schema.gql',
-      ),
+      autoSchemaFile: path.join(process.cwd(), 'apps/api/src', 'schema.gql'),
       sortSchema: true,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
       introspection: true,
