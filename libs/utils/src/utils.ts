@@ -9,6 +9,10 @@ export const isEmptyObject = (value: any): boolean => {
   );
 };
 
+export const isObject = (value: any): boolean => {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+};
+
 export const encryptPassword = (password: string) => {
   return bcrypt.hashSync(password, 10);
 };

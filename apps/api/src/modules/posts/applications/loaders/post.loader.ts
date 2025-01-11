@@ -1,18 +1,18 @@
+import { NestLoader } from '@common/core/interceptors/loader.interceptor';
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import * as DataLoader from 'dataloader';
 import mongoose from 'mongoose';
-import { NestDataLoader } from 'nestjs-dataloader';
 import { PostDomain, PostJson } from '../../domain/post.domain';
 import { PostServicePort } from '../../ports/in/post.service.port';
 import { POST_SERVICE } from '../../post.const';
 
 @Injectable({ scope: Scope.REQUEST }) // 요청당 하나의 DataLoader 인스턴스
-export class PostLoader implements NestDataLoader<string, PostJson> {
+export class PostLoader implements NestLoader<string, PostJson> {
   constructor(
     @Inject(POST_SERVICE) private readonly postService: PostServicePort,
   ) {}
 
-  generateDataLoader() {
+  generateLoader(params?: Record<string, any>) {
     return new DataLoader<string, PostJson[]>(
       (authorIds: string[]) => this.batchLoadPosts(authorIds),
       {

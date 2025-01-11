@@ -1,7 +1,7 @@
+import { NestLoader } from '@common/core/interceptors/loader.interceptor';
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import * as DataLoader from 'dataloader';
 import mongoose from 'mongoose';
-import { NestDataLoader } from 'nestjs-dataloader';
 import { UserDomain, UserJson } from '../../domain/user.domain';
 import { UserServicePort } from '../../ports/in/user.service.port';
 import { USER_SERVICE } from '../../user.const';
@@ -9,12 +9,12 @@ import { USER_SERVICE } from '../../user.const';
 // CacheMap을 사용하기 때문에, 객체를 key로 삼지 않는 이상 키가 중복되지 않음
 // key 값의 순서와 entity 값의 순서가 보장되어야 맞게 매핑됨
 @Injectable({ scope: Scope.REQUEST })
-export class UserLoader implements NestDataLoader<string, UserJson> {
+export class UserLoader implements NestLoader<string, UserJson> {
   constructor(
     @Inject(USER_SERVICE) private readonly userService: UserServicePort,
   ) {}
 
-  generateDataLoader() {
+  generateLoader(params?: Record<string, any>) {
     return new DataLoader<string, UserJson>(
       (userIds: string[]) => this.batchLoadUsers(userIds),
       {

@@ -1,5 +1,6 @@
 import { MongoId } from '@common/core/@types/datatype';
 import { Role } from '@common/core/constants/role.const';
+import { Loader } from '@common/core/decorators/loader.decorator';
 import { RoleGuard } from '@common/core/guards/role.guard';
 import { Inject, UseGuards } from '@nestjs/common';
 import {
@@ -11,7 +12,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { Loader } from 'nestjs-dataloader';
+import * as DataLoader from 'dataloader';
 import { CommentOutput } from '../../../../comments/adapters/graphql/outputs/comment.output';
 import { CommentLoader } from '../../../../comments/applications/loaders/comment.loader';
 import { UserOutput } from '../../../../users/adapters/graphql/outputs/user.output';
@@ -84,7 +85,7 @@ export class PostResolver {
   @ResolveField(() => [CommentOutput])
   async comments(
     @Parent() post: PostOutput,
-    @Loader(CommentLoader) commentLoader: Loader<string, Comment[]>,
+    @Loader(CommentLoader) commentLoader: DataLoader<string, Comment[]>,
   ) {
     return commentLoader.load(post._id.toString());
   }
@@ -92,7 +93,7 @@ export class PostResolver {
   @ResolveField(() => UserOutput)
   async author(
     @Parent() post: PostOutput,
-    @Loader(UserLoader) userLoader: Loader<string, UserOutput>,
+    @Loader(UserLoader) userLoader: DataLoader<string, UserOutput>,
   ) {
     return userLoader.load(post.authorId.toString());
   }

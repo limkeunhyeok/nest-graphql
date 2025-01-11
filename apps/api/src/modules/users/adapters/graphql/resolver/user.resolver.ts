@@ -1,5 +1,6 @@
 import { MongoId } from '@common/core/@types/datatype';
 import { Role } from '@common/core/constants/role.const';
+import { Loader } from '@common/core/decorators/loader.decorator';
 import { RoleGuard } from '@common/core/guards/role.guard';
 import { Inject, UseGuards } from '@nestjs/common';
 import {
@@ -10,7 +11,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { Loader } from 'nestjs-dataloader';
+import * as DataLoader from 'dataloader';
 import { PostOutput } from '../../../../posts/adapters/graphql/outputs/post.output';
 import { PostLoader } from '../../../../posts/applications/loaders/post.loader';
 import { UserServicePort } from '../../../ports/in/user.service.port';
@@ -66,7 +67,7 @@ export class UserResolver {
   @ResolveField(() => [PostOutput])
   async posts(
     @Parent() user: UserOutput,
-    @Loader(PostLoader) postLoader: Loader<string, PostOutput[]>,
+    @Loader(PostLoader) postLoader: DataLoader<string, PostOutput[]>,
   ) {
     return postLoader.load(user._id.toString());
   }

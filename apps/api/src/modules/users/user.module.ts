@@ -1,8 +1,8 @@
+import { NestLoaderInterceptor } from '@common/core/interceptors/loader.interceptor';
 import { forwardRef, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
-import { DataLoaderInterceptor } from 'nestjs-dataloader';
 import { PostModule } from '../posts/post.module';
 import { UserResolver } from './adapters/graphql/resolver/user.resolver';
 import { User, UserSchema } from './adapters/persistence/entities/user.entity';
@@ -33,7 +33,7 @@ import { USER_REPOSITORY, USER_SERVICE } from './user.const';
     UserLoader,
     {
       provide: APP_INTERCEPTOR,
-      useClass: DataLoaderInterceptor,
+      useClass: NestLoaderInterceptor,
     },
     {
       provide: USER_SERVICE,
