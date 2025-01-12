@@ -21,7 +21,12 @@
       "request": "launch",
       "name": "Debug Nest Framework E2E Test",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "test:e2e"],
+      "runtimeArgs": [
+        "run",
+        "test:api:e2e",
+        "--",
+        "./apps/api/test/e2e/test.e2e-spec.ts"
+      ],
       "autoAttachChildProcesses": true,
       "restart": true,
       "sourceMaps": true,
