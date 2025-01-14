@@ -10,15 +10,20 @@ import {
 } from '../../domain/notification.domain';
 
 export interface NotificationServicePort {
-  create(NotificationRaw: NotificationInfo): Promise<NotificationJson>;
+  create(notificationRaw: NotificationInfo): Promise<NotificationJson>;
   updateById(
     notificationId: MongoId,
     userId: MongoId,
     updateQuery: UpdateQuery<NotificationRaw>,
   ): Promise<NotificationJson>;
+  updateMany(
+    notificationIds: MongoId[],
+    userId: MongoId,
+    updateQuery: UpdateQuery<NotificationRaw>,
+  ): Promise<{ successIds: MongoId[]; failedIds: MongoId[] }>;
   deleteById(
     notificationId: MongoId,
-    authorId: MongoId,
+    userId: MongoId,
   ): Promise<NotificationJson>;
   paginateByQuery(
     filterQuery: FilterQuery<NotificationRaw>,
