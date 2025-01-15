@@ -78,7 +78,7 @@ export class NotificationService implements NotificationServicePort {
       (id) => !validIds.includes(id.toString()),
     );
 
-    await this.notificationRepository.updateMany(validIds, userId, updateQuery);
+    await this.notificationRepository.updateMany(validIds, updateQuery);
     return {
       successIds: validIds,
       failedIds,

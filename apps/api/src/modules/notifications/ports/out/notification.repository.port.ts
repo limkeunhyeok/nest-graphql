@@ -1,7 +1,6 @@
 import { MongoId } from '@common/core/@types/datatype';
-import { UpdateManyResult } from '@common/core/interfaces/db-result.interface';
 import { SortQuery } from '@common/core/interfaces/sort.interface';
-import { FilterQuery, UpdateQuery } from 'mongoose';
+import { FilterQuery, UpdateQuery, UpdateWriteOpResult } from 'mongoose';
 import {
   NotificationDomain,
   NotificationInfo,
@@ -24,9 +23,8 @@ export interface NotificationRepositoryPort {
   ): Promise<NotificationDomain | null>;
   updateMany(
     ids: MongoId[],
-    userId: MongoId,
     updateQuery: UpdateQuery<NotificationRaw>,
-  ): Promise<UpdateManyResult>;
+  ): Promise<UpdateWriteOpResult>;
   deleteById(id: MongoId): Promise<NotificationDomain | null>;
   getTotalCountPromise(
     filterQuery: FilterQuery<NotificationJson>,
