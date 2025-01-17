@@ -41,17 +41,44 @@ type Mutation {
   createPost(createPostInput: CreatePostInput!): PostOutput!
   createUser(createUserInput: CreateUserInput!): UserOutput!
   deleteComment(commentId: String!, postId: String!): CommentOutput!
+  deleteNotification(notificationId: String!): NotificationOutput!
   deletePost(postId: String!): PostOutput!
   deleteUser(userId: String!): UserOutput!
   login(loginInput: LoginInput!): TokenOutput!
   signup(signupInput: SignupInput!): TokenOutput!
   updateComment(updateCommentInput: UpdateCommentInput!): CommentOutput!
+  updateNotification(updateNotificationInput: UpdateNotificationInput!): NotificationOutput!
   updatePost(updatePostInput: UpdatePostInput!): PostOutput!
   updateUser(updateUserInput: UpdateUserInput!): UserOutput!
 }
 
+type NotificationOutput {
+  _id: String!
+  actorId: String!
+  commentId: String!
+  contents: String!
+  createdAt: String!
+  isRead: Boolean!
+  postId: String!
+  type: NotificationType!
+  updatedAt: String!
+  userId: String!
+}
+
+enum NotificationType {
+  COMMENT
+  LIKE
+}
+
 type PaginateCommentOutput {
   docs: [CommentOutput!]!
+  limit: Float!
+  offset: Float!
+  total: Float!
+}
+
+type PaginateNotificationOutput {
+  docs: [NotificationOutput!]!
   limit: Float!
   offset: Float!
   total: Float!
@@ -85,6 +112,7 @@ type PostOutput {
 
 type Query {
   paginateComments(readCommentInput: ReadCommentInput!): PaginateCommentOutput!
+  paginateNotifications(readNotificationInput: ReadNotificationInput!): PaginateNotificationOutput!
   paginatePosts(readPostInput: ReadPostInput!): PaginatePostOutput!
   paginateUsers(readUserInput: ReadUserInput!): PaginateUsersOutput!
 }
@@ -98,6 +126,20 @@ input ReadCommentInput {
   published: Boolean
   sortBy: String! = "createdAt"
   sortOrder: String! = "desc"
+}
+
+input ReadNotificationInput {
+  _id: String
+  actorId: String
+  commentId: String
+  isRead: Boolean
+  limit: Int! = 10
+  offset: Int! = 0
+  postId: String
+  sortBy: String! = "createdAt"
+  sortOrder: String! = "desc"
+  type: NotificationType
+  userId: String
 }
 
 input ReadPostInput {
@@ -140,6 +182,11 @@ input UpdateCommentInput {
   contents: String!
   postId: String!
   published: Boolean!
+}
+
+input UpdateNotificationInput {
+  _id: String!
+  isRead: Boolean!
 }
 
 input UpdatePostInput {

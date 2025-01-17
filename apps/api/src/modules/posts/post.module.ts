@@ -1,6 +1,5 @@
 import { NestLoaderInterceptor } from '@common/core/interceptors/loader.interceptor';
 import { forwardRef, Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CommentModule } from '../comments/comment.module';
@@ -20,7 +19,7 @@ import { POST_REPOSITORY, POST_SERVICE } from './post.const';
         schema: PostSchema,
       },
     ]),
-    ConfigModule,
+    // ConfigModule,
     CommentModule,
     forwardRef(() => UserModule),
   ],
