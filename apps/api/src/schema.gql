@@ -48,6 +48,7 @@ type Mutation {
   signup(signupInput: SignupInput!): TokenOutput!
   updateComment(updateCommentInput: UpdateCommentInput!): CommentOutput!
   updateNotification(updateNotificationInput: UpdateNotificationInput!): NotificationOutput!
+  updateNotifications(updateNotificationsInput: UpdateNotificationsInput!): UpdateManyResultOutput!
   updatePost(updatePostInput: UpdatePostInput!): PostOutput!
   updateUser(updateUserInput: UpdateUserInput!): UserOutput!
 }
@@ -184,8 +185,19 @@ input UpdateCommentInput {
   published: Boolean!
 }
 
+type UpdateManyResultOutput {
+  failedIds: [String!]!
+  successIds: [String!]!
+  totalProcessed: Float!
+}
+
 input UpdateNotificationInput {
   _id: String!
+  isRead: Boolean!
+}
+
+input UpdateNotificationsInput {
+  _ids: [String!]!
   isRead: Boolean!
 }
 

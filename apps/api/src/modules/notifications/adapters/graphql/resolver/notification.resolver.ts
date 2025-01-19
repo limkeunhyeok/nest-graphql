@@ -1,6 +1,7 @@
 import { MongoId } from '@common/core/@types/datatype';
 import { Role } from '@common/core/constants/role.const';
 import { RoleGuard } from '@common/core/guards/role.guard';
+import { UpdateManyResultOutput } from '@common/core/interfaces/db-result.interface';
 import { Inject, UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { NOTIFICATION_SERVICE } from '../../../notification.const';
@@ -35,7 +36,7 @@ export class NotificationResolver {
     );
   }
 
-  @Mutation(() => NotificationOutput)
+  @Mutation(() => UpdateManyResultOutput)
   async updateNotifications(
     @Args('updateNotificationsInput')
     updateNotificationsInput: UpdateNotificationsInput,

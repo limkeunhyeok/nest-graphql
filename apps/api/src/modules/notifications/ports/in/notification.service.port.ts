@@ -1,4 +1,5 @@
 import { MongoId } from '@common/core/@types/datatype';
+import { UpdateManyResult } from '@common/core/interfaces/db-result.interface';
 import { SortQuery } from '@common/core/interfaces/sort.interface';
 import { PaginateResponse } from '@common/utils/paginate';
 import { FilterQuery, UpdateQuery } from 'mongoose';
@@ -20,7 +21,7 @@ export interface NotificationServicePort {
     notificationIds: MongoId[],
     userId: MongoId,
     updateQuery: UpdateQuery<NotificationRaw>,
-  ): Promise<{ successIds: MongoId[]; failedIds: MongoId[] }>;
+  ): Promise<UpdateManyResult>;
   deleteById(
     notificationId: MongoId,
     userId: MongoId,
