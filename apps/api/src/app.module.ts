@@ -1,6 +1,7 @@
 import { Role } from '@common/core/constants/role.const';
 import { AuthGuard } from '@common/core/guards/auth.guard';
 import { HealthModule } from '@common/modules/health/health.module';
+import { PubSubModule } from '@common/modules/pubsub/pubsub.module';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Inject, Logger, Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -38,6 +39,7 @@ import { USER_SERVICE } from './modules/users/user.const';
       useClass: JwtConfigService,
     }),
     HealthModule,
+    PubSubModule,
   ],
   providers: [Logger, { provide: APP_GUARD, useClass: AuthGuard }],
   exports: [Logger],

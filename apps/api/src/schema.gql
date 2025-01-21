@@ -18,6 +18,15 @@ input CreateCommentInput {
   published: Boolean!
 }
 
+input CreateNotificationInput {
+  commentId: String
+  contents: String!
+  isRead: Boolean!
+  postId: String!
+  type: NotificationType!
+  userId: String!
+}
+
 input CreatePostInput {
   contents: String!
   published: Boolean!
@@ -38,6 +47,7 @@ input LoginInput {
 
 type Mutation {
   createComment(createCommentInput: CreateCommentInput!): CommentOutput!
+  createNotification(createNotificationInput: CreateNotificationInput!): NotificationOutput!
   createPost(createPostInput: CreatePostInput!): PostOutput!
   createUser(createUserInput: CreateUserInput!): UserOutput!
   deleteComment(commentId: String!, postId: String!): CommentOutput!
@@ -172,6 +182,10 @@ input SignupInput {
   name: String!
   password: String!
   role: Role! = MEMBER
+}
+
+type Subscription {
+  createdNotification: NotificationOutput!
 }
 
 type TokenOutput {

@@ -10,6 +10,7 @@ export class GraphqlConfigService implements GqlOptionsFactory {
   createGqlOptions(): Promise<ApolloDriverConfig> | ApolloDriverConfig {
     return {
       playground: false,
+      installSubscriptionHandlers: true,
       debug: true,
       autoSchemaFile: path.join(process.cwd(), 'apps/api/src', 'schema.gql'),
       sortSchema: true,
@@ -37,6 +38,22 @@ export class GraphqlConfigService implements GqlOptionsFactory {
             timestamp,
           },
         };
+      },
+      subscriptions: {
+        'subscriptions-transport-ws': {
+          onConnect: (headersRaw: Record<string, unknown>) => {
+            const headers = Object.keys(headersRaw).reduce((dest, key) => {
+              dest[key.toLowerCase()] = headersRaw[key];
+              console.log(dest);
+              return dest;
+            }, {});
+            return {
+              req: {
+                headers: headers,
+              },
+            };
+          },
+        },
       },
     };
   }

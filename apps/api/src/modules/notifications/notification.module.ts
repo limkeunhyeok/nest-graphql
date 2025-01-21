@@ -1,5 +1,7 @@
+import { PUB_SUB } from '@common/modules/pubsub/pubsub.const';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { PubSub } from 'graphql-subscriptions';
 import { NotificationResolver } from './adapters/graphql/resolver/notification.resolver';
 import {
   Notification,
@@ -36,6 +38,10 @@ import {
     {
       provide: NOTIFICATION_REPOSITORY,
       useClass: NotifcationRepository,
+    },
+    {
+      provide: PUB_SUB,
+      useClass: PubSub,
     },
   ],
 })
